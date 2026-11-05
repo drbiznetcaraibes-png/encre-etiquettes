@@ -32,3 +32,7 @@ Fichiers à la racine du dépôt : `server.py`, `index.html`, `requirements.txt`
 Start command Render : `uvicorn server:app --host 0.0.0.0 --port $PORT`.
 
 L'API Gemini est sollicitée **côté serveur uniquement** : `POST /v1beta/models/gemini-3.8-flash:generateContent` avec `google_search` et sources ancrées. Pas de clé dans les téléchargements ni dans les réponses HTTP.
+
+
+## Version 5 : étiquettes premium
+Le modèle d'impression a été entièrement refait avec une composition inspirée de l'affiche validée : bleu marine, jaune vif, trois mensualités très visibles et nom complet du téléphone sur plusieurs lignes. Il n'y a pas de photographie, conformément au format réduit validé. Recherche IA et calculs inchangés.
