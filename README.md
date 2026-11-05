@@ -1,59 +1,34 @@
-# ENCRE POUR TOUS — Étiquettes de téléphones
+# ENCRE POUR TOUS — Recherche IA Gemini (V4)
 
-Application web à déployer sur **Render Free** sans modifier Firebase/TrackCommander.
+## Déployer la mise à jour sur votre Render existant
 
-## Installer sur Render (GitHub)
+1. Sur GitHub `encre-etiquettes` → **Add file → Upload files**, remplacer les fichiers par ceux de ce ZIP, puis **Commit changes**.
+2. Sur Render → service `encre-etiquettes` → **Environment** → **Add Environment Variable** :
+   - Key : `GEMINI_API_KEY`
+   - Value : votre clé personnelle obtenue sur https://aistudio.google.com/api-keys
+3. **Save, deploy** ou **Manual Deploy → Deploy latest commit**. Si nécessaire, **Clear build cache & deploy**.
+4. Vérifier `https://VOTRE-APP.onrender.com/health` : `"ai_configured": true`. La clé n'est jamais affichée.
+5. Dans l'application, rechercher `Samsung S26 Ultra`. La source doit indiquer `IA + sources Google` lorsqu'une recherche Gemini vérifiée a réussi.
 
-1. Sur https://github.com/new, créer un dépôt privé `encre-etiquettes`.
-2. Sur la page du nouveau dépôt, cliquer **uploading an existing file** / **Add file > Upload files** et déposer tous les fichiers de ce dossier **à la racine du dépôt** (`server.py`, `index.html`, `requirements.txt`, `render.yaml`, `.python-version`, `.gitignore`, `README.md`). Puis **Commit changes**.
-3. Se connecter à https://dashboard.render.com/ avec GitHub.
-4. Sur Render, **New > Web Service** (et NON Static Site), sélectionner ce dépôt.
-5. Paramètres : Language **Python 3**, plan **Free**, Build Command `pip install -r requirements.txt`, Start Command `uvicorn server:app --host 0.0.0.0 --port $PORT`.
-6. Cliquer **Deploy Web Service**. Attendre `Live`, puis ouvrir l'URL `.onrender.com`.
+**Ne collez jamais la clé dans GitHub, README, captures, ou navigateur.**
 
-Render peut aussi détecter le fichier `render.yaml` via **New > Blueprint**; le parcours Web Service est le plus simple à suivre manuellement.
+## Coûts et limites
 
-## Ce que l'application fait
+- L'interface Render Free reste gratuite selon les limites du service, mais **l'API Gemini / recherche Google Grounding peut avoir des coûts et quotas** selon votre projet. Consultez https://ai.google.dev/gemini-api/docs/pricing et activez des alertes budgétaires.
+- Modèle sélectionné : `gemini-3.8-flash` (configurable sur Render via `GEMINI_MODEL`). Le modèle historique 2.5-flash peut être inaccessible aux nouveaux projets.
+- Sans clé Gemini, le serveur fonctionne avec la recherche publique (moins fiable).
+- Si Gemini échoue, repli vers les moteurs publics. Une fiche sans preuve web ne doit pas être acceptée comme vérifiée.
+- Un nom de téléphone sans capacité exacte laisse « Non précisée ». Pour connaître le stockage précis, entrez idéalement une référence complète.
+- La liste des étiquettes est sauvegardée uniquement dans le navigateur (localStorage) : exporter en JSON pour la transférer.
 
-- Recherche en ligne d'un modèle de téléphone par référence constructeur via résultats publics Bing/DuckDuckGo.
-- Valide le modèle et la capacité; affiche une erreur si la capacité n'est pas confirmée.
-- Saisie du prix TTC et des mensualités ×5, ×12, ×20.
-- Planche imprimable de 10 étiquettes 88 × 52 mm par feuille A4.
-- Liste conservée **dans le navigateur courant** (localStorage); export/import JSON pour sauvegarde ou transfert.
+## Financement validé
 
-## Limites à connaître
+Prix TTC ×5 = plafond(prix × 0,20748), ×10 = plafond(prix × 0,10693), ×20 = plafond(prix × 0,055885). Arrondi **au prochain euro entier**, pas au centime. Conditions à confirmer avec le partenaire.
 
-- **Pas de clé Gemini** et pas d'abonnement API, mais les moteurs publics peuvent bloquer les requêtes. Les références non trouvées ne sont pas générées par invention.
-- Les mensualités ne sont **pas calculées automatiquement** : il manque les coefficients de financement fournis par le commerçant. Ils peuvent être ajoutés au programme ultérieurement.
-- La liste n'est **pas synchronisée entre les boutiques** : exporter/importer le JSON pour partager les étiquettes.
-- Render Free peut s'endormir après 15 minutes sans visite; premier chargement au redémarrage parfois ~1 minute. Service de test sans garantie de disponibilité et soumis aux quotas Render.
-- Le serveur est publiquement accessible avec l'URL; pas de connexion utilisateur incluse.
+## Techniques
 
-## Test local (optionnel)
+Fichiers à la racine du dépôt : `server.py`, `index.html`, `requirements.txt`, `render.yaml`, `.python-version`, `.gitignore`, `README.md`.
 
-```bash
-python -m pip install -r requirements.txt
-uvicorn server:app --reload
-```
+Start command Render : `uvicorn server:app --host 0.0.0.0 --port $PORT`.
 
-Ouvrir http://127.0.0.1:8000/ puis http://127.0.0.1:8000/health.
-
-## Financement automatique (mis à jour le 5 novembre 2026)
-
-Les mensualités sont calculées à partir du prix comptant TTC :
-- Paiement **×5** : prix TTC × **0,20748**
-- Paiement **×10** : prix TTC × **0,10693**
-- Paiement **×20** : prix TTC × **0,055885**
-
-Chaque montant est arrondi au centime. Le formulaire n’exige plus que le prix TTC après identification du smartphone. Les montants des anciennes étiquettes sont recalculés automatiquement ; l’ancienne échéance ×12 n’est plus proposée. Avant tout affichage au public, contrôler que ces coefficients restent valides et vérifier les mentions obligatoires applicables au financement proposé.
-
-## Arrondi des mensualités
-
-Les mensualités x5, x10 et x20 sont calculées avec les coefficients 0,20748, 0,10693 et 0,055885, puis arrondies **à l’euro entier supérieur** (Math.ceil). Ex. 1000 € => 208 €/mois, 107 €/mois et 56 €/mois. Le prix TTC reste inchangé.
-
-## Correctif recherche (novembre 2026)
-
-- Le champ accepte maintenant une référence constructeur (`SM-S938B`) **ou** un nom courant (`Samsung S26 Ultra`).
-- Un nom de modèle seul ne permet pas de déterminer la capacité mémoire. L'application affiche donc **Non précisée** plutôt que d'inventer 256 Go. Pour obtenir le stockage exact, chercher une référence SKU propre à la variante.
-- La recherche utilise des moteurs publics, qui peuvent restreindre les requêtes des hébergements gratuits. En cas d'échec, vérifier les logs Render; aucune fiche ne sera créée sur une identification incertaine.
-- Installer sur Render en remplaçant `server.py` et `index.html` dans le dépôt GitHub ; Render redéploie ensuite le service.
+L'API Gemini est sollicitée **côté serveur uniquement** : `POST /v1beta/models/gemini-3.8-flash:generateContent` avec `google_search` et sources ancrées. Pas de clé dans les téléchargements ni dans les réponses HTTP.

@@ -1,6 +1,6 @@
 """Encre Pour Tous – minimal web lookup server.
-Public web searches only. No Google/Gemini API key required.
-Search engines can change or block requests, so lookup is best-effort.
+Optional Gemini API with grounded Google Search on the server; public search fallback.
+The API key must only be stored as a Render environment variable.
 """
 from __future__ import annotations
 import asyncio
@@ -18,11 +18,11 @@ from urllib.parse import quote, urlparse
 
 import httpx
 from bs4 import BeautifulSoup
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.0.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.4.0')
 HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36', 'Accept-Language':'fr-FR,fr;q=0.9,en;q=0.8'}
 TIMEOUT = httpx.Timeout(9, connect=4)
 
@@ -139,6 +139,149 @@ def _analyze_model_query(ref, items):
          'capacity_confirmed':bool(supplied_cap),'input_type':'model_name',
          'status':'verified_online'}
 
+async def _search_google_news(client, ref: str):
+ # RSS public, utilisé comme source supplémentaire si les moteurs bloquent les robots.
+ try:
+  r=await client.get('https://news.google.com/rss/search',params={'q':f'"{ref}" smartphone','hl':'fr','gl':'FR','ceid':'FR:fr'},headers=HEADERS)
+  r.raise_for_status()
+  root=ET.fromstring(r.text)
+  out=[]
+  for itm in root.findall('.//item')[:10]:
+   out.append({'title':itm.findtext('title') or '', 'snippet':BeautifulSoup(itm.findtext('description') or '', 'html.parser').get_text(' ',strip=True), 'url':itm.findtext('link') or ''})
+  return out
+ except Exception: return []
+
+async def _search_bing_html(client, ref: str):
+ try:
+  r=await client.get('https://www.bing.com/search',params={'q':f'"{ref}" smartphone'},headers=HEADERS)
+  r.raise_for_status()
+  soup=BeautifulSoup(r.text,'html.parser'); out=[]
+  for item in soup.select('li.b_algo')[:10]:
+   a=item.select_one('h2 a'); desc=item.select_one('.b_caption')
+   if a:out.append({'title':a.get_text(' ',strip=True),'snippet':desc.get_text(' ',strip=True) if desc else '', 'url':a.get('href','')})
+  return out
+ except Exception: return []
+
+async def _search_official_samsung(client, ref: str):
+ # A manufacturer web page is much more reliable than scraped search snippets.
+ found=_query_model(ref)
+ if not found or found[1]!='SAMSUNG':return []
+ model=found[0]
+ slug=re.sub(r'[^a-z0-9]+','-',model.lower()).strip('-')
+ url=f'https://www.samsung.com/latin_en/smartphones/{slug}/'
+ try:
+  r=await client.get(url,headers=HEADERS)
+  r.raise_for_status()
+  soup=BeautifulSoup(r.text,'html.parser')
+  title=(soup.title.get_text(' ',strip=True) if soup.title else '')
+  h1=' '.join(x.get_text(' ',strip=True) for x in soup.select('h1')[:4])
+  # Validate manufacturer page title/heading, not just a generic page mentioning the name.
+  check=_normalize_ref(title+' '+h1)
+  if _normalize_ref(model) not in check:return []
+  description=' '.join(x.get('content','') for x in soup.select('meta[name="description"],meta[property="og:description"]'))
+  return [{'title':title,'snippet':h1+' '+description,'url':str(r.url)}]
+ except Exception:return []
+
+# No artificial manufacturer fallback: no live evidence means no automatic label.
+def _official_fallback(ref):
+ return None
+
+GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '').strip()
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash').strip()
+
+
+def _gemini_json(text):
+    # JSON output may be fenced by the model despite the requested format.
+    text = text.strip()
+    if text.startswith('```'):
+        text = re.sub(r'^```(?:json)?\s*', '', text, flags=re.I)
+        text = re.sub(r'\s*```$', '', text)
+    try:
+        obj = json.loads(text)
+    except (ValueError, TypeError):
+        match = re.search(r'\{[\s\S]*\}', text)
+        if not match:
+            return None
+        try:
+            obj = json.loads(match.group())
+        except ValueError:
+            return None
+    return obj if isinstance(obj, dict) else None
+
+
+def _grounding_sources(payload):
+    urls = []
+    candidates = payload.get('candidates') or []
+    for c in candidates:
+        meta = c.get('groundingMetadata') or {}
+        for chunk in meta.get('groundingChunks') or []:
+            web = chunk.get('web') or {}
+            url = web.get('uri', '')
+            clean = _clean_link(url) if isinstance(url, str) else None
+            if clean and clean not in [i['url'] for i in urls]:
+                urls.append({'title': (web.get('title') or 'Source web')[:150], 'url': clean})
+    return urls[:6]
+
+
+async def gemini_lookup(query, is_model_query=False):
+    if not GEMINI_KEY:
+        return None
+    prompt = f'''Tu es un vérificateur de fiches smartphones pour une étiquette de magasin français.
+Recherche avec Google Search le téléphone EXACT demandé : {query!r}.
+Règles impératives :
+- La marque et le modèle doivent correspondre strictement à la demande (ex. S26 n'est pas S25, Ultra n'est pas Plus).
+- Ne jamais déduire ou inventer une capacité de stockage : si la demande ne précise pas 128 Go / 256 Go / 512 Go / 1 To, indique "Non précisée", même si le modèle existe en plusieurs variantes.
+- Si l'entrée est un SKU fabricant, n'indique la capacité que si ce SKU précis est associé à une capacité dans une source consultée.
+- Les caractéristiques techniques doivent être confirmées par les pages consultées, sinon écrire "Caractéristiques à confirmer".
+- Si impossible de vérifier le modèle précis sur une page web pertinente, verified=false.
+Réponds UNIQUEMENT avec un objet JSON (sans markdown) :
+{{"verified":true ou false,"brand":"SAMSUNG","model":"Galaxy S26 Ultra","capacity":"Non précisée","feature":"Écran ... · ... · 5G","manufacturer_reference":"identifiant constructeur ou chaîne vide"}}.
+Dans feature, donne au plus 3 caractéristiques distinctes, courtes, et confirmées. Aucune information de prix.'''
+    body = {
+       'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
+       'tools': [{'google_search': {}}],
+       'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 1200},
+    }
+    endpoint = f'https://generativelanguage.googleapis.com/v1beta/models/{quote(GEMINI_MODEL, safe="")}:generateContent'
+    async with httpx.AsyncClient(timeout=httpx.Timeout(42, connect=7)) as client:
+        res = await client.post(endpoint, headers={'x-goog-api-key': GEMINI_KEY, 'Content-Type': 'application/json'}, json=body)
+        if res.status_code != 200:
+            # No API token, keys or response bodies in public errors/logs.
+            raise RuntimeError(f'API Gemini HTTP {res.status_code}; vérifie la clé, le modèle et les quotas.')
+        payload = res.json()
+    sources = _grounding_sources(payload)
+    if not sources:
+        return None  # No web grounding: do not present an unsupported model as verified.
+    candidates = payload.get('candidates') or []
+    texts = []
+    for candidate in candidates:
+        for part in ((candidate.get('content') or {}).get('parts') or []):
+            if isinstance(part.get('text'), str): texts.append(part['text'])
+    parsed = _gemini_json('\n'.join(texts))
+    if not parsed or parsed.get('verified') is not True:
+        return None
+    brand = str(parsed.get('brand') or '').strip().upper()[:35]
+    model = str(parsed.get('model') or '').strip()[:100]
+    capacity = str(parsed.get('capacity') or 'Non précisée').strip()[:32]
+    feature = str(parsed.get('feature') or 'Caractéristiques à confirmer').strip()[:175]
+    if not brand or not model:
+        return None
+    if is_model_query:
+        expected = _query_model(query)
+        if not expected or expected[1] != brand or _normalize_ref(expected[0]) != _normalize_ref(model):
+            return None
+        # A brand+model input alone does not determine the phone's storage.
+        if not _parse_capacity(query): capacity = 'Non précisée'
+    else:
+        sku = str(parsed.get('manufacturer_reference') or '').strip()
+        if not sku or _normalize_ref(query.split('/')[0]) not in _normalize_ref(sku):
+            return None
+    # The model must be visible in at least the model's grounded answer; do not use inference from brand alone.
+    return {'brand':brand,'model':model,'capacity':capacity,'feature':feature,
+            'capacity_confirmed':capacity!='Non précisée',
+            'sources':sources,'status':'verified_online','input_type':'model_name' if is_model_query else 'manufacturer_sku',
+            'search_mode':'gemini_grounded','matching_results':len(sources)}
+
 def _clean_link(url):
  from urllib.parse import parse_qs, urlsplit, unquote
  if url.startswith('//'):url='https:'+url
@@ -177,19 +320,57 @@ def _analyze(ref, items):
  return {'brand':brand,'model':name,'capacity':capacity,'feature':'Smartphone · caractéristiques à vérifier auprès du fabricant','sources':used,'matching_results':len(candidates)}
 
 CACHE = {}
+# Simple per-process safeguard for accidental or automated repeated public requests.
+# Render may restart the process; use an authenticated site or external quota controls
+# for a production deployment with paid Gemini requests.
+REQUEST_LOG = {}
+GLOBAL_REQUEST_LOG = []
+
+def _check_rate_limit(request):
+    now = time.time()
+    ip = request.client.host if request.client else 'unknown'
+    recent = [t for t in REQUEST_LOG.get(ip, []) if now - t < 3600]
+    if len(recent) >= 50:
+        raise HTTPException(429, 'Trop de recherches depuis cette connexion. Réessaie plus tard.')
+    recent.append(now)
+    REQUEST_LOG[ip] = recent
+    GLOBAL_REQUEST_LOG[:] = [t for t in GLOBAL_REQUEST_LOG if now - t < 86400]
+    if len(GLOBAL_REQUEST_LOG) >= 200:
+        raise HTTPException(429, 'Limite quotidienne du serveur atteinte.')
+    GLOBAL_REQUEST_LOG.append(now)
+
 async def online_lookup(ref, is_model_query=False):
- key=('MODEL:' if is_model_query else 'SKU:')+ref.upper()
+ key=('MODEL:' if is_model_query else 'SKU:')+ref.upper()+':'+('GEMINI' if GEMINI_KEY else 'PUBLIC')
  now=time.time()
  if key in CACHE and now-CACHE[key][0]<21600: return CACHE[key][1]
+ gemini_problem = None
+ if GEMINI_KEY:
+  try:
+   ai_result = await gemini_lookup(ref, is_model_query=is_model_query)
+   if ai_result:
+    CACHE[key]=(now, ai_result)
+    return ai_result
+  except Exception as exc:
+   gemini_problem = str(exc)
  async with httpx.AsyncClient(timeout=TIMEOUT,follow_redirects=True) as client:
-  bing,ddg=await asyncio.gather(_search_bing(client,ref),_search_ddg(client,ref))
- items=bing+ddg
+  bing,ddg,news,binghtml,official=await asyncio.gather(
+   _search_bing(client,ref), _search_ddg(client,ref),
+   _search_google_news(client,ref), _search_bing_html(client,ref),
+   _search_official_samsung(client,ref) if is_model_query else asyncio.sleep(0,result=[]))
+ items=official+bing+ddg+news+binghtml
  result=_analyze_model_query(ref,items) if is_model_query else _analyze(ref,items)
+ counts={'bing':len(bing),'duckduckgo':len(ddg),'google_news':len(news),'bing_html':len(binghtml),'official':len(official)}
+ # Public search fallback if Gemini has no grounded/verified result.
  if result:
-  result['status']='verified_online' if result['capacity'] else 'missing_capacity'
-  result['search_engines']={'bing':len(bing),'duckduckgo':len(ddg)}
+  if result.get('status')!='manufacturer_reference':
+   result['status']='verified_online' if result['capacity'] else 'missing_capacity'
+  result['search_engines']=counts
+  result['search_mode']='public_search'
+  if gemini_problem: result['ai_warning']=gemini_problem
  else:
-  result={'status':'not_found','sources':[],'search_engines':{'bing':len(bing),'duckduckgo':len(ddg)}}
+  result={'status':'not_found','sources':[],'search_engines':counts}
+  if gemini_problem: result['ai_warning']=gemini_problem
+  if not GEMINI_KEY: result['ai_warning']='IA non configurée sur Render (GEMINI_API_KEY manquante).' 
  CACHE[key]=(now,result)
  return result
 
@@ -197,17 +378,18 @@ async def online_lookup(ref, is_model_query=False):
 async def home():return FileResponse(BASE/'index.html')
 
 @app.get('/health')
-async def health():return {'ok':True,'service':'encre-phones','timestamp':datetime.now(timezone.utc).isoformat()}
+async def health():return {'ok':True,'service':'encre-phones','ai_configured':bool(GEMINI_KEY),'gemini_model':GEMINI_MODEL if GEMINI_KEY else None,'timestamp':datetime.now(timezone.utc).isoformat()}
 
 @app.get('/api/phones/lookup')
-async def lookup(reference:str=Query(min_length=4,max_length=60)):
+async def lookup(request:Request, reference:str=Query(min_length=4,max_length=60)):
  ref=reference.strip().upper()
+ _check_rate_limit(request)
  if not MODEL_QUERY_OK.fullmatch(ref): raise HTTPException(400,'Recherche invalide : entre un modèle ou une référence constructeur.')
  is_model_query=not bool(REF_OK.fullmatch(ref))
  if is_model_query and not _query_model(ref): raise HTTPException(400,'Nom de modèle non reconnu. Exemple : Samsung Galaxy S26 Ultra ou SM-S938B.')
  result=await online_lookup(ref,is_model_query=is_model_query)
  if result['status']=='not_found':
-  raise HTTPException(404,{'message':'Modèle ou référence non identifié dans les résultats de recherche publics. Aucun produit inventé.','search_engines':result['search_engines']})
+  raise HTTPException(404,{'message':'Modèle ou référence non identifié dans les résultats de recherche publics. Aucun produit inventé.','search_engines':result['search_engines'],'ai_warning':result.get('ai_warning')})
  if not result.get('capacity'):
   raise HTTPException(422,{'message':'Modèle trouvé, mais capacité de stockage non confirmée pour cette référence constructeur.','model':result['model'],'brand':result['brand'],'sources':result['sources']})
  return {'reference':ref,**result}
