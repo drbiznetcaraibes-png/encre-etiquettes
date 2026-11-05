@@ -36,3 +36,20 @@ L'API Gemini est sollicitée **côté serveur uniquement** : `POST /v1beta/model
 
 ## Version 5 : étiquettes premium
 Le modèle d'impression a été entièrement refait avec une composition inspirée de l'affiche validée : bleu marine, jaune vif, trois mensualités très visibles et nom complet du téléphone sur plusieurs lignes. Il n'y a pas de photographie, conformément au format réduit validé. Recherche IA et calculs inchangés.
+
+
+## Correctif V6 — caractéristiques techniques
+- Gemini doit retourner 3 caractéristiques vérifiées minimum (écran, photo, batterie, puce, réseau, RAM).
+- Les recherches publiques ne fabriquent aucune fiche si elles ne fournissent pas assez de détails.
+- Les étiquettes affichent jusqu'à 4 lignes de spécifications sous le nom du téléphone.
+- Un produit précédemment ajouté en V5 doit être supprimé puis recherché à nouveau ; les anciennes étiquettes conservées dans le navigateur ne gagnent pas automatiquement des caractéristiques.
+- Si la recherche échoue, vérifier Render > Environment > GEMINI_API_KEY et /health (ai_configured). Ne jamais publier la clé.
+
+
+## V7 — Design premium définitif pour les planches A4
+- Nouveau rendu bleu marine, jaune lumineux, bandeau de marque, montant comptant et blocs financiers très contrastés, basé sur la maquette approuvée.
+- Format physique fixe 88 × 52 mm, 2 colonnes × 5 lignes sur A4 (100 % à l'impression).
+- Nom du téléphone sur plusieurs lignes, capacité et jusqu'à cinq caractéristiques vérifiées.
+- Pas de photo : à cette dimension, l'espace est réservé au nom et aux données techniques, conformément à la demande précédente.
+- Recherche Gemini, validations serveur et coefficients de financement inchangés.
+- Remplacer les fichiers présents dans GitHub, puis redéployer sur Render.

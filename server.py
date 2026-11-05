@@ -22,7 +22,7 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.4.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.6.0')
 HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36', 'Accept-Language':'fr-FR,fr;q=0.9,en;q=0.8'}
 TIMEOUT = httpx.Timeout(9, connect=4)
 
@@ -133,8 +133,9 @@ def _analyze_model_query(ref, items):
  if not candidates:return None
  # Results may show many variants; model-name queries cannot identify a specific storage capacity.
  supplied_cap=_parse_capacity(ref)
+ specs=_specs_from_public(ref,items)
  return {'brand':query_brand,'model':query_model,'capacity':supplied_cap or 'Non précisée',
-         'feature':'Caractéristiques détaillées à vérifier sur la fiche fabricant',
+         'feature':_spec_feature(specs),'specs':specs,
          'sources':links,'matching_results':len(candidates),
          'capacity_confirmed':bool(supplied_cap),'input_type':'model_name',
          'status':'verified_online'}
@@ -226,17 +227,17 @@ def _grounding_sources(payload):
 async def gemini_lookup(query, is_model_query=False):
     if not GEMINI_KEY:
         return None
-    prompt = f'''Tu es un vérificateur de fiches smartphones pour une étiquette de magasin français.
-Recherche avec Google Search le téléphone EXACT demandé : {query!r}.
-Règles impératives :
-- La marque et le modèle doivent correspondre strictement à la demande (ex. S26 n'est pas S25, Ultra n'est pas Plus).
-- Ne jamais déduire ou inventer une capacité de stockage : si la demande ne précise pas 128 Go / 256 Go / 512 Go / 1 To, indique "Non précisée", même si le modèle existe en plusieurs variantes.
-- Si l'entrée est un SKU fabricant, n'indique la capacité que si ce SKU précis est associé à une capacité dans une source consultée.
-- Les caractéristiques techniques doivent être confirmées par les pages consultées, sinon écrire "Caractéristiques à confirmer".
-- Si impossible de vérifier le modèle précis sur une page web pertinente, verified=false.
-Réponds UNIQUEMENT avec un objet JSON (sans markdown) :
-{{"verified":true ou false,"brand":"SAMSUNG","model":"Galaxy S26 Ultra","capacity":"Non précisée","feature":"Écran ... · ... · 5G","manufacturer_reference":"identifiant constructeur ou chaîne vide"}}.
-Dans feature, donne au plus 3 caractéristiques distinctes, courtes, et confirmées. Aucune information de prix.'''
+    prompt = f'''Tu es un vérificateur de caractéristiques techniques de smartphones pour une étiquette de magasin français.
+Utilise la recherche Google pour vérifier le produit EXACT : {query!r}.
+IMPORTANT : l'utilisateur ne souhaite saisir QUE son prix TTC, tout le reste doit venir de sources publiques vérifiables.
+Compare rigoureusement les variantes : S26 ≠ S25 ; Ultra ≠ Plus ; Fold ≠ Flip.
+Ne jamais déduire ou inventer la capacité de stockage si elle n'est pas précisée dans la demande, renvoie "Non précisée".
+Pour un code fabricant, confirme que le modèle correspond au code exact. Chaque caractéristique doit être directement soutenue par les sources.
+Si un champ est inconnu, mets une chaîne vide. Il faut au moins 3 caractéristiques SPECIFIQUES confirmées parmi écran (taille/technologie/fréquence), appareil_photo (MP), batterie (mAh), processeur (nom exact), reseau (5G/Wi-Fi), mémoire_ram (Go). Ne mets pas "smartphone", "à vérifier", ou de propriétés génériques comme substitut.
+Si moins de 3 caractéristiques spécifiques, ou absence de sources vérifiables, verified=false.
+Réponds UNIQUEMENT par un JSON sans markdown :
+{{"verified":true,"brand":"SAMSUNG","model":"Galaxy S26 Ultra","capacity":"Non précisée","manufacturer_reference":"","specs":{{"ecran":"6,9 pouces AMOLED 120 Hz","photo":"200 Mpx","batterie":"5000 mAh","processeur":"nom du processeur","reseau":"5G / Wi-Fi 7","ram":"12 Go"}}}}.
+Les valeurs ci-dessus sont uniquement des exemples de FORMAT : remplace-les EXCLUSIVEMENT par les valeurs vérifiées dans les pages consultées.'''
     body = {
        'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
        'tools': [{'google_search': {}}],
@@ -263,8 +264,9 @@ Dans feature, donne au plus 3 caractéristiques distinctes, courtes, et confirm�
     brand = str(parsed.get('brand') or '').strip().upper()[:35]
     model = str(parsed.get('model') or '').strip()[:100]
     capacity = str(parsed.get('capacity') or 'Non précisée').strip()[:32]
-    feature = str(parsed.get('feature') or 'Caractéristiques à confirmer').strip()[:175]
-    if not brand or not model:
+    specs = _clean_specs(parsed.get('specs'))
+    feature = _spec_feature(specs)
+    if not brand or not model or len(specs) < 3:
         return None
     if is_model_query:
         expected = _query_model(query)
@@ -277,10 +279,52 @@ Dans feature, donne au plus 3 caractéristiques distinctes, courtes, et confirm�
         if not sku or _normalize_ref(query.split('/')[0]) not in _normalize_ref(sku):
             return None
     # The model must be visible in at least the model's grounded answer; do not use inference from brand alone.
-    return {'brand':brand,'model':model,'capacity':capacity,'feature':feature,
+    return {'brand':brand,'model':model,'capacity':capacity,'feature':feature,'specs':specs,
             'capacity_confirmed':capacity!='Non précisée',
             'sources':sources,'status':'verified_online','input_type':'model_name' if is_model_query else 'manufacturer_sku',
             'search_mode':'gemini_grounded','matching_results':len(sources)}
+
+# Compact structured facts for reliable typography on 88 x 52 mm labels.
+SPEC_LABELS = {'ecran':'Écran','photo':'Photo','batterie':'Batterie','processeur':'Puce','reseau':'Réseau','ram':'RAM'}
+def _clean_specs(obj):
+    if not isinstance(obj, dict):return {}
+    out={}
+    for key in SPEC_LABELS:
+        v=str(obj.get(key) or '').strip()
+        if not v or len(v)>75 or re.search(r'\b(?:inconnu|unknown|vérifier|confirmer|non\s+précis|n/?a)\b',v,re.I):continue
+        out[key]=v
+    return out
+
+def _spec_feature(specs):
+    return ' · '.join(f'{SPEC_LABELS[k]} : {v}' for k,v in list(specs.items())[:4])
+
+def _specs_from_public(query, items):
+    """Only match values actually present in search snippets that explicitly name this model.
+    No guesses from another generation or variant."""
+    expected=_query_model(query)
+    if not expected:return {}
+    model,brand=expected
+    found={}
+    for item in items:
+        text=html.unescape((item.get('title') or '')+' '+(item.get('snippet') or ''))
+        detected, b=_extract_model(text)
+        if not detected or b!=brand or _normalize_ref(detected)!=_normalize_ref(model):continue
+        checks=[
+         ('ecran',r'(?<!\d)([5-8][,.]\d\s*(?:pouces|[″“”]|inches|\")\s*(?:AMOLED|OLED|LTPO|120\s*Hz|90\s*Hz)?)'),
+         ('photo',r'(?<!\d)(\d{2,3}\s*(?:MP|Mpx|mégapixels))\b'),
+         ('batterie',r'(?<!\d)([3-9]\s?\d{3}\s*mAh)\b'),
+         ('processeur',r'\b((?:Snapdragon|Dimensity|Exynos|Tensor|Apple A)\s*[\w\-+ ]{2,28})'),
+         ('reseau',r'\b(5G(?:\s*[/·,+]\s*Wi-?Fi\s*[67])?)\b'),
+         ('ram',r'\b(\d{1,2}\s*(?:Go|GB)\s*(?:RAM|de RAM|LPDDR5[X]?))\b')]
+        for field,pattern in checks:
+            if field in found:continue
+            m=re.search(pattern,text,re.I)
+            if m:
+                val=m.group(1).strip().rstrip(' .:,;')
+                if field=='processeur':
+                    val=re.split(r'\s+(?:avec|et|pour|sur|batterie|stockage|écran|camera|caméra|RAM|5G)\b',val,flags=re.I)[0][:35].strip()
+                if val:found[field]=val
+    return found
 
 def _clean_link(url):
  from urllib.parse import parse_qs, urlsplit, unquote
@@ -317,7 +361,8 @@ def _analyze(ref, items):
  name,brand=Counter((model,b) for model,b,c in candidates).most_common(1)[0][0]
  vals=[c for model,b,c in candidates if model==name and b==brand and c]
  capacity=Counter(vals).most_common(1)[0][0] if vals else None
- return {'brand':brand,'model':name,'capacity':capacity,'feature':'Smartphone · caractéristiques à vérifier auprès du fabricant','sources':used,'matching_results':len(candidates)}
+ specs=_specs_from_public(name,items)
+ return {'brand':brand,'model':name,'capacity':capacity,'feature':_spec_feature(specs),'specs':specs,'sources':used,'matching_results':len(candidates)}
 
 CACHE = {}
 # Simple per-process safeguard for accidental or automated repeated public requests.
@@ -361,7 +406,10 @@ async def online_lookup(ref, is_model_query=False):
  result=_analyze_model_query(ref,items) if is_model_query else _analyze(ref,items)
  counts={'bing':len(bing),'duckduckgo':len(ddg),'google_news':len(news),'bing_html':len(binghtml),'official':len(official)}
  # Public search fallback if Gemini has no grounded/verified result.
- if result:
+ if result and len(result.get('specs') or {}) < 3:
+  result={'status':'insufficient_specs','sources':result.get('sources',[]),'search_engines':counts,
+          'ai_warning':gemini_problem or ('Gemini n’a pas retourné 3 caractéristiques techniques vérifiables.' if GEMINI_KEY else 'IA non configurée sur Render (GEMINI_API_KEY manquante).')}
+ if result and result.get('status')!='insufficient_specs':
   if result.get('status')!='manufacturer_reference':
    result['status']='verified_online' if result['capacity'] else 'missing_capacity'
   result['search_engines']=counts
@@ -388,6 +436,8 @@ async def lookup(request:Request, reference:str=Query(min_length=4,max_length=60
  is_model_query=not bool(REF_OK.fullmatch(ref))
  if is_model_query and not _query_model(ref): raise HTTPException(400,'Nom de modèle non reconnu. Exemple : Samsung Galaxy S26 Ultra ou SM-S938B.')
  result=await online_lookup(ref,is_model_query=is_model_query)
+ if result['status']=='insufficient_specs':
+  raise HTTPException(422,{'message':'Téléphone identifié, mais moins de 3 caractéristiques techniques vérifiées. Vérifie la configuration Gemini sur Render ; aucune fiche incomplète ne sera imprimée.','ai_warning':result.get('ai_warning'),'sources':result.get('sources',[])})
  if result['status']=='not_found':
   raise HTTPException(404,{'message':'Modèle ou référence non identifié dans les résultats de recherche publics. Aucun produit inventé.','search_engines':result['search_engines'],'ai_warning':result.get('ai_warning')})
  if not result.get('capacity'):
