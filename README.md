@@ -53,3 +53,35 @@ Le modèle d'impression a été entièrement refait avec une composition inspir�
 - Pas de photo : à cette dimension, l'espace est réservé au nom et aux données techniques, conformément à la demande précédente.
 - Recherche Gemini, validations serveur et coefficients de financement inchangés.
 - Remplacer les fichiers présents dans GitHub, puis redéployer sur Render.
+
+
+## Correctif V8 : fiches techniques absentes
+- Les fiches plus anciennes étaient stockées localement sans `specs` : leur aspect ne se mettait pas à jour malgré les améliorations du serveur.
+- Bouton **Compléter les caractéristiques** dans la planche, et **↻ Fiche** par référence pour rechercher sur le serveur sans perdre le prix TTC ni les mensualités.
+- L'impression est bloquée tant qu'une étiquette ne contient pas au moins 3 caractéristiques techniques.
+- Si la recherche échoue, consulter le message ; vérifier Render Environment (`GEMINI_API_KEY`), les quotas et les sources disponibles. Les faits non vérifiés ne sont pas inventés.
+
+
+## V9 — Samsung A56/A07 + remise à jour des caractéristiques
+- Les recherches « Samsung A56 », « Galaxy A56 5G », « Samsung A07 », « Samsung A07 4G » et « Samsung A07 5G » disposent maintenant de données techniques constructeur sourcées, même si la recherche publique est bloquée.
+- Pour « A07 » sans suffixe, affiche la version Galaxy A07 4G ; demander la référence exacte lorsque la version 5G est vendue.
+- Le stockage exact n'est pas déduit d'un simple nom : « Non précisée » à moins d'une capacité explicite confirmée.
+- Les modèles non repris dans cette base sont recherchés via Gemini/recherche Internet comme précédemment.
+- Le bouton « ↻ Compléter les caractéristiques » met à jour les fiches déjà enregistrées dans le navigateur sans toucher aux prix et aux mensualités.
+- Tester par exemple : `Samsung A56 256 Go`, `Samsung A07 64 Go`, `Samsung A07 5G`.
+
+
+## V10 — Fiabilité + prix comptant bien plus visible
+- Recherche publique avec une seconde passe ciblée lorsqu’il manque des données, et tolérance à la marque répétée dans la réponse Gemini (sans fusionner les variantes 4G/5G).
+- Fiches vérifiées mises en cache dans le navigateur pour éviter de rechercher deux fois un modèle déjà trouvé. Ce cache dépend du navigateur et peut être effacé ; une recherche Internet reste nécessaire pour les nouveaux modèles.
+- Prix comptant sur fond JAUNE lumineux, cadre contrasté, texte 6,35 mm (réduit pour les prix longs), bien visible malgré le format 88 × 52 mm. Mensualités ×5/×10/×20 inchangées et toujours fortes.
+- 2 colonnes × 5 lignes sur A4 ; pas de photo ; pas de frais d’hébergement Render supplémentaire.
+- Ne pas promettre 100 % de reconnaissance : certaines fiches sont introuvables, les moteurs peuvent bloquer Render et les quotas gratuits Gemini varient selon le compte.
+- Important : la recherche Gemini peut consommer des quotas ou être facturée selon le niveau de compte. Ne pas laisser une application publique exposée sans contrôle d'accès adapté à une utilisation commerciale.
+
+
+## V11 — Carte prix TTC épurée
+- Affiche le seul montant TTC (aucune mention « prix comptant » sur l'étiquette).
+- Fond blanc dégradé léger, liseré bleu marine, fin accent doré, prix centré et en gras.
+- Les mensualités ×5, ×10, ×20, leurs coefficients, la recherche IA et les dimensions 88 × 52 mm restent inchangés.
+- Seul `index.html` a changé par rapport à la V10 ; le ZIP complet est proposé pour faciliter la mise à jour GitHub.

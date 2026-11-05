@@ -22,13 +22,13 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.6.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.10.0')
 HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36', 'Accept-Language':'fr-FR,fr;q=0.9,en;q=0.8'}
 TIMEOUT = httpx.Timeout(9, connect=4)
 
 BRAND_PATTERNS = [(r'\b(samsung|galaxy)\b','SAMSUNG'),(r'\b(apple|iphone)\b','APPLE'),(r'\b(xiaomi|redmi|poco)\b','XIAOMI'),(r'\b(oppo)\b','OPPO'),(r'\b(realme)\b','REALME'),(r'\b(honor)\b','HONOR'),(r'\b(huawei)\b','HUAWEI'),(r'\b(motorola|moto\s)\b','MOTOROLA'),(r'\b(google|pixel)\b','GOOGLE'),(r'\b(nothing phone|nothing)\b','NOTHING'),(r'\b(oneplus)\b','ONEPLUS'),(r'\b(nokia|hmd)\b','NOKIA'),(r'\b(vivo)\b','VIVO'),(r'\b(tecno)\b','TECNO'),(r'\b(infinix)\b','INFINIX')]
 MODEL_PATTERNS = [
- (r'\bGalaxy\s+(?:S\d{1,2}(?:\s*(?:Ultra|Plus|FE|\+))?|Z\s*(?:Fold|Flip)\s*\d+|A\d{1,2}(?:\s*5G)?|M\d{1,2}|Note\s*\d{1,2}(?:\s*Ultra)?)', 'SAMSUNG'),
+ (r'\bGalaxy\s+(?:S\d{1,2}(?:\s*(?:Ultra|Plus|FE|\+))?|Z\s*(?:Fold|Flip)\s*\d+|A\d{1,2}(?:\s*(?:4G|5G))?|M\d{1,2}|Note\s*\d{1,2}(?:\s*Ultra)?)', 'SAMSUNG'),
  (r'\biPhone\s+(?:1[1-9]|[5-9]|SE)(?:\s*(?:Pro\s*Max|Pro|Plus|mini|e))?', 'APPLE'),
  (r'\b(?:Redmi\s*Note\s*\d{1,2}(?:\s*Pro\+?|\s*5G)?|Redmi\s*\d{1,2}(?:\s*[AC])?|POCO\s*[XFM]\d{1,2}(?:\s*Pro)?|Xiaomi\s*\d{1,2}(?:\s*(?:Ultra|Pro|T\s*Pro|T|Lite))?)', 'XIAOMI'),
  (r'\b(?:Pixel\s*\d{1,2}(?:\s*(?:Pro\s*XL|Pro|a|XL|Fold))?)', 'GOOGLE'),
@@ -81,6 +81,25 @@ async def _search_ddg(client, ref: str):
 
 def _normalize_ref(s): return re.sub(r'[^A-Z0-9]','',s.upper())
 
+def _model_identity(text, brand):
+    """Normalise marque commerciale et modèle, sans confondre les versions."""
+    text=re.sub(r'\s+',' ',str(text or '')).strip()
+    b=(brand or '').upper()
+    if b=='SAMSUNG':
+        text=re.sub(r'^(?:SAMSUNG\s+)?(?:GALAXY\s+)?', '', text, flags=re.I)
+        text=re.sub(r'^SAMSUNG\s+', '', text, flags=re.I)
+    elif b=='APPLE':
+        text=re.sub(r'^APPLE\s+', '', text, flags=re.I)
+    elif b=='XIAOMI':
+        text=re.sub(r'^XIAOMI\s+', '', text, flags=re.I)
+    return _normalize_ref(text)
+
+def _same_model(expected, received, brand):
+    a=_model_identity(expected,brand)
+    b=_model_identity(received,brand)
+    return bool(a and a==b)
+
+
 def _detect_brand(text):
  for pat,brand in BRAND_PATTERNS:
   if re.search(pat,text,re.I):return brand
@@ -111,7 +130,7 @@ def _query_model(query):
  if not model:
   b = _detect_brand(cleaned)
   if b == 'SAMSUNG':
-   m = re.search(r"\b(?:S\s?\d{2}|A\s?\d{2}|Z\s?(?:Fold|Flip)\s?\d+)\s*(?:Ultra|Plus|FE|5G|\+)?\b",cleaned,re.I)
+   m = re.search(r"\b(?:S\s?\d{2}|A\s?\d{2}|Z\s?(?:Fold|Flip)\s?\d+)\s*(?:Ultra|Plus|FE|4G|5G|\+)?\b",cleaned,re.I)
    if m: model='Galaxy '+m.group(0);brand='SAMSUNG'
  if not model: return None
  return model,brand
@@ -126,7 +145,7 @@ def _analyze_model_query(ref, items):
   title=html.unescape(item.get('title','')); snippet=html.unescape(item.get('snippet',''))
   combined=title+' — '+snippet
   model,brand=_extract_model(combined)
-  if not model or brand!=query_brand or _normalize_ref(model)!=expected_token:continue
+  if not model or brand!=query_brand or not (_same_model(query_model, model, query_brand) or (expected_token=='GALAXYA56' and _normalize_ref(model)=='GALAXYA565G')):continue
   candidates.append((model,brand))
   url=_clean_link(item.get('url',''))
   if url and len(links)<5 and url not in [u['url'] for u in links]: links.append({'title':title[:160],'url':url})
@@ -187,6 +206,49 @@ async def _search_official_samsung(client, ref: str):
 def _official_fallback(ref):
  return None
 
+# Fiches constructeur Samsung vérifiées : secours fiable aux recherches IA/SEO.
+# Ces données sont communes au modèle et non aux options commerciales (mémoire, coloris).
+# La version A07 4G est distincte du A07 5G (batterie et écran différents).
+OFFICIAL_MODEL_DATA = {
+ 'A56': {
+   'model':'Galaxy A56 5G', 'specs':{'ecran':'6,7″ Super AMOLED 120 Hz','photo':'50 Mpx + 12 + 5','batterie':'5 000 mAh','reseau':'5G','ram':'8 ou 12 Go selon version'},
+   'capacities':('128','256'),
+   'sources':[{'title':'Samsung Mobile Press — Galaxy A56 5G : Tech Specs','url':'https://www.samsungmobilepress.com/media-assets/galaxy-a56-5g?tab=specs'}]
+ },
+ 'A07_4G': {
+   'model':'Galaxy A07 (4G)', 'specs':{'ecran':'6,7″ PLS LCD HD+','photo':'50 Mpx + 2 Mpx','batterie':'5 000 mAh','processeur':'Helio G99','reseau':'4G'},
+   'capacities':('64','128'),
+   'sources':[{'title':'Samsung — Galaxy A07 : caractéristiques','url':'https://www.samsung.com/latin_en/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075mzkdgto/'}, {'title':'Samsung — rapport officiel Galaxy A07','url':'https://images.samsung.com/is/content/samsung/assets/global/ir/docs/2026_1Q_Interim_Report.pdf'}]
+ },
+ 'A07_5G': {
+   'model':'Galaxy A07 5G', 'specs':{'ecran':'6,7″ HD+ 120 Hz','photo':'50 Mpx + 2 Mpx','batterie':'6 000 mAh','reseau':'5G'},
+   'capacities':(),
+   'sources':[{'title':'Samsung Global Newsroom — Galaxy A07 5G','url':'https://news.samsung.com/global/samsung-launches-galaxy-a07-5g-bringing-intelligence-and-reliable-performance-to-more-galaxy-a-series-devices'}]
+ }
+}
+
+def _official_samsung_model(query, is_model_query):
+    if not is_model_query:return None
+    parsed=_query_model(query)
+    if not parsed or parsed[1]!='SAMSUNG':return None
+    model=_normalize_ref(parsed[0]); raw=query.upper()
+    if model in ('GALAXYA56','GALAXYA565G'):
+        item=OFFICIAL_MODEL_DATA['A56']
+    elif model in ('GALAXYA07','GALAXYA074G'):
+        # The unqualified "Galaxy A07" is the 2025 4G model; the newer 5G
+        # model has the explicit suffix "5G" in its marketed name.
+        item=OFFICIAL_MODEL_DATA['A07_4G']
+    elif model=='GALAXYA075G':
+        item=OFFICIAL_MODEL_DATA['A07_5G']
+    else:return None
+    # Name-only searches are not allowed to invent a memory/storage variant.
+    asked=re.search(r'(?<!\d)(64|128|256|512)\s*(?:GO|GB)\b',raw)
+    cap=asked.group(1)+' Go' if asked and asked.group(1) in item['capacities'] else 'Non précisée'
+    return {'brand':'SAMSUNG','model':item['model'],'capacity':cap,'capacity_confirmed':cap!='Non précisée',
+            'specs':dict(item['specs']),'feature':_spec_feature(item['specs']),
+            'sources':item['sources'],'status':'verified_online','input_type':'model_name',
+            'search_mode':'official_manufacturer_catalog','matching_results':len(item['sources'])}
+
 GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '').strip()
 GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash').strip()
 
@@ -230,7 +292,7 @@ async def gemini_lookup(query, is_model_query=False):
     prompt = f'''Tu es un vérificateur de caractéristiques techniques de smartphones pour une étiquette de magasin français.
 Utilise la recherche Google pour vérifier le produit EXACT : {query!r}.
 IMPORTANT : l'utilisateur ne souhaite saisir QUE son prix TTC, tout le reste doit venir de sources publiques vérifiables.
-Compare rigoureusement les variantes : S26 ≠ S25 ; Ultra ≠ Plus ; Fold ≠ Flip.
+Compare rigoureusement les variantes : S26 ≠ S25 ; Ultra ≠ Plus ; Fold ≠ Flip ; Galaxy A07 4G ≠ A07 5G. Une marque en préfixe ou absente ne constitue pas un autre modèle.
 Ne jamais déduire ou inventer la capacité de stockage si elle n'est pas précisée dans la demande, renvoie "Non précisée".
 Pour un code fabricant, confirme que le modèle correspond au code exact. Chaque caractéristique doit être directement soutenue par les sources.
 Si un champ est inconnu, mets une chaîne vide. Il faut au moins 3 caractéristiques SPECIFIQUES confirmées parmi écran (taille/technologie/fréquence), appareil_photo (MP), batterie (mAh), processeur (nom exact), reseau (5G/Wi-Fi), mémoire_ram (Go). Ne mets pas "smartphone", "à vérifier", ou de propriétés génériques comme substitut.
@@ -241,7 +303,7 @@ Les valeurs ci-dessus sont uniquement des exemples de FORMAT : remplace-les EXCL
     body = {
        'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
        'tools': [{'google_search': {}}],
-       'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 1200},
+       'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 1900},
     }
     endpoint = f'https://generativelanguage.googleapis.com/v1beta/models/{quote(GEMINI_MODEL, safe="")}:generateContent'
     async with httpx.AsyncClient(timeout=httpx.Timeout(42, connect=7)) as client:
@@ -270,7 +332,7 @@ Les valeurs ci-dessus sont uniquement des exemples de FORMAT : remplace-les EXCL
         return None
     if is_model_query:
         expected = _query_model(query)
-        if not expected or expected[1] != brand or _normalize_ref(expected[0]) != _normalize_ref(model):
+        if not expected or expected[1] != brand or not _same_model(expected[0], model, brand):
             return None
         # A brand+model input alone does not determine the phone's storage.
         if not _parse_capacity(query): capacity = 'Non précisée'
@@ -385,6 +447,8 @@ def _check_rate_limit(request):
     GLOBAL_REQUEST_LOG.append(now)
 
 async def online_lookup(ref, is_model_query=False):
+ official = _official_samsung_model(ref,is_model_query)
+ if official:return official
  key=('MODEL:' if is_model_query else 'SKU:')+ref.upper()+':'+('GEMINI' if GEMINI_KEY else 'PUBLIC')
  now=time.time()
  if key in CACHE and now-CACHE[key][0]<21600: return CACHE[key][1]
@@ -402,9 +466,18 @@ async def online_lookup(ref, is_model_query=False):
    _search_bing(client,ref), _search_ddg(client,ref),
    _search_google_news(client,ref), _search_bing_html(client,ref),
    _search_official_samsung(client,ref) if is_model_query else asyncio.sleep(0,result=[]))
- items=official+bing+ddg+news+binghtml
+  items=official+bing+ddg+news+binghtml
+ # Seconde passe ciblée : interrogations constructeur/fiches techniques si la
+ # première recherche renvoie seulement des annonces marchandes génériques.
+ preliminary=_analyze_model_query(ref,items) if is_model_query else _analyze(ref,items)
+ if not preliminary or len(preliminary.get('specs') or {}) < 3:
+  model_hint=_query_model(ref)[0] if is_model_query and _query_model(ref) else ref
+  targeted_query=f'{model_hint} fiche technique écran batterie appareil photo processeur site:samsung.com OR site:apple.com OR site:mi.com'
+  async with httpx.AsyncClient(timeout=TIMEOUT,follow_redirects=True) as detail_client:
+   extra_bing, extra_ddg=await asyncio.gather(_search_bing(detail_client,targeted_query),_search_ddg(detail_client,targeted_query))
+  items+=extra_bing+extra_ddg
  result=_analyze_model_query(ref,items) if is_model_query else _analyze(ref,items)
- counts={'bing':len(bing),'duckduckgo':len(ddg),'google_news':len(news),'bing_html':len(binghtml),'official':len(official)}
+ counts={'bing':len(bing),'duckduckgo':len(ddg),'google_news':len(news),'bing_html':len(binghtml),'official':len(official),'all_results':len(items)}
  # Public search fallback if Gemini has no grounded/verified result.
  if result and len(result.get('specs') or {}) < 3:
   result={'status':'insufficient_specs','sources':result.get('sources',[]),'search_engines':counts,
@@ -416,7 +489,8 @@ async def online_lookup(ref, is_model_query=False):
   result['search_mode']='public_search'
   if gemini_problem: result['ai_warning']=gemini_problem
  else:
-  result={'status':'not_found','sources':[],'search_engines':counts}
+  if not result or result.get('status')!='insufficient_specs':
+   result={'status':'not_found','sources':[],'search_engines':counts}
   if gemini_problem: result['ai_warning']=gemini_problem
   if not GEMINI_KEY: result['ai_warning']='IA non configurée sur Render (GEMINI_API_KEY manquante).' 
  CACHE[key]=(now,result)
