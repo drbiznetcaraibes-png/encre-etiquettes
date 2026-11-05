@@ -22,7 +22,7 @@ from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse, JSONResponse
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.10.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.12.0')
 HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36', 'Accept-Language':'fr-FR,fr;q=0.9,en;q=0.8'}
 TIMEOUT = httpx.Timeout(9, connect=4)
 
@@ -97,7 +97,13 @@ def _model_identity(text, brand):
 def _same_model(expected, received, brand):
     a=_model_identity(expected,brand)
     b=_model_identity(received,brand)
-    return bool(a and a==b)
+    if not a or not b:
+        return False
+    if a == b:
+        return True
+    # Galaxy A56 is sold as A56 5G; accept a shorter customer name only
+    # for this exact generation, not for ambiguous A07/A16 variants.
+    return brand.upper() == 'SAMSUNG' and a == 'A56' and b == 'A565G'
 
 
 def _detect_brand(text):
@@ -132,6 +138,14 @@ def _query_model(query):
   if b == 'SAMSUNG':
    m = re.search(r"\b(?:S\s?\d{2}|A\s?\d{2}|Z\s?(?:Fold|Flip)\s?\d+)\s*(?:Ultra|Plus|FE|4G|5G|\+)?\b",cleaned,re.I)
    if m: model='Galaxy '+m.group(0);brand='SAMSUNG'
+ if not model:
+  # Allow new models without changing regex on every new release. Explicit brand
+  # plus an alphanumeric generation is mandatory; avoid overly vague strings.
+  b=_detect_brand(cleaned)
+  stripped=re.sub(r'^(?:samsung|apple|xiaomi)\s+', '',cleaned,flags=re.I).strip()
+  if b and re.search(r'\d',stripped) and len(stripped)>=4:
+   model=('Galaxy '+re.sub(r'^Galaxy\s+', '',stripped,flags=re.I)) if b=='SAMSUNG' else stripped
+   brand=b
  if not model: return None
  return model,brand
 
@@ -250,7 +264,11 @@ def _official_samsung_model(query, is_model_query):
             'search_mode':'official_manufacturer_catalog','matching_results':len(item['sources'])}
 
 GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '').strip()
-GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'gemini-3.8-flash').strip()
+# Explicit model override is supported; 'auto' tries current models compatible with a free API key.
+# 2.5 Flash-Lite can be unavailable for newer API projects, so prefer current Flash-Lite.
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL', 'auto').strip()
+GEMINI_CANDIDATES = ('gemini-3.5-flash-lite', 'gemini-3.8-flash', 'gemini-2.5-flash-lite')
+
 
 
 def _gemini_json(text):
@@ -286,64 +304,130 @@ def _grounding_sources(payload):
     return urls[:6]
 
 
+def _model_candidates():
+    name = GEMINI_MODEL
+    if name and name.lower() != 'auto':
+        return (name,)
+    return GEMINI_CANDIDATES
+
+
+def _gemini_error_message(response):
+    code = response.status_code
+    try:
+        parsed = response.json().get('error', {})
+        message = str(parsed.get('message') or '')
+    except Exception:
+        message = ''
+    if code in (400, 404) and ('not found' in message.lower() or 'not supported' in message.lower() or 'model' in message.lower()):
+        return 'modele_indisponible'
+    if code == 429:
+        return 'quota_atteint'
+    if code in (401,403):
+        return 'cle_non_autorisee'
+    return f'HTTP_{code}'
+
+
+def _first_fenced_json(text):
+    result = _gemini_json(text)
+    if result is not None:
+        return result
+    # Sometimes the model replies with several JSON objects; choose the first valid one.
+    decoder = json.JSONDecoder()
+    for match in re.finditer(r'\{', text):
+        try:
+            obj, _ = decoder.raw_decode(text[match.start():])
+            if isinstance(obj, dict):
+                return obj
+        except ValueError:
+            continue
+    return None
+
+
 async def gemini_lookup(query, is_model_query=False):
+    """Grounded Gemini lookup with model availability fallback and explicit diagnostics.
+
+    One successful grounded call per lookup; no extra AI generation for parsing.
+    """
     if not GEMINI_KEY:
         return None
-    prompt = f'''Tu es un vérificateur de caractéristiques techniques de smartphones pour une étiquette de magasin français.
-Utilise la recherche Google pour vérifier le produit EXACT : {query!r}.
-IMPORTANT : l'utilisateur ne souhaite saisir QUE son prix TTC, tout le reste doit venir de sources publiques vérifiables.
-Compare rigoureusement les variantes : S26 ≠ S25 ; Ultra ≠ Plus ; Fold ≠ Flip ; Galaxy A07 4G ≠ A07 5G. Une marque en préfixe ou absente ne constitue pas un autre modèle.
-Ne jamais déduire ou inventer la capacité de stockage si elle n'est pas précisée dans la demande, renvoie "Non précisée".
-Pour un code fabricant, confirme que le modèle correspond au code exact. Chaque caractéristique doit être directement soutenue par les sources.
-Si un champ est inconnu, mets une chaîne vide. Il faut au moins 3 caractéristiques SPECIFIQUES confirmées parmi écran (taille/technologie/fréquence), appareil_photo (MP), batterie (mAh), processeur (nom exact), reseau (5G/Wi-Fi), mémoire_ram (Go). Ne mets pas "smartphone", "à vérifier", ou de propriétés génériques comme substitut.
-Si moins de 3 caractéristiques spécifiques, ou absence de sources vérifiables, verified=false.
-Réponds UNIQUEMENT par un JSON sans markdown :
-{{"verified":true,"brand":"SAMSUNG","model":"Galaxy S26 Ultra","capacity":"Non précisée","manufacturer_reference":"","specs":{{"ecran":"6,9 pouces AMOLED 120 Hz","photo":"200 Mpx","batterie":"5000 mAh","processeur":"nom du processeur","reseau":"5G / Wi-Fi 7","ram":"12 Go"}}}}.
-Les valeurs ci-dessus sont uniquement des exemples de FORMAT : remplace-les EXCLUSIVEMENT par les valeurs vérifiées dans les pages consultées.'''
-    body = {
-       'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
-       'tools': [{'google_search': {}}],
-       'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 1900},
-    }
-    endpoint = f'https://generativelanguage.googleapis.com/v1beta/models/{quote(GEMINI_MODEL, safe="")}:generateContent'
-    async with httpx.AsyncClient(timeout=httpx.Timeout(42, connect=7)) as client:
-        res = await client.post(endpoint, headers={'x-goog-api-key': GEMINI_KEY, 'Content-Type': 'application/json'}, json=body)
-        if res.status_code != 200:
-            # No API token, keys or response bodies in public errors/logs.
-            raise RuntimeError(f'API Gemini HTTP {res.status_code}; vérifie la clé, le modèle et les quotas.')
-        payload = res.json()
+    prompt = f'''Tu vérifies les caractéristiques exactes des smartphones pour une étiquette commerciale.
+REQUÊTE DU VENDEUR : {query!r}
+
+Cherche en priorité les pages constructeur officielles Samsung, Apple, Xiaomi/Redmi/POCO,
+puis compare éventuellement à deux autres sources. Vérifie le NOM EXACT et la génération.
+Le suffixe 4G/5G, Plus/Pro/Ultra/FE, la capacité, et le code constructeur sont essentiels.
+Si l'utilisateur n'indique PAS de capacité, mets exactement "Non précisée" : ne la devine pas.
+Si l'utilisateur indique un stockage, indique-le seulement s'il existe pour ce modèle.
+Retourne des faits précis, chacun vérifiable dans les sources : écran (taille et type),
+photo (Mpx), batterie (mAh), processeur (nom), réseau (4G/5G), RAM (Go).
+Les champs incertains sont des chaînes vides. Ne retourne pas d'informations génériques.
+Si le modèle exact n'est pas confirmé et que moins de trois caractéristiques
+spécifiques sont documentées, définis "verified": false.
+Réponds avec UN SEUL objet JSON sans markdown, schéma :
+{{"verified":true,"brand":"SAMSUNG","model":"Galaxy A56 5G","capacity":"Non précisée","manufacturer_reference":"","specs":{{"ecran":"6,7 pouces Super AMOLED 120 Hz","photo":"50 Mpx","batterie":"5000 mAh","processeur":"Exynos 1580","reseau":"5G","ram":"8 Go"}}}}
+Les valeurs du schéma sont UNIQUEMENT des exemples : ne les copie pas sans vérification.
+'''
+    body = {'contents': [{'role': 'user', 'parts': [{'text': prompt}]}],
+            'tools': [{'google_search': {}}],
+            'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 2600}}
+    payload = None
+    tried = []
+    async with httpx.AsyncClient(timeout=httpx.Timeout(48, connect=8)) as client:
+        for model in _model_candidates():
+            endpoint = f'https://generativelanguage.googleapis.com/v1beta/models/{quote(model, safe="")}:generateContent'
+            try:
+                response = await client.post(endpoint, headers={'x-goog-api-key': GEMINI_KEY, 'Content-Type': 'application/json'}, json=body)
+            except httpx.TimeoutException:
+                raise RuntimeError('Delai Gemini depasse. Reessaie.')
+            except httpx.RequestError:
+                raise RuntimeError('Connexion au service Gemini impossible.')
+            if response.status_code == 200:
+                payload = response.json()
+                break
+            error = _gemini_error_message(response)
+            tried.append(f'{model}:{error}')
+            # If the model is missing, try another one. Rate limits or bad keys
+            # must stop immediately to avoid needless additional requests.
+            if error == 'modele_indisponible':
+                continue
+            if error == 'quota_atteint':
+                raise RuntimeError('Quota gratuit Gemini atteint ou limité : vérifie AI Studio.')
+            if error == 'cle_non_autorisee':
+                raise RuntimeError('Clé Gemini refusée : vérifie GEMINI_API_KEY dans Render.')
+            raise RuntimeError(f'Erreur Gemini {error} avec {model}.')
+    if payload is None:
+        raise RuntimeError('Aucun modèle Gemini disponible sur cette clé (' + ', '.join(tried) + ').')
+
     sources = _grounding_sources(payload)
-    if not sources:
-        return None  # No web grounding: do not present an unsupported model as verified.
     candidates = payload.get('candidates') or []
-    texts = []
-    for candidate in candidates:
-        for part in ((candidate.get('content') or {}).get('parts') or []):
-            if isinstance(part.get('text'), str): texts.append(part['text'])
-    parsed = _gemini_json('\n'.join(texts))
-    if not parsed or parsed.get('verified') is not True:
+    texts = [part['text'] for candidate in candidates
+             for part in (((candidate.get('content') or {}).get('parts')) or [])
+             if isinstance(part.get('text'), str)]
+    parsed = _first_fenced_json('\n'.join(texts))
+    if not parsed or parsed.get('verified') is not True or not sources:
         return None
     brand = str(parsed.get('brand') or '').strip().upper()[:35]
-    model = str(parsed.get('model') or '').strip()[:100]
+    model = str(parsed.get('model') or '').strip()[:105]
     capacity = str(parsed.get('capacity') or 'Non précisée').strip()[:32]
     specs = _clean_specs(parsed.get('specs'))
-    feature = _spec_feature(specs)
     if not brand or not model or len(specs) < 3:
         return None
+    # Match the model from a name query, but accept cosmetic punctuation or
+    # 'Samsung Galaxy' prefix changes, not a different Plus/Ultra/FE/5G variant.
     if is_model_query:
         expected = _query_model(query)
         if not expected or expected[1] != brand or not _same_model(expected[0], model, brand):
             return None
-        # A brand+model input alone does not determine the phone's storage.
         if not _parse_capacity(query): capacity = 'Non précisée'
     else:
         sku = str(parsed.get('manufacturer_reference') or '').strip()
         if not sku or _normalize_ref(query.split('/')[0]) not in _normalize_ref(sku):
             return None
-    # The model must be visible in at least the model's grounded answer; do not use inference from brand alone.
-    return {'brand':brand,'model':model,'capacity':capacity,'feature':feature,'specs':specs,
-            'capacity_confirmed':capacity!='Non précisée',
-            'sources':sources,'status':'verified_online','input_type':'model_name' if is_model_query else 'manufacturer_sku',
+    return {'brand':brand,'model':model,'capacity':capacity,
+            'feature':_spec_feature(specs),'specs':specs,
+            'capacity_confirmed':capacity!='Non précisée', 'sources':sources,
+            'status':'verified_online',
+            'input_type':'model_name' if is_model_query else 'manufacturer_sku',
             'search_mode':'gemini_grounded','matching_results':len(sources)}
 
 # Compact structured facts for reliable typography on 88 x 52 mm labels.
@@ -422,7 +506,7 @@ def _analyze(ref, items):
  if not candidates:return None
  name,brand=Counter((model,b) for model,b,c in candidates).most_common(1)[0][0]
  vals=[c for model,b,c in candidates if model==name and b==brand and c]
- capacity=Counter(vals).most_common(1)[0][0] if vals else None
+ capacity=Counter(vals).most_common(1)[0][0] if vals and len(set(vals)) == 1 else None
  specs=_specs_from_public(name,items)
  return {'brand':brand,'model':name,'capacity':capacity,'feature':_spec_feature(specs),'specs':specs,'sources':used,'matching_results':len(candidates)}
 
@@ -500,7 +584,7 @@ async def online_lookup(ref, is_model_query=False):
 async def home():return FileResponse(BASE/'index.html')
 
 @app.get('/health')
-async def health():return {'ok':True,'service':'encre-phones','ai_configured':bool(GEMINI_KEY),'gemini_model':GEMINI_MODEL if GEMINI_KEY else None,'timestamp':datetime.now(timezone.utc).isoformat()}
+async def health():return {'ok':True,'service':'encre-phones','ai_configured':bool(GEMINI_KEY),'gemini_model':GEMINI_MODEL if GEMINI_KEY else None,'lookup_mode':'Gemini + sources officielles + recherche publique','timestamp':datetime.now(timezone.utc).isoformat()}
 
 @app.get('/api/phones/lookup')
 async def lookup(request:Request, reference:str=Query(min_length=4,max_length=60)):
