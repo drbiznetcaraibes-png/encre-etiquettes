@@ -50,3 +50,10 @@ Chaque montant est arrondi au centime. Le formulaire n’exige plus que le prix 
 ## Arrondi des mensualités
 
 Les mensualités x5, x10 et x20 sont calculées avec les coefficients 0,20748, 0,10693 et 0,055885, puis arrondies **à l’euro entier supérieur** (Math.ceil). Ex. 1000 € => 208 €/mois, 107 €/mois et 56 €/mois. Le prix TTC reste inchangé.
+
+## Correctif recherche (novembre 2026)
+
+- Le champ accepte maintenant une référence constructeur (`SM-S938B`) **ou** un nom courant (`Samsung S26 Ultra`).
+- Un nom de modèle seul ne permet pas de déterminer la capacité mémoire. L'application affiche donc **Non précisée** plutôt que d'inventer 256 Go. Pour obtenir le stockage exact, chercher une référence SKU propre à la variante.
+- La recherche utilise des moteurs publics, qui peuvent restreindre les requêtes des hébergements gratuits. En cas d'échec, vérifier les logs Render; aucune fiche ne sera créée sur une identification incertaine.
+- Installer sur Render en remplaçant `server.py` et `index.html` dans le dépôt GitHub ; Render redéploie ensuite le service.

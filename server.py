@@ -40,6 +40,7 @@ MODEL_PATTERNS = [
 ]
 CAP_RE = re.compile(r'(?<![\d])(?:64|128|256|512|1024)\s*(?:Go|GB|G[Bb]|To|TB)(?![a-z])',re.I)
 REF_OK = re.compile(r'^[A-Z0-9][A-Z0-9_./#\-+]{3,59}$')
+MODEL_QUERY_OK = re.compile(r"^[\w\s./#+\-]{4,60}$", re.UNICODE)
 
 # Well-known references from prior approved examples. These act as a fallback only;
 # searches are attempted first. Capacity is verified only if SKU mapping provides it.
@@ -53,7 +54,7 @@ CATALOG = {
 async def _search_bing(client, ref: str):
  url='https://www.bing.com/search'
  try:
-  r=await client.get(url, params={'format':'rss','q':f'"{ref}" smartphone capacité fiche technique'},headers=HEADERS)
+  r=await client.get(url, params={'format':'rss','q':f'{ref} smartphone caractéristiques stockage capacité'},headers=HEADERS)
   r.raise_for_status()
   root=ET.fromstring(r.text)
   items=[]
@@ -67,7 +68,7 @@ async def _search_bing(client, ref: str):
 
 async def _search_ddg(client, ref: str):
  try:
-  r=await client.get('https://html.duckduckgo.com/html/',params={'q':f'"{ref}" téléphone capacité caractéristiques'},headers=HEADERS)
+  r=await client.get('https://html.duckduckgo.com/html/',params={'q':f'{ref} téléphone caractéristiques capacité'},headers=HEADERS)
   r.raise_for_status()
   doc=BeautifulSoup(r.text,'html.parser')
   items=[]
@@ -102,6 +103,41 @@ def _extract_model(text):
    if brand=='SAMSUNG' and not out.lower().startswith('galaxy'):out='Galaxy '+out
    return out,brand
  return None,None
+
+def _query_model(query):
+ # Allow familiar expressions such as "Samsung S26 Ultra" without pretending this is a manufacturer SKU.
+ cleaned = re.sub(r"\s+", " ", query).strip()
+ model, brand = _extract_model(cleaned)
+ if not model:
+  b = _detect_brand(cleaned)
+  if b == 'SAMSUNG':
+   m = re.search(r"\b(?:S\s?\d{2}|A\s?\d{2}|Z\s?(?:Fold|Flip)\s?\d+)\s*(?:Ultra|Plus|FE|5G|\+)?\b",cleaned,re.I)
+   if m: model='Galaxy '+m.group(0);brand='SAMSUNG'
+ if not model: return None
+ return model,brand
+
+def _analyze_model_query(ref, items):
+ expected=_query_model(ref)
+ if not expected:return None
+ query_model,query_brand=expected
+ expected_token=_normalize_ref(query_model)
+ candidates=[]; links=[]
+ for item in items:
+  title=html.unescape(item.get('title','')); snippet=html.unescape(item.get('snippet',''))
+  combined=title+' — '+snippet
+  model,brand=_extract_model(combined)
+  if not model or brand!=query_brand or _normalize_ref(model)!=expected_token:continue
+  candidates.append((model,brand))
+  url=_clean_link(item.get('url',''))
+  if url and len(links)<5 and url not in [u['url'] for u in links]: links.append({'title':title[:160],'url':url})
+ if not candidates:return None
+ # Results may show many variants; model-name queries cannot identify a specific storage capacity.
+ supplied_cap=_parse_capacity(ref)
+ return {'brand':query_brand,'model':query_model,'capacity':supplied_cap or 'Non précisée',
+         'feature':'Caractéristiques détaillées à vérifier sur la fiche fabricant',
+         'sources':links,'matching_results':len(candidates),
+         'capacity_confirmed':bool(supplied_cap),'input_type':'model_name',
+         'status':'verified_online'}
 
 def _clean_link(url):
  from urllib.parse import parse_qs, urlsplit, unquote
@@ -141,14 +177,14 @@ def _analyze(ref, items):
  return {'brand':brand,'model':name,'capacity':capacity,'feature':'Smartphone · caractéristiques à vérifier auprès du fabricant','sources':used,'matching_results':len(candidates)}
 
 CACHE = {}
-async def online_lookup(ref):
- key=ref.upper()
+async def online_lookup(ref, is_model_query=False):
+ key=('MODEL:' if is_model_query else 'SKU:')+ref.upper()
  now=time.time()
  if key in CACHE and now-CACHE[key][0]<21600: return CACHE[key][1]
  async with httpx.AsyncClient(timeout=TIMEOUT,follow_redirects=True) as client:
   bing,ddg=await asyncio.gather(_search_bing(client,ref),_search_ddg(client,ref))
  items=bing+ddg
- result=_analyze(ref,items)
+ result=_analyze_model_query(ref,items) if is_model_query else _analyze(ref,items)
  if result:
   result['status']='verified_online' if result['capacity'] else 'missing_capacity'
   result['search_engines']={'bing':len(bing),'duckduckgo':len(ddg)}
@@ -166,11 +202,13 @@ async def health():return {'ok':True,'service':'encre-phones','timestamp':dateti
 @app.get('/api/phones/lookup')
 async def lookup(reference:str=Query(min_length=4,max_length=60)):
  ref=reference.strip().upper()
- if not REF_OK.fullmatch(ref): raise HTTPException(400,'Référence invalide.')
- result=await online_lookup(ref)
+ if not MODEL_QUERY_OK.fullmatch(ref): raise HTTPException(400,'Recherche invalide : entre un modèle ou une référence constructeur.')
+ is_model_query=not bool(REF_OK.fullmatch(ref))
+ if is_model_query and not _query_model(ref): raise HTTPException(400,'Nom de modèle non reconnu. Exemple : Samsung Galaxy S26 Ultra ou SM-S938B.')
+ result=await online_lookup(ref,is_model_query=is_model_query)
  if result['status']=='not_found':
-  raise HTTPException(404,{'message':'Référence non identifiée sur les moteurs publics. Aucun modèle inventé.','search_engines':result['search_engines']})
+  raise HTTPException(404,{'message':'Modèle ou référence non identifié dans les résultats de recherche publics. Aucun produit inventé.','search_engines':result['search_engines']})
  if not result.get('capacity'):
-  raise HTTPException(422,{'message':'Modèle trouvé, mais capacité de stockage non confirmée pour cette référence.','model':result['model'],'brand':result['brand'],'sources':result['sources']})
+  raise HTTPException(422,{'message':'Modèle trouvé, mais capacité de stockage non confirmée pour cette référence constructeur.','model':result['model'],'brand':result['brand'],'sources':result['sources']})
  return {'reference':ref,**result}
 
