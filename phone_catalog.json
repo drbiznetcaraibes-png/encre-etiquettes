@@ -1,0 +1,235 @@
+{
+  "verified_at": "2026-11-07",
+  "note": "Caractéristiques communes au modèle ; aucune RAM ou capacité déduite d’une référence générique. Les sources constructeur sont indiquées pour chaque fiche.",
+  "phones": [
+    {
+      "brand": "APPLE",
+      "model": "iPhone 16",
+      "aliases": [
+        "iPhone 16"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED Super Retina XDR",
+        "photo": "48 Mpx + 12 Mpx",
+        "batterie": "Jusqu’à 22 h de vidéo",
+        "processeur": "Apple A18",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Apple — iPhone 16 : caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/121029"
+        }
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25 Ultra",
+      "aliases": [
+        "Galaxy S25 Ultra",
+        "S25 Ultra",
+        "Galaxy S25 Ultra 5G",
+        "S25 Ultra 5G"
+      ],
+      "manufacturer_references": [
+        "SM-S938B",
+        "SM-S938B/DS"
+      ],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,9″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "200 + 50 + 50 + 10 Mpx",
+        "batterie": "5 000 mAh",
+        "processeur": "Snapdragon 8 Elite for Galaxy",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25 Ultra : caractéristiques",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion"
+        },
+        {
+          "title": "Samsung — référence SM-S938B/DS",
+          "url": "https://www.samsung.com/in/support/model/SM-S938BAKQINS/"
+        }
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25",
+      "aliases": [
+        "Galaxy S25",
+        "S25",
+        "Galaxy S25 5G",
+        "S25 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,2″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 + 10 Mpx",
+        "batterie": "4 000 mAh",
+        "processeur": "Snapdragon 8 Elite for Galaxy",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25 : caractéristiques",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion"
+        }
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25+",
+      "aliases": [
+        "Galaxy S25+",
+        "Galaxy S25 Plus",
+        "S25+",
+        "S25 Plus",
+        "Galaxy S25+ 5G",
+        "Galaxy S25 Plus 5G",
+        "S25+ 5G",
+        "S25 Plus 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 + 10 Mpx",
+        "batterie": "4 900 mAh",
+        "processeur": "Snapdragon 8 Elite for Galaxy",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25+ : caractéristiques",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-galaxy-s25-series-sets-the-standard-of-ai-phone-as-a-true-ai-companion"
+        }
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A56 5G",
+      "aliases": [
+        "Galaxy A56 5G",
+        "Galaxy A56",
+        "A56 5G",
+        "A56"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Super AMOLED 120 Hz",
+        "photo": "50 + 12 + 5 Mpx",
+        "batterie": "5 000 mAh",
+        "processeur": "Exynos 1580",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A56 5G : caractéristiques",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-marks-a-step-forward-with-ai-for-everyone-by-introducing-new-galaxy-a56-5g-galaxy-a36-5g-and-galaxy-a26-5g"
+        }
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A36 5G",
+      "aliases": [
+        "Galaxy A36 5G",
+        "Galaxy A36",
+        "A36 5G",
+        "A36"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Super AMOLED 120 Hz",
+        "photo": "50 + 8 + 5 Mpx",
+        "batterie": "5 000 mAh",
+        "processeur": "Snapdragon 6 Gen 3",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A36 5G : caractéristiques",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-marks-a-step-forward-with-ai-for-everyone-by-introducing-new-galaxy-a56-5g-galaxy-a36-5g-and-galaxy-a26-5g"
+        }
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A07 (4G)",
+      "aliases": [
+        "Galaxy A07",
+        "Galaxy A07 4G",
+        "A07",
+        "A07 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ PLS LCD HD+",
+        "photo": "50 Mpx + 2 Mpx",
+        "batterie": "5 000 mAh",
+        "processeur": "Helio G99",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A07 : caractéristiques",
+          "url": "https://www.samsung.com/latin_en/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075mzkdgto/"
+        }
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A07 5G",
+      "aliases": [
+        "Galaxy A07 5G",
+        "A07 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [],
+      "specs": {
+        "ecran": "6,7″ HD+ 120 Hz",
+        "photo": "50 Mpx + 2 Mpx",
+        "batterie": "6 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A07 5G : caractéristiques",
+          "url": "https://news.samsung.com/global/samsung-launches-galaxy-a07-5g-bringing-intelligence-and-reliable-performance-to-more-galaxy-a-series-devices"
+        }
+      ]
+    }
+  ]
+}

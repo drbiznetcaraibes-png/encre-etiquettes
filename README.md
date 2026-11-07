@@ -1,30 +1,50 @@
-# ENCRE POUR TOUS — Générateur d'étiquettes V12
+# ENCRE POUR TOUS — Générateur d’étiquettes V13
 
-Cette mise à jour se concentre sur la **fiabilité de l'identification des smartphones** sans modifier le modèle graphique V11.
+Recherche un smartphone par son nom ou sa référence constructeur, récupère ses caractéristiques et crée une planche A4 d’étiquettes commerciales.
 
-## Installation sur Render + GitHub
+## Utilisation
 
-1. Décompressez le ZIP.
-2. Dans le dépôt GitHub `encre-etiquettes`, remplacez les fichiers présents à la racine par **tous les fichiers** du ZIP. Cliquez sur **Commit changes**.
-3. Render > service `encre-etiquettes` > **Environment** : vérifiez la variable `GEMINI_API_KEY`. Ne la placez jamais dans le dépôt GitHub.
-4. Pour permettre le choix automatique de modèle, supprimez l'ancienne variable `GEMINI_MODEL` si elle existe, ou affectez-lui la valeur **`auto`**.
-5. Render > **Manual Deploy** > **Deploy latest commit** (ou attendez le redéploiement automatique). Attendez le statut **Live**, puis actualisez Chrome avec Ctrl+F5.
-6. Dans l'application, cliquez sur « Tester la connexion IA » puis recherchez `Samsung A56 256 Go`, `iPhone 17 Pro Max 256 Go` et `Xiaomi 15T Pro`.
+1. Recherche `iPhone 16 128 Go`, `Samsung A56 256 Go` ou `SM-S938B`.
+2. Vérifie le modèle et consulte les sources affichées.
+3. Si la référence désigne plusieurs variantes, choisis le stockage dans la liste documentée par le constructeur.
+4. Saisis le prix TTC et clique sur **Ajouter à la planche**, puis **Imprimer en A4**.
 
-## Fonctionnement
+Le gabarit reste à 88 × 52 mm, dix étiquettes par feuille A4. Les mensualités sont calculées avec les coefficients existants : ×5 = 0,20748 ; ×10 = 0,10693 ; ×20 = 0,055885, arrondies à l’euro supérieur.
 
-- Recherche en priorité avec Gemini et les sources Google, avec repli sur les résultats de recherche publics et les fiches constructeur reconnues.
-- Choix de modèle Gemini plus souple : en mode auto, essai de `gemini-3.5-flash-lite`, puis `gemini-3.8-flash`, puis `gemini-2.5-flash-lite` en cas de modèle indisponible. En cas de quota ou clé invalide, aucune autre requête Gemini n'est lancée inutilement.
-- Ne valide une étiquette que si le modèle et au moins trois caractéristiques sont identifiés, avec sources vérifiables.
-- Les fiches déjà vérifiées sont sauvegardées **dans le navigateur** utilisé (localStorage). Render Free ne garantit pas de stockage durable sur son disque.
-- Saisie du seul prix TTC, puis paiements ×5 (0,20748), ×10 (0,10693), ×20 (0,055885), arrondis à l'euro supérieur.
-- Gabarit commercial V11 inchangé : 88 × 52 mm, 2 × 5 par A4, sans photo, prix TTC seul dans un cartouche blanc.
+## Recherche et fiabilité
 
-## Limites et sécurité
+- Les fiches constructeur sont consultées **avant Gemini**. Les huit fiches initiales dans `phone_catalog.json` fonctionnent sans clé ni quota IA : iPhone 16, Galaxy S25/S25+/S25 Ultra, A56 5G, A36 5G et A07 4G/5G.
+- Pour les autres iPhone, le serveur consulte les fiches techniques Apple en français et vérifie le modèle exact, les sections techniques et les capacités proposées. Cette lecture nécessite l’accès au site Apple.
+- Pour les autres modèles, Gemini avec sources et les recherches publiques restent disponibles en complément. Leur succès dépend des sources, du réseau et des quotas Google.
+- Le serveur distingue les variantes Pro, Pro Max, Plus/+, Ultra et 4G/5G. Les résultats comparatifs ou mélangeant plusieurs modèles ne servent pas à extraire des caractéristiques.
+- Une capacité demandée doit être documentée. Une référence familiale comme `SM-S938B` ne permet pas de déduire le stockage de l’exemplaire vendu. Une capacité impossible pour un modèle du catalogue produit un message indiquant les options documentées.
+- L’étiquette exige au moins trois caractéristiques. Le stockage peut rester **Non précisée** tant qu’aucune variante n’a été sélectionnée ; vérifie-le avant impression.
 
-- La recherche Internet/IA dépend de l'état du réseau, de la disponibilité du modèle Gemini, de la clé et des quotas. Certains appels peuvent être refusés ; la recherche n'est pas garantie à 100 %.
-- **L'utilisation gratuite de Gemini dépend du forfait de votre compte Google et des quotas applicables.** Consultez la tarification officielle : https://ai.google.dev/gemini-api/docs/pricing
-- Le moteur peut refuser une variante inconnue plutôt que d'imprimer des informations techniques incorrectes.
-- Le diagnostic vérifie que la clé existe côté serveur, **pas** qu'elle est valide ou qu'elle dispose encore de quota.
-- Ne rendez pas ce service public sans contrôle d'accès si vous activez une facturation Google ; les limites de requêtes en mémoire de ce petit serveur ne sont pas un dispositif anti-abus suffisant.
-- Aucune vraie interrogation Gemini n'a été exécutée sans la clé API personnelle, qui ne doit pas être communiquée.
+Les sources, la date de vérification et le choix du stockage sont conservés avec les nouvelles étiquettes et dans l’export JSON. Les listes déjà enregistrées restent accessibles dans le même navigateur. Le cache des fiches est renouvelé après sept jours ; les anciennes étiquettes ne sont pas supprimées.
+
+Pour ajouter un téléphone au catalogue, renseigne le modèle exact, ses alias, les références fabricant vérifiées, les capacités et au moins trois caractéristiques communes au modèle avec leurs liens constructeur dans `phone_catalog.json`. N’invente pas la RAM ou le stockage à partir d’une référence familiale.
+
+## Déploiement Render
+
+`render.yaml` conserve la configuration existante. Render installe `requirements.txt` et démarre :
+
+```sh
+uvicorn server:app --host 0.0.0.0 --port $PORT
+```
+
+Déploie le dernier commit si le déploiement automatique n’est pas activé, puis actualise le navigateur. **Tester le serveur** confirme sa disponibilité ; `/health` indique la version. Ce test ne vérifie pas les quotas Gemini.
+
+`GEMINI_API_KEY` est facultative pour les fiches constructeur. Pour activer l’IA complémentaire, configure la clé uniquement dans les variables d’environnement Render. `GEMINI_MODEL=auto` conserve le choix automatique existant ; un nom explicite reste possible. La facturation et les quotas dépendent du compte Google : [documentation officielle](https://ai.google.dev/gemini-api/docs/pricing).
+
+Le stockage serveur en mémoire disparaît lors d’un redémarrage Render. Les étiquettes sont enregistrées dans le navigateur : utilise **Exporter la liste** pour les sauvegarder. Les limites de requêtes en mémoire ne remplacent pas un contrôle d’accès pour un service public utilisant une clé payante.
+
+## Vérification locale
+
+```sh
+python -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+.venv/bin/python -m unittest discover -s tests -v
+.venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000
+```
+
+Les tests ne nécessitent aucune clé Gemini. Ils couvrent les références et variantes, les capacités, les erreurs et la lecture des sections Apple avec des réponses simulées. L’accès réel aux sites constructeur doit également être vérifié lors d’un déploiement.

@@ -6,7 +6,6 @@ from __future__ import annotations
 import asyncio
 from collections import Counter
 from datetime import datetime, timezone
-from functools import lru_cache
 from pathlib import Path
 import html
 import json
@@ -19,18 +18,20 @@ from urllib.parse import quote, urlparse
 import httpx
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, HTTPException, Query, Request
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
+
+from official_phones import lookup_official_phone
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.12.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.13.0')
 HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36', 'Accept-Language':'fr-FR,fr;q=0.9,en;q=0.8'}
 TIMEOUT = httpx.Timeout(9, connect=4)
 
 BRAND_PATTERNS = [(r'\b(samsung|galaxy)\b','SAMSUNG'),(r'\b(apple|iphone)\b','APPLE'),(r'\b(xiaomi|redmi|poco)\b','XIAOMI'),(r'\b(oppo)\b','OPPO'),(r'\b(realme)\b','REALME'),(r'\b(honor)\b','HONOR'),(r'\b(huawei)\b','HUAWEI'),(r'\b(motorola|moto\s)\b','MOTOROLA'),(r'\b(google|pixel)\b','GOOGLE'),(r'\b(nothing phone|nothing)\b','NOTHING'),(r'\b(oneplus)\b','ONEPLUS'),(r'\b(nokia|hmd)\b','NOKIA'),(r'\b(vivo)\b','VIVO'),(r'\b(tecno)\b','TECNO'),(r'\b(infinix)\b','INFINIX')]
 MODEL_PATTERNS = [
- (r'\bGalaxy\s+(?:S\d{1,2}(?:\s*(?:Ultra|Plus|FE|\+))?|Z\s*(?:Fold|Flip)\s*\d+|A\d{1,2}(?:\s*(?:4G|5G))?|M\d{1,2}|Note\s*\d{1,2}(?:\s*Ultra)?)', 'SAMSUNG'),
- (r'\biPhone\s+(?:1[1-9]|[5-9]|SE)(?:\s*(?:Pro\s*Max|Pro|Plus|mini|e))?', 'APPLE'),
- (r'\b(?:Redmi\s*Note\s*\d{1,2}(?:\s*Pro\+?|\s*5G)?|Redmi\s*\d{1,2}(?:\s*[AC])?|POCO\s*[XFM]\d{1,2}(?:\s*Pro)?|Xiaomi\s*\d{1,2}(?:\s*(?:Ultra|Pro|T\s*Pro|T|Lite))?)', 'XIAOMI'),
+ (r'\bGalaxy\s+(?:S\s*\d{1,2}(?:\s*(?:Ultra|Plus|FE|\+))?(?:\s*5G)?|Z\s*(?:Fold|Flip)\s*\d+(?:\s*5G)?|A\s*\d{1,2}(?:\s*(?:4G|5G))?|M\d{1,2}(?:\s*(?:4G|5G))?|Note\s*\d{1,2}(?:\s*Ultra)?)(?![\w+])', 'SAMSUNG'),
+ (r'\biPhone\s*(?:(?:1[1-9]|[5-9]|SE)(?:\s*(?:Pro\s*Max|Pro|Plus|mini|e))?|Air)(?!\w)', 'APPLE'),
+ (r'\b(?:Redmi\s*Note\s*\d{1,2}(?:\s*Pro\+?)?(?:\s*(?:4G|5G))?|Redmi\s*\d{1,2}(?:\s*[AC])?(?:\s*(?:4G|5G))?|POCO\s*[XFM]\d{1,2}(?:\s*Pro)?(?:\s*(?:4G|5G))?|Xiaomi\s*\d{1,2}(?:\s*(?:T\s*Pro|Ultra|Pro|T|Lite))?(?:\s*(?:4G|5G))?)(?![\w+])', 'XIAOMI'),
  (r'\b(?:Pixel\s*\d{1,2}(?:\s*(?:Pro\s*XL|Pro|a|XL|Fold))?)', 'GOOGLE'),
  (r'\b(?:HONOR\s*(?:Magic\s*\d{1,2}(?:\s*(?:Pro|Lite))?|\d{1,3}(?:\s*(?:Pro|Lite))?|X\d{1,2}))', 'HONOR'),
  (r'\b(?:OPPO\s*(?:Reno\s*\d{1,2}(?:\s*(?:Pro|F))?|A\d{2,3}|Find\s*[NX]\d{1,2}(?:\s*Pro)?))', 'OPPO'),
@@ -38,18 +39,9 @@ MODEL_PATTERNS = [
  (r'\b(?:realme\s*(?:\d{1,2}(?:\s*Pro\+?)?|GT\s*\d{1,2}(?:\s*Pro)?|C\d{2,3}))', 'REALME'),
  (r'\b(?:OnePlus\s*\d{1,2}(?:\s*[RT])?|OnePlus\s*Nord\s*\d{1,2})', 'ONEPLUS'),
 ]
-CAP_RE = re.compile(r'(?<![\d])(?:64|128|256|512|1024)\s*(?:Go|GB|G[Bb]|To|TB)(?![a-z])',re.I)
+CAP_RE = re.compile(r'(?<![\w])(?:(32|64|128|256|512|1024|2048)\s*(?:Go|GB)|(1|2)\s*(?:To|TB))\b',re.I)
 REF_OK = re.compile(r'^[A-Z0-9][A-Z0-9_./#\-+]{3,59}$')
 MODEL_QUERY_OK = re.compile(r"^[\w\s./#+\-]{4,60}$", re.UNICODE)
-
-# Well-known references from prior approved examples. These act as a fallback only;
-# searches are attempted first. Capacity is verified only if SKU mapping provides it.
-CATALOG = {
- 'SM-S938B':{'brand':'SAMSUNG','model':'Galaxy S25 Ultra','capacity':None,'feature':'Galaxy AI · 200 Mpx · 5G'},
- 'SM-S938B/DS':{'brand':'SAMSUNG','model':'Galaxy S25 Ultra','capacity':None,'feature':'Galaxy AI · 200 Mpx · 5G'},
- 'SM-F946B':{'brand':'SAMSUNG','model':'Galaxy Z Fold5','capacity':None,'feature':'Écran pliable · AMOLED · 5G'},
- 'SM-A115F':{'brand':'SAMSUNG','model':'Galaxy A11','capacity':None,'feature':'Écran 6,4″ · Triple capteur · 4G'},
-}
 
 async def _search_bing(client, ref: str):
  url='https://www.bing.com/search'
@@ -79,7 +71,7 @@ async def _search_ddg(client, ref: str):
   return items
  except Exception: return []
 
-def _normalize_ref(s): return re.sub(r'[^A-Z0-9]','',s.upper())
+def _normalize_ref(s): return re.sub(r'[^A-Z0-9]','',s.upper().replace('+','PLUS'))
 
 def _model_identity(text, brand):
     """Normalise marque commerciale et modèle, sans confondre les versions."""
@@ -112,13 +104,14 @@ def _detect_brand(text):
  return None
 
 def _parse_capacity(text):
- # Product capacity needs explicit storage context or recognizably branded listing, NOT RAM numbers.
+ # Storage units are explicit; 8/12/16 GB RAM must never become storage.
  m=CAP_RE.search(text)
  if not m:return None
- unit=m.group(0).upper().replace(' ','')
- if unit.endswith(('TO','TB')):return '1 To'
- num=re.match(r'\d+',unit).group()
- return num+' Go'
+ if m.group(2):return m.group(2)+' To'
+ return {'1024':'1 To','2048':'2 To'}.get(m.group(1),m.group(1)+' Go')
+
+def _capacities_in(text):
+ return {_parse_capacity(m.group(0)) for m in CAP_RE.finditer(text)}
 
 def _extract_model(text):
  for pattern,brand in MODEL_PATTERNS:
@@ -132,45 +125,65 @@ def _extract_model(text):
 def _query_model(query):
  # Allow familiar expressions such as "Samsung S26 Ultra" without pretending this is a manufacturer SKU.
  cleaned = re.sub(r"\s+", " ", query).strip()
+ # Normalize common shop spelling without discarding a generation or variant.
+ cleaned = re.sub(r'\biPhone\s*(?=\d)', 'iPhone ', cleaned, flags=re.I)
  model, brand = _extract_model(cleaned)
  if not model:
   b = _detect_brand(cleaned)
   if b == 'SAMSUNG':
-   m = re.search(r"\b(?:S\s?\d{2}|A\s?\d{2}|Z\s?(?:Fold|Flip)\s?\d+)\s*(?:Ultra|Plus|FE|4G|5G|\+)?\b",cleaned,re.I)
+   m = re.search(r"\b(?:S\s?\d{2}|A\s?\d{2}|Z\s?(?:Fold|Flip)\s?\d+)(?:\s*(?:Ultra|Plus|FE|\+))?(?:\s*(?:4G|5G))?(?![\w+])",cleaned,re.I)
    if m: model='Galaxy '+m.group(0);brand='SAMSUNG'
  if not model:
   # Allow new models without changing regex on every new release. Explicit brand
   # plus an alphanumeric generation is mandatory; avoid overly vague strings.
   b=_detect_brand(cleaned)
-  stripped=re.sub(r'^(?:samsung|apple|xiaomi)\s+', '',cleaned,flags=re.I).strip()
+  stripped=CAP_RE.sub('',cleaned)
+  stripped=re.sub(r'^(?:samsung|apple|xiaomi)\s+', '',stripped,flags=re.I).strip()
   if b and re.search(r'\d',stripped) and len(stripped)>=4:
    model=('Galaxy '+re.sub(r'^Galaxy\s+', '',stripped,flags=re.I)) if b=='SAMSUNG' else stripped
    brand=b
  if not model: return None
+ # A suffix the parser did not consume must not silently select the base phone.
+ variants=lambda value:Counter(x.upper() for x in re.findall(r'\b(?:Pro|Max|Plus|Ultra|FE|mini|4G|5G)\b|\+',value,re.I))
+ if variants(cleaned)!=variants(model):return None
  return model,brand
+
+def _item_matches_model(item, model, brand):
+ """A comparison or another variant is not evidence for this phone's specs."""
+ text=html.unescape((item.get('title') or '')+' '+(item.get('snippet') or ''))
+ if re.search(r'\b(?:vs\.?|versus|comparatif|comparaison)\b',text,re.I):return False
+ detected,b=_extract_model(text)
+ if b!=brand or not detected or not _same_model(model,detected,brand):return False
+ for pattern,item_brand in MODEL_PATTERNS:
+  for match in re.finditer(pattern,text,re.I):
+   if item_brand!=brand or not _same_model(model,match.group(0),brand):return False
+ return True
 
 def _analyze_model_query(ref, items):
  expected=_query_model(ref)
  if not expected:return None
  query_model,query_brand=expected
- expected_token=_normalize_ref(query_model)
  candidates=[]; links=[]
  for item in items:
   title=html.unescape(item.get('title','')); snippet=html.unescape(item.get('snippet',''))
   combined=title+' — '+snippet
   model,brand=_extract_model(combined)
-  if not model or brand!=query_brand or not (_same_model(query_model, model, query_brand) or (expected_token=='GALAXYA56' and _normalize_ref(model)=='GALAXYA565G')):continue
+  if not _item_matches_model(item,query_model,query_brand):continue
   candidates.append((model,brand))
   url=_clean_link(item.get('url',''))
   if url and len(links)<5 and url not in [u['url'] for u in links]: links.append({'title':title[:160],'url':url})
  if not candidates:return None
  # Results may show many variants; model-name queries cannot identify a specific storage capacity.
  supplied_cap=_parse_capacity(ref)
+ # The customer's requested option must also occur in matching evidence.
+ supported=set().union(*(_capacities_in((i.get('title') or '')+' '+(i.get('snippet') or ''))
+                         for i in items if _item_matches_model(i,query_model,query_brand)))
+ confirmed=bool(supplied_cap and supplied_cap in supported)
  specs=_specs_from_public(ref,items)
- return {'brand':query_brand,'model':query_model,'capacity':supplied_cap or 'Non précisée',
+ return {'brand':query_brand,'model':query_model,'capacity':supplied_cap if confirmed else 'Non précisée',
          'feature':_spec_feature(specs),'specs':specs,
          'sources':links,'matching_results':len(candidates),
-         'capacity_confirmed':bool(supplied_cap),'input_type':'model_name',
+         'capacity_confirmed':confirmed,'input_type':'model_name',
          'status':'verified_online'}
 
 async def _search_google_news(client, ref: str):
@@ -215,53 +228,6 @@ async def _search_official_samsung(client, ref: str):
   description=' '.join(x.get('content','') for x in soup.select('meta[name="description"],meta[property="og:description"]'))
   return [{'title':title,'snippet':h1+' '+description,'url':str(r.url)}]
  except Exception:return []
-
-# No artificial manufacturer fallback: no live evidence means no automatic label.
-def _official_fallback(ref):
- return None
-
-# Fiches constructeur Samsung vérifiées : secours fiable aux recherches IA/SEO.
-# Ces données sont communes au modèle et non aux options commerciales (mémoire, coloris).
-# La version A07 4G est distincte du A07 5G (batterie et écran différents).
-OFFICIAL_MODEL_DATA = {
- 'A56': {
-   'model':'Galaxy A56 5G', 'specs':{'ecran':'6,7″ Super AMOLED 120 Hz','photo':'50 Mpx + 12 + 5','batterie':'5 000 mAh','reseau':'5G','ram':'8 ou 12 Go selon version'},
-   'capacities':('128','256'),
-   'sources':[{'title':'Samsung Mobile Press — Galaxy A56 5G : Tech Specs','url':'https://www.samsungmobilepress.com/media-assets/galaxy-a56-5g?tab=specs'}]
- },
- 'A07_4G': {
-   'model':'Galaxy A07 (4G)', 'specs':{'ecran':'6,7″ PLS LCD HD+','photo':'50 Mpx + 2 Mpx','batterie':'5 000 mAh','processeur':'Helio G99','reseau':'4G'},
-   'capacities':('64','128'),
-   'sources':[{'title':'Samsung — Galaxy A07 : caractéristiques','url':'https://www.samsung.com/latin_en/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075mzkdgto/'}, {'title':'Samsung — rapport officiel Galaxy A07','url':'https://images.samsung.com/is/content/samsung/assets/global/ir/docs/2026_1Q_Interim_Report.pdf'}]
- },
- 'A07_5G': {
-   'model':'Galaxy A07 5G', 'specs':{'ecran':'6,7″ HD+ 120 Hz','photo':'50 Mpx + 2 Mpx','batterie':'6 000 mAh','reseau':'5G'},
-   'capacities':(),
-   'sources':[{'title':'Samsung Global Newsroom — Galaxy A07 5G','url':'https://news.samsung.com/global/samsung-launches-galaxy-a07-5g-bringing-intelligence-and-reliable-performance-to-more-galaxy-a-series-devices'}]
- }
-}
-
-def _official_samsung_model(query, is_model_query):
-    if not is_model_query:return None
-    parsed=_query_model(query)
-    if not parsed or parsed[1]!='SAMSUNG':return None
-    model=_normalize_ref(parsed[0]); raw=query.upper()
-    if model in ('GALAXYA56','GALAXYA565G'):
-        item=OFFICIAL_MODEL_DATA['A56']
-    elif model in ('GALAXYA07','GALAXYA074G'):
-        # The unqualified "Galaxy A07" is the 2025 4G model; the newer 5G
-        # model has the explicit suffix "5G" in its marketed name.
-        item=OFFICIAL_MODEL_DATA['A07_4G']
-    elif model=='GALAXYA075G':
-        item=OFFICIAL_MODEL_DATA['A07_5G']
-    else:return None
-    # Name-only searches are not allowed to invent a memory/storage variant.
-    asked=re.search(r'(?<!\d)(64|128|256|512)\s*(?:GO|GB)\b',raw)
-    cap=asked.group(1)+' Go' if asked and asked.group(1) in item['capacities'] else 'Non précisée'
-    return {'brand':'SAMSUNG','model':item['model'],'capacity':cap,'capacity_confirmed':cap!='Non précisée',
-            'specs':dict(item['specs']),'feature':_spec_feature(item['specs']),
-            'sources':item['sources'],'status':'verified_online','input_type':'model_name',
-            'search_mode':'official_manufacturer_catalog','matching_results':len(item['sources'])}
 
 GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '').strip()
 # Explicit model override is supported; 'auto' tries current models compatible with a free API key.
@@ -372,7 +338,7 @@ Les valeurs du schéma sont UNIQUEMENT des exemples : ne les copie pas sans vér
             'generationConfig': {'temperature': 0.1, 'maxOutputTokens': 2600}}
     payload = None
     tried = []
-    async with httpx.AsyncClient(timeout=httpx.Timeout(48, connect=8)) as client:
+    async with httpx.AsyncClient(timeout=httpx.Timeout(23, connect=5)) as client:
         for model in _model_candidates():
             endpoint = f'https://generativelanguage.googleapis.com/v1beta/models/{quote(model, safe="")}:generateContent'
             try:
@@ -418,7 +384,11 @@ Les valeurs du schéma sont UNIQUEMENT des exemples : ne les copie pas sans vér
         expected = _query_model(query)
         if not expected or expected[1] != brand or not _same_model(expected[0], model, brand):
             return None
-        if not _parse_capacity(query): capacity = 'Non précisée'
+        requested=_parse_capacity(query)
+        if not requested or _parse_capacity(capacity)!=requested:
+            capacity = 'Non précisée'
+        else:
+            capacity=requested
     else:
         sku = str(parsed.get('manufacturer_reference') or '').strip()
         if not sku or _normalize_ref(query.split('/')[0]) not in _normalize_ref(sku):
@@ -436,8 +406,10 @@ def _clean_specs(obj):
     if not isinstance(obj, dict):return {}
     out={}
     for key in SPEC_LABELS:
-        v=str(obj.get(key) or '').strip()
+        if not isinstance(obj.get(key),str):continue
+        v=obj[key].strip()
         if not v or len(v)>75 or re.search(r'\b(?:inconnu|unknown|vérifier|confirmer|non\s+précis|n/?a)\b',v,re.I):continue
+        if key=='ram' and re.search(r'\bou\b|selon|suivant',v,re.I):continue
         out[key]=v
     return out
 
@@ -453,8 +425,7 @@ def _specs_from_public(query, items):
     found={}
     for item in items:
         text=html.unescape((item.get('title') or '')+' '+(item.get('snippet') or ''))
-        detected, b=_extract_model(text)
-        if not detected or b!=brand or _normalize_ref(detected)!=_normalize_ref(model):continue
+        if not _item_matches_model(item,model,brand):continue
         checks=[
          ('ecran',r'(?<!\d)([5-8][,.]\d\s*(?:pouces|[″“”]|inches|\")\s*(?:AMOLED|OLED|LTPO|120\s*Hz|90\s*Hz)?)'),
          ('photo',r'(?<!\d)(\d{2,3}\s*(?:MP|Mpx|mégapixels))\b'),
@@ -494,21 +465,18 @@ def _analyze(ref, items):
   wordref=ref.split('/')[0]
   if _normalize_ref(wordref) not in _normalize_ref(combined):continue
   model,brand=_extract_model(combined)
-  if not model or not brand:continue
+  if not model or not brand or not _item_matches_model(item,model,brand):continue
   # Determine capacity by title first; a spec line may contain RAM then storage.
-  caps=re.findall(r'(?:64|128|256|512|1024)\s*(?:Go|GB|To|TB)\b',combined,re.I)
-  cap=None
-  if caps:
-   cap=_parse_capacity(' '.join(caps))
-  candidates.append((model,brand,cap))
+  candidates.append((model,brand,_capacities_in(combined)))
   url=_clean_link(item['url'])
   if url and len(used)<5:used.append({'title':title[:160],'url':url})
  if not candidates:return None
  name,brand=Counter((model,b) for model,b,c in candidates).most_common(1)[0][0]
- vals=[c for model,b,c in candidates if model==name and b==brand and c]
- capacity=Counter(vals).most_common(1)[0][0] if vals and len(set(vals)) == 1 else None
+ vals=set().union(*(c for model,b,c in candidates if model==name and b==brand))
+ capacity=next(iter(vals)) if len(vals)==1 else 'Non précisée'
  specs=_specs_from_public(name,items)
- return {'brand':brand,'model':name,'capacity':capacity,'feature':_spec_feature(specs),'specs':specs,'sources':used,'matching_results':len(candidates)}
+ return {'brand':brand,'model':name,'capacity':capacity,'capacity_confirmed':capacity!='Non précisée',
+         'input_type':'manufacturer_sku','feature':_spec_feature(specs),'specs':specs,'sources':used,'matching_results':len(candidates)}
 
 CACHE = {}
 # Simple per-process safeguard for accidental or automated repeated public requests.
@@ -531,18 +499,30 @@ def _check_rate_limit(request):
     GLOBAL_REQUEST_LOG.append(now)
 
 async def online_lookup(ref, is_model_query=False):
- official = _official_samsung_model(ref,is_model_query)
- if official:return official
- key=('MODEL:' if is_model_query else 'SKU:')+ref.upper()+':'+('GEMINI' if GEMINI_KEY else 'PUBLIC')
+ key='V13:'+('MODEL:' if is_model_query else 'SKU:')+ref.upper()+':'+('GEMINI' if GEMINI_KEY else 'PUBLIC')
  now=time.time()
- if key in CACHE and now-CACHE[key][0]<21600: return CACHE[key][1]
+ if key in CACHE:
+  saved_at,saved=CACHE[key]
+  ttl=21600 if saved.get('status')=='verified_online' else 60
+  if now-saved_at<ttl:return saved
+ # Manufacturer facts and exact variant options work without an AI key/quota.
+ async with httpx.AsyncClient(timeout=httpx.Timeout(6,connect=3),follow_redirects=True,headers=HEADERS) as client:
+  try:
+   official=await asyncio.wait_for(lookup_official_phone(client,ref),timeout=8)
+  except (httpx.HTTPError,asyncio.TimeoutError):
+   official=None
+ if official:
+  CACHE[key]=(now,official)
+  return official
  gemini_problem = None
  if GEMINI_KEY:
   try:
-   ai_result = await gemini_lookup(ref, is_model_query=is_model_query)
+   ai_result = await asyncio.wait_for(gemini_lookup(ref, is_model_query=is_model_query),timeout=24)
    if ai_result:
     CACHE[key]=(now, ai_result)
     return ai_result
+  except asyncio.TimeoutError:
+   gemini_problem='Délai Gemini dépassé ; recherche publique utilisée.'
   except Exception as exc:
    gemini_problem = str(exc)
  async with httpx.AsyncClient(timeout=TIMEOUT,follow_redirects=True) as client:
@@ -578,24 +558,33 @@ async def online_lookup(ref, is_model_query=False):
   if gemini_problem: result['ai_warning']=gemini_problem
   if not GEMINI_KEY: result['ai_warning']='IA non configurée sur Render (GEMINI_API_KEY manquante).' 
  CACHE[key]=(now,result)
+ # Bound process memory without turning an old quota failure into a long outage.
+ if len(CACHE)>500:
+  for expired in list(CACHE)[:100]:CACHE.pop(expired,None)
  return result
 
 @app.get('/')
 async def home():return FileResponse(BASE/'index.html')
 
 @app.get('/health')
-async def health():return {'ok':True,'service':'encre-phones','ai_configured':bool(GEMINI_KEY),'gemini_model':GEMINI_MODEL if GEMINI_KEY else None,'lookup_mode':'Gemini + sources officielles + recherche publique','timestamp':datetime.now(timezone.utc).isoformat()}
+async def health():return {'ok':True,'service':'encre-phones','version':app.version,'official_lookup':True,'ai_configured':bool(GEMINI_KEY),'gemini_model':GEMINI_MODEL if GEMINI_KEY else None,'lookup_mode':'Sources constructeur prioritaires + Gemini en complément + recherche publique','timestamp':datetime.now(timezone.utc).isoformat()}
 
 @app.get('/api/phones/lookup')
 async def lookup(request:Request, reference:str=Query(min_length=4,max_length=60)):
  ref=reference.strip().upper()
  _check_rate_limit(request)
  if not MODEL_QUERY_OK.fullmatch(ref): raise HTTPException(400,'Recherche invalide : entre un modèle ou une référence constructeur.')
- is_model_query=not bool(REF_OK.fullmatch(ref))
- if is_model_query and not _query_model(ref): raise HTTPException(400,'Nom de modèle non reconnu. Exemple : Samsung Galaxy S26 Ultra ou SM-S938B.')
- result=await online_lookup(ref,is_model_query=is_model_query)
+ is_model_query=bool(_query_model(ref))
+ if not is_model_query and not REF_OK.fullmatch(CAP_RE.sub('',ref).strip()): raise HTTPException(400,'Nom de modèle non reconnu. Exemple : Samsung Galaxy A56 256 Go, iPhone 16 ou SM-S938B.')
+ try:
+  result=await asyncio.wait_for(online_lookup(ref,is_model_query=is_model_query),timeout=52)
+ except asyncio.TimeoutError:
+  raise HTTPException(504,{'message':'La recherche a pris trop de temps. Réessaie avec le nom exact du modèle et son stockage.'})
+ if result['status']=='invalid_capacity':
+  options=', '.join(result.get('capacities',[]))
+  raise HTTPException(422,{'message':f"Stockage non proposé pour ce modèle. Capacités constructeur : {options}.",'capacities':result.get('capacities',[]),'sources':result.get('sources',[])})
  if result['status']=='insufficient_specs':
-  raise HTTPException(422,{'message':'Téléphone identifié, mais moins de 3 caractéristiques techniques vérifiées. Vérifie la configuration Gemini sur Render ; aucune fiche incomplète ne sera imprimée.','ai_warning':result.get('ai_warning'),'sources':result.get('sources',[])})
+  raise HTTPException(422,{'message':'Téléphone identifié, mais moins de 3 caractéristiques ont pu être vérifiées. Précise le nom complet ou la référence constructeur.','ai_warning':result.get('ai_warning'),'sources':result.get('sources',[])})
  if result['status']=='not_found':
   raise HTTPException(404,{'message':'Modèle ou référence non identifié dans les résultats de recherche publics. Aucun produit inventé.','search_engines':result['search_engines'],'ai_warning':result.get('ai_warning')})
  if not result.get('capacity'):
