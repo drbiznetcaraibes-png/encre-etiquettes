@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import patch
 
 import httpx
 
@@ -65,9 +66,10 @@ class OfficialLookupTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(terabyte['capacity'], '1 To')
 
     async def test_live_apple_sheet_uses_exact_heading_and_explicit_sections(self):
-        async with httpx.AsyncClient(transport=httpx.MockTransport(self.transport)) as client:
-            result = await official_phones.lookup_official_phone(client, 'iPhone16 Pro 1 To')
-            invalid = await official_phones.lookup_official_phone(client, 'iPhone 16 Pro 2 To')
+        with patch.object(official_phones, 'CATALOG', {'phones': []}):
+            async with httpx.AsyncClient(transport=httpx.MockTransport(self.transport)) as client:
+                result = await official_phones.lookup_official_phone(client, 'iPhone16 Pro 1 To')
+                invalid = await official_phones.lookup_official_phone(client, 'iPhone 16 Pro 2 To')
         self.assertEqual(result['model'], 'iPhone 16 Pro')
         self.assertEqual(result['capacity'], '1 To')
         self.assertEqual(result['specs']['processeur'], 'Apple A18 Pro')
@@ -76,8 +78,9 @@ class OfficialLookupTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.requests), 1)
 
     async def test_apple_redirect_or_page_for_another_model_is_rejected(self):
-        async with httpx.AsyncClient(transport=httpx.MockTransport(self.transport)) as client:
-            result = await official_phones.lookup_official_phone(client, 'iPhone 16 Pro Max 256 Go')
+        with patch.object(official_phones, 'CATALOG', {'phones': []}):
+            async with httpx.AsyncClient(transport=httpx.MockTransport(self.transport)) as client:
+                result = await official_phones.lookup_official_phone(client, 'iPhone 16 Pro Max 256 Go')
         self.assertIsNone(result)
 
     async def test_older_apple_sheet_uses_rear_camera_not_truedepth(self):
@@ -93,9 +96,99 @@ class OfficialLookupTests(unittest.IsolatedAsyncioTestCase):
     async def test_manufacturer_unavailable_allows_next_provider(self):
         def failing(request):
             return httpx.Response(503)
-        async with httpx.AsyncClient(transport=httpx.MockTransport(failing)) as client:
-            result = await official_phones.lookup_official_phone(client, 'iPhone 16 Pro 256 Go')
+        with patch.object(official_phones, 'CATALOG', {'phones': []}):
+            async with httpx.AsyncClient(transport=httpx.MockTransport(failing)) as client:
+                result = await official_phones.lookup_official_phone(client, 'iPhone 16 Pro 256 Go')
         self.assertIsNone(result)
+
+    async def test_all_common_iphone_families_work_when_apple_and_ai_are_unreachable(self):
+        def offline(request):
+            self.fail('A known iPhone must not need a network request')
+        cases = [
+            ('iPhone 7 32 Go', 'iPhone 7', '32 Go', '4G LTE'),
+            ('iPhone 7 Plus 128 Go', 'iPhone 7 Plus', '128 Go', '4G LTE'),
+            ('iPhone 8 64 Go', 'iPhone 8', '64 Go', '4G LTE'),
+            ('iPhone 8 Plus 256 Go', 'iPhone 8 Plus', '256 Go', '4G LTE'),
+            ('iPhone X 64 Go', 'iPhone X', '64 Go', '4G LTE'),
+            ('iPhone XR 128 Go', 'iPhone XR', '128 Go', '4G LTE'),
+            ('iPhone XS 512 Go', 'iPhone XS', '512 Go', '4G LTE'),
+            ('iPhone XS Max 256 Go', 'iPhone XS Max', '256 Go', '4G LTE'),
+            ('iPhone 11 128 Go', 'iPhone 11', '128 Go', '4G LTE'),
+            ('iPhone 11 Pro 64 Go', 'iPhone 11 Pro', '64 Go', '4G LTE'),
+            ('iPhone 11 Pro Max 512 Go', 'iPhone 11 Pro Max', '512 Go', '4G LTE'),
+            ('iPhone 12 64 Go', 'iPhone 12', '64 Go', '5G'),
+            ('iPhone 12 mini 128 Go', 'iPhone 12 mini', '128 Go', '5G'),
+            ('iPhone 12 Pro 512 Go', 'iPhone 12 Pro', '512 Go', '5G'),
+            ('iPhone 12 Pro Max 256 Go', 'iPhone 12 Pro Max', '256 Go', '5G'),
+            ('iPhone 13 128 Go', 'iPhone 13', '128 Go', '5G'),
+            ('iPhone 13 mini 256 Go', 'iPhone 13 mini', '256 Go', '5G'),
+            ('iPhone 13 Pro 1 To', 'iPhone 13 Pro', '1 To', '5G'),
+            ('iPhone 13 Pro Max 512 Go', 'iPhone 13 Pro Max', '512 Go', '5G'),
+            ('iPhone 14 128 Go', 'iPhone 14', '128 Go', '5G'),
+            ('iPhone 14 Plus 256 Go', 'iPhone 14 Plus', '256 Go', '5G'),
+            ('iPhone 14 Pro 1 To', 'iPhone 14 Pro', '1 To', '5G'),
+            ('iPhone 14 Pro Max 512 Go', 'iPhone 14 Pro Max', '512 Go', '5G'),
+            ('iPhone 15 128 Go', 'iPhone 15', '128 Go', '5G'),
+            ('iPhone 15 Plus 256 Go', 'iPhone 15 Plus', '256 Go', '5G'),
+            ('iPhone 15 Pro 1 To', 'iPhone 15 Pro', '1 To', '5G'),
+            ('iPhone 15 Pro Max 512 Go', 'iPhone 15 Pro Max', '512 Go', '5G'),
+            ('iPhone 16 128 Go', 'iPhone 16', '128 Go', '5G'),
+            ('iPhone 16 Plus 256 Go', 'iPhone 16 Plus', '256 Go', '5G'),
+            ('iPhone 16 Pro 1 To', 'iPhone 16 Pro', '1 To', '5G'),
+            ('iPhone 16 Pro Max 512 Go', 'iPhone 16 Pro Max', '512 Go', '5G'),
+            ('iPhone 16e 128 Go', 'iPhone 16e', '128 Go', '5G'),
+            ('iPhone 17 256 Go', 'iPhone 17', '256 Go', '5G'),
+            ('iPhone 17 Pro 1 To', 'iPhone 17 Pro', '1 To', '5G'),
+            ('iPhone 17 Pro Max 2 To', 'iPhone 17 Pro Max', '2 To', '5G'),
+            ('iPhone 17e 256 Go', 'iPhone 17e', '256 Go', '5G'),
+            ('iPhone Air 512 Go', 'iPhone Air', '512 Go', '5G'),
+            ('iPhone SE 2016 16 Go', 'iPhone SE (2016)', '16 Go', '4G LTE'),
+            ('iPhone SE 2020 64 Go', 'iPhone SE (2020)', '64 Go', '4G LTE'),
+            ('iPhone SE 2022 128 Go', 'iPhone SE (2022)', '128 Go', '5G'),
+        ]
+        async with httpx.AsyncClient(transport=httpx.MockTransport(offline)) as client:
+            for query, model, capacity, network in cases:
+                with self.subTest(query=query):
+                    result = await official_phones.lookup_official_phone(client, query)
+                    self.assertIsNotNone(result)
+                    self.assertEqual(result['model'], model)
+                    self.assertEqual(result['capacity'], capacity)
+                    self.assertTrue(result['capacity_confirmed'])
+                    self.assertEqual(result['specs']['reseau'], network)
+                    self.assertGreaterEqual(len(result['specs']), 4)
+                    self.assertTrue(all(source['url'].startswith('https://support.apple.com/fr-fr/') for source in result['sources']))
+
+    async def test_se_requires_generation_and_capacities_remain_model_specific(self):
+        async with httpx.AsyncClient(transport=httpx.MockTransport(self.transport)) as client:
+            self.assertIsNone(await official_phones.lookup_official_phone(client, 'iPhone SE 128 Go'))
+            se2 = await official_phones.lookup_official_phone(client, 'iPhone SE 2 128 Go')
+            se3 = await official_phones.lookup_official_phone(client, 'iPhone SE (3e génération) 128 Go')
+            self.assertEqual(se2['specs']['processeur'], 'Apple A13 Bionic')
+            self.assertEqual(se3['specs']['processeur'], 'Apple A15 Bionic')
+            for query in ['iPhone 7 64 Go', 'iPhone 11 Pro 128 Go', 'iPhone 17 128 Go', 'iPhone X 512 Go']:
+                with self.subTest(query=query):
+                    result = await official_phones.lookup_official_phone(client, query)
+                    self.assertEqual(result['status'], 'invalid_capacity')
+        self.assertEqual(self.requests, [])
+
+    async def test_legacy_apple_sections_preserve_radio_battery_and_fusion_chip(self):
+        document = '''<h1>iPhone 7 - Caractéristiques techniques</h1>
+        <div><h3>Capacité</h3><p>32 Go 128 Go 256 Go</p></div>
+        <div><h3>Écran</h3><p>LCD panoramique de 4,7 pouces</p></div>
+        <div><h3>Appareil photo</h3><p>Appareil photo 12 Mpx</p></div>
+        <div><h3>Puce</h3><p>Puce A10 Fusion</p></div>
+        <div><h3>Alimentation et batterie</h3><p>Lecture vidéo sans fil : Jusqu’à 13 heures</p></div>
+        <div><h3>Réseaux cellulaires et sans fil</h3><p>FDD-LTE</p></div>'''
+        result = official_phones.parse_apple_sheet(document, 'IPHONE7', 'https://support.apple.com/fr-fr/111943')
+        self.assertEqual(result['specs']['processeur'], 'Apple A10 Fusion')
+        self.assertEqual(result['specs']['reseau'], '4G LTE')
+        self.assertEqual(result['specs']['batterie'], 'Jusqu’à 13 h de vidéo')
+        document = document.replace('iPhone 7', 'iPhone SE').replace('4,7 pouces', '4 pouces')
+        document = document.replace('Puce A10 Fusion', 'Puce A9')
+        document = document.replace('Lecture vidéo sans fil :', 'Lecture vidéo')
+        result = official_phones.parse_apple_sheet(document, 'IPHONESE', 'https://support.apple.com/fr-fr/112005')
+        self.assertEqual(result['specs']['ecran'], '4″ LCD')
+        self.assertEqual(result['specs']['batterie'], 'Jusqu’à 13 h de vidéo')
 
     async def test_index_supports_locale_free_and_legacy_apple_links(self):
         index = '''<a href="https://support.apple.com/125090">Consultez les caractéristiques techniques de l’iPhone 17 Pro</a>

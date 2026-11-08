@@ -1,7 +1,7 @@
 """Manufacturer-sourced phone facts, available without an AI subscription.
 
-The local catalogue contains facts checked against the linked manufacturer pages.
-Other iPhones are read from Apple's own technical sheets, never search snippets.
+The local catalogues contain facts checked against the linked manufacturer pages.
+Known iPhones work offline; new models can use Apple's own technical sheets.
 Storage is chosen explicitly and validated independently of RAM.
 """
 from __future__ import annotations
@@ -19,6 +19,10 @@ import httpx
 from bs4 import BeautifulSoup
 
 CATALOG = json.loads((Path(__file__).with_name('phone_catalog.json')).read_text(encoding='utf-8'))
+APPLE_CATALOG = json.loads((Path(__file__).with_name('apple_catalog.json')).read_text(encoding='utf-8'))
+# The expanded Apple catalogue replaces the former single-model fallback, keeping
+# one exact definition per phone. Other manufacturer catalogues can join here.
+CATALOG['phones'] = APPLE_CATALOG['phones'] + [item for item in CATALOG['phones'] if item['brand'] != 'APPLE']
 APPLE_INDEX = 'https://support.apple.com/fr-fr/108044'
 APPLE_ARTICLES = {
     'iphone14': '111850', 'iphone15': '111831',
@@ -125,9 +129,9 @@ def parse_apple_sheet(document, expected_model, source_url):
     camera = _section(soup, 'Appareil photo') or _section(soup, 'Caméra', exact=True)
     chip = _section(soup, 'Puce')
     battery = _section(soup, 'Alimentation et batterie')
-    network = _section(soup, 'Connectivité cellulaire')
+    network = _section(soup, 'Connectivité cellulaire') or _section(soup, 'Réseaux cellulaires')
     specs = {}
-    diagonal = re.search(r'(\d[,.]\d)\s*pouces', screen, re.I)
+    diagonal = re.search(r'(?<!\d)(\d(?:[,.]\d+)?)\s*pouces', screen, re.I)
     if diagonal:
         panel = ' OLED' if re.search(r'\bOLED\b', screen, re.I) else ' LCD' if re.search(r'\bLCD\b', screen, re.I) else ''
         refresh = ' 120 Hz' if re.search(r'120\s*Hz', screen, re.I) else ''
@@ -135,10 +139,10 @@ def parse_apple_sheet(document, expected_model, source_url):
     photo = re.search(r'(?<!\d)(\d{1,3})\s*(?:MP|Mpx)\b', camera, re.I)
     if photo:
         specs['photo'] = photo.group(1) + ' Mpx (principal)'
-    processor = re.search(r'\bPuce\s+(A\d{1,2}(?:\s+(?:Pro|Bionic))?)\b', chip, re.I)
+    processor = re.search(r'\bPuce\s+(A\d{1,2}(?:\s+(?:Pro|Bionic|Fusion))?)\b', chip, re.I)
     if processor:
         specs['processeur'] = 'Apple ' + processor.group(1)
-    endurance = re.search(r'Lecture vidéo\s*:\s*Jusqu[’\']à\s*(\d+)\s*heures', battery, re.I)
+    endurance = re.search(r'Lecture vidéo(?:\s+(?:sans fil|\(sans fil\)))?\s*:?\s*Jusqu[’\']à\s*(\d+)\s*heures', battery, re.I)
     if endurance:
         specs['batterie'] = 'Jusqu’à ' + endurance.group(1) + ' h de vidéo'
     if re.search(r'\b5G\b', network):
@@ -163,7 +167,7 @@ async def _apple_index(client):
         label = _plain(anchor.get_text(' ', strip=True))
         if 'caractéristiques techniques' not in label.lower():
             continue
-        name = re.search(r'iPhone\s*(?:\d{1,2}(?:e)?(?:\s*(?:Pro\s*Max|Pro|Plus|mini))?|Air)\b', label, re.I)
+        name = re.search(r'iPhone\s*(?:\d{1,2}(?:e)?(?:\s*(?:Pro\s*Max|Pro|Plus|mini))?|X(?:R|S(?:\s*Max)?)?|Air|Duo)\b', label, re.I)
         if not name:
             continue
         url = urljoin(APPLE_INDEX, anchor['href'])
@@ -218,7 +222,7 @@ async def lookup_official_phone(client, query: str):
         skus = {_identity(a) for a in item.get('manufacturer_references', [])}
         if identity in aliases or identity in skus:
             return _result(item, requested, is_sku=identity in skus)
-    if re.fullmatch(r'IPHONE(?:\d{1,2}E?(?:PROMAX|PRO|PLUS|MINI)?|AIR)', identity):
+    if re.fullmatch(r'IPHONE(?:\d{1,2}E?(?:PROMAX|PRO|PLUS|MINI)?|X(?:R|S(?:MAX)?)?|AIR|DUO)', identity):
         try:
             return await asyncio.wait_for(_lookup_apple(client, identity, requested), timeout=7)
         except (httpx.HTTPError, asyncio.TimeoutError, ValueError):

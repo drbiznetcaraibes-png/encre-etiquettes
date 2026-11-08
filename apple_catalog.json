@@ -1,0 +1,1091 @@
+{
+  "verified_at": "2026-11-08",
+  "source_index": "https://support.apple.com/fr-fr/108044",
+  "note": "Extraction déterministe des sections des fiches Apple FR exactes; stockage explicite validé par la section Capacité. Aucun appel réseau nécessaire pour les modèles inclus. iPhone SE exige une année ou génération.",
+  "phones": [
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17e",
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A19",
+        "batterie": "Jusqu’à 26 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 17e - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/126470"
+        }
+      ],
+      "aliases": [
+        "iPhone 17e",
+        "iPhone 17e 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17 Pro Max",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To",
+        "2 To"
+      ],
+      "specs": {
+        "ecran": "6,9″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A19 Pro",
+        "batterie": "Jusqu’à 37 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 17 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125091"
+        }
+      ],
+      "aliases": [
+        "iPhone 17 Pro Max",
+        "iPhone 17 Pro Max 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17 Pro",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A19 Pro",
+        "batterie": "Jusqu’à 31 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 17 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125090"
+        }
+      ],
+      "aliases": [
+        "iPhone 17 Pro",
+        "iPhone 17 Pro 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17",
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A19",
+        "batterie": "Jusqu’à 30 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 17 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125089"
+        }
+      ],
+      "aliases": [
+        "iPhone 17",
+        "iPhone 17 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone Air",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,5″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A19 Pro",
+        "batterie": "Jusqu’à 27 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone Air - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125092"
+        }
+      ],
+      "aliases": [
+        "iPhone Air",
+        "iPhone Air 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 16e",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A18",
+        "batterie": "Jusqu’à 26 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 16e - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/122208"
+        }
+      ],
+      "aliases": [
+        "iPhone 16e",
+        "iPhone 16e 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 16 Pro Max",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,9″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A18 Pro",
+        "batterie": "Jusqu’à 33 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 16 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/121032"
+        }
+      ],
+      "aliases": [
+        "iPhone 16 Pro Max",
+        "iPhone 16 Pro Max 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 16 Pro",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A18 Pro",
+        "batterie": "Jusqu’à 27 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 16 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/121031"
+        }
+      ],
+      "aliases": [
+        "iPhone 16 Pro",
+        "iPhone 16 Pro 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 16 Plus",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ OLED",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A18",
+        "batterie": "Jusqu’à 27 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 16 Plus - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/121030"
+        }
+      ],
+      "aliases": [
+        "iPhone 16 Plus",
+        "iPhone 16 Plus 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 16",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A18",
+        "batterie": "Jusqu’à 22 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 16 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/121029"
+        }
+      ],
+      "aliases": [
+        "iPhone 16",
+        "iPhone 16 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 15 Pro Max",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,7″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A17 Pro",
+        "batterie": "Jusqu’à 29 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 15 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111828"
+        }
+      ],
+      "aliases": [
+        "iPhone 15 Pro Max",
+        "iPhone 15 Pro Max 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 15 Pro",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A17 Pro",
+        "batterie": "Jusqu’à 23 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 15 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111829"
+        }
+      ],
+      "aliases": [
+        "iPhone 15 Pro",
+        "iPhone 15 Pro 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 15 Plus",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ OLED",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A16 Bionic",
+        "batterie": "Jusqu’à 26 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 15 Plus - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111830"
+        }
+      ],
+      "aliases": [
+        "iPhone 15 Plus",
+        "iPhone 15 Plus 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 15",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A16 Bionic",
+        "batterie": "Jusqu’à 20 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 15 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111831"
+        }
+      ],
+      "aliases": [
+        "iPhone 15",
+        "iPhone 15 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 14 Pro Max",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,7″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A16 Bionic",
+        "batterie": "Jusqu’à 29 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 14 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111846"
+        }
+      ],
+      "aliases": [
+        "iPhone 14 Pro Max",
+        "iPhone 14 Pro Max 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 14 Pro",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "processeur": "Apple A16 Bionic",
+        "batterie": "Jusqu’à 23 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 14 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111849"
+        }
+      ],
+      "aliases": [
+        "iPhone 14 Pro",
+        "iPhone 14 Pro 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 14 Plus",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A15 Bionic",
+        "batterie": "Jusqu’à 26 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 14 Plus - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111854"
+        }
+      ],
+      "aliases": [
+        "iPhone 14 Plus",
+        "iPhone 14 Plus 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 14",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A15 Bionic",
+        "batterie": "Jusqu’à 20 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 14 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111850"
+        }
+      ],
+      "aliases": [
+        "iPhone 14",
+        "iPhone 14 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone SE (2022)",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "4,7″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A15 Bionic",
+        "batterie": "Jusqu’à 15 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone SE (3e génération) - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111866"
+        }
+      ],
+      "aliases": [
+        "iPhone SE 2022",
+        "iPhone SE 3",
+        "iPhone SE (3e génération)",
+        "iPhone SE troisième génération",
+        "iPhone SE 2022 5G",
+        "iPhone SE 3 5G",
+        "iPhone SE (3e génération) 5G",
+        "iPhone SE troisième génération 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 13 Pro Max",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,7″ OLED 120 Hz",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A15 Bionic",
+        "batterie": "Jusqu’à 28 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 13 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111870"
+        }
+      ],
+      "aliases": [
+        "iPhone 13 Pro Max",
+        "iPhone 13 Pro Max 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 13 Pro",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED 120 Hz",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A15 Bionic",
+        "batterie": "Jusqu’à 22 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 13 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111871"
+        }
+      ],
+      "aliases": [
+        "iPhone 13 Pro",
+        "iPhone 13 Pro 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 13",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A15 Bionic",
+        "batterie": "Jusqu’à 19 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 13 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111872"
+        }
+      ],
+      "aliases": [
+        "iPhone 13",
+        "iPhone 13 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 13 mini",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "5,4″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A15 Bionic",
+        "batterie": "Jusqu’à 17 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 13 mini - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111873"
+        }
+      ],
+      "aliases": [
+        "iPhone 13 mini",
+        "iPhone 13 mini 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 12 Pro Max",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A14 Bionic",
+        "batterie": "Jusqu’à 20 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 12 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111874"
+        }
+      ],
+      "aliases": [
+        "iPhone 12 Pro Max",
+        "iPhone 12 Pro Max 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 12 Pro",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A14 Bionic",
+        "batterie": "Jusqu’à 17 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 12 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111875"
+        }
+      ],
+      "aliases": [
+        "iPhone 12 Pro",
+        "iPhone 12 Pro 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 12",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A14 Bionic",
+        "batterie": "Jusqu’à 17 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 12 - Caractéristiques Techniques",
+          "url": "https://support.apple.com/fr-fr/111876"
+        }
+      ],
+      "aliases": [
+        "iPhone 12",
+        "iPhone 12 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 12 mini",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "5,4″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A14 Bionic",
+        "batterie": "Jusqu’à 15 h de vidéo",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "iPhone 12 mini - Caractéristiques Techniques",
+          "url": "https://support.apple.com/fr-fr/111877"
+        }
+      ],
+      "aliases": [
+        "iPhone 12 mini",
+        "iPhone 12 mini 5G"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone SE (2020)",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "4,7″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A13 Bionic",
+        "batterie": "Jusqu’à 13 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone SE (2e génération) - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111882"
+        }
+      ],
+      "aliases": [
+        "iPhone SE 2020",
+        "iPhone SE 2",
+        "iPhone SE (2e génération)",
+        "iPhone SE deuxième génération"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 11 Pro",
+      "capacities": [
+        "64 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "5,8″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A13 Bionic",
+        "batterie": "Jusqu’à 18 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone 11 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111879"
+        }
+      ],
+      "aliases": [
+        "iPhone 11 Pro"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 11 Pro Max",
+      "capacities": [
+        "64 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,5″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A13 Bionic",
+        "batterie": "Jusqu’à 20 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone 11 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111878"
+        }
+      ],
+      "aliases": [
+        "iPhone 11 Pro Max"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 11",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A13 Bionic",
+        "batterie": "Jusqu’à 17 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone 11 - Caractéristiques Techniques",
+          "url": "https://support.apple.com/fr-fr/111865"
+        }
+      ],
+      "aliases": [
+        "iPhone 11"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone XS",
+      "capacities": [
+        "64 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "5,8″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A12 Bionic",
+        "batterie": "Jusqu’à 14 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone XS - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111881"
+        }
+      ],
+      "aliases": [
+        "iPhone XS"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone XS Max",
+      "capacities": [
+        "64 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,5″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A12 Bionic",
+        "batterie": "Jusqu’à 15 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone XS Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111880"
+        }
+      ],
+      "aliases": [
+        "iPhone XS Max"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone XR",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "6,1″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A12 Bionic",
+        "batterie": "Jusqu’à 16 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone XR - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111868"
+        }
+      ],
+      "aliases": [
+        "iPhone XR"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone X",
+      "capacities": [
+        "64 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "5,8″ OLED",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A11 Bionic",
+        "batterie": "Jusqu’à 13 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone X - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111864"
+        }
+      ],
+      "aliases": [
+        "iPhone X"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 8",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "4,7″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A11 Bionic",
+        "batterie": "Jusqu’à 13 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone 8 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111976"
+        }
+      ],
+      "aliases": [
+        "iPhone 8"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 8 Plus",
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "5,5″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A11 Bionic",
+        "batterie": "Jusqu’à 14 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone 8 Plus - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111950"
+        }
+      ],
+      "aliases": [
+        "iPhone 8 Plus"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 7",
+      "capacities": [
+        "32 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "4,7″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A10 Fusion",
+        "batterie": "Jusqu’à 13 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone 7 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111943"
+        }
+      ],
+      "aliases": [
+        "iPhone 7"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 7 Plus",
+      "capacities": [
+        "32 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "5,5″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A10 Fusion",
+        "batterie": "Jusqu’à 14 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone 7 Plus - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/111953"
+        }
+      ],
+      "aliases": [
+        "iPhone 7 Plus"
+      ],
+      "manufacturer_references": []
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone SE (2016)",
+      "capacities": [
+        "16 Go",
+        "32 Go",
+        "64 Go",
+        "128 Go"
+      ],
+      "specs": {
+        "ecran": "4″ LCD",
+        "photo": "12 Mpx (principal)",
+        "processeur": "Apple A9",
+        "batterie": "Jusqu’à 13 h de vidéo",
+        "reseau": "4G LTE"
+      },
+      "sources": [
+        {
+          "title": "iPhone SE - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/112005"
+        }
+      ],
+      "aliases": [
+        "iPhone SE 2016",
+        "iPhone SE 1",
+        "iPhone SE (1re génération)",
+        "iPhone SE première génération"
+      ],
+      "manufacturer_references": []
+    }
+  ]
+}

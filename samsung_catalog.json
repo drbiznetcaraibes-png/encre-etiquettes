@@ -1,0 +1,276 @@
+{
+  "checked_at": "2026-11-08",
+  "phones": [
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26",
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,3″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "12 + 50 + 10 Mpx (arrière)",
+        "batterie": "4 300 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5 for Galaxy, Exynos 2600 (selon marché)",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26 : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-unveils-galaxy-s26-series-intuitive-galaxy-ai"
+        }
+      ],
+      "aliases": [
+        "S26"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26+",
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "12 + 50 + 10 Mpx (arrière)",
+        "batterie": "4 900 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5 for Galaxy, Exynos 2600 (selon marché)",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26+ : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-unveils-galaxy-s26-series-intuitive-galaxy-ai"
+        }
+      ],
+      "aliases": [
+        "S26+"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26 Ultra",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "6,9″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 200 + 50 + 10 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5 for Galaxy",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26 Ultra : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-unveils-galaxy-s26-series-intuitive-galaxy-ai"
+        }
+      ],
+      "aliases": [
+        "S26 Ultra"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A57 5G",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Super AMOLED+ 120 Hz",
+        "photo": "12 + 50 + 5 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A57 5G : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-galaxy-a57-a37-5g-pro-features-awesome-price"
+        }
+      ],
+      "aliases": [
+        "A57 5G",
+        "A57"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A37 5G",
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Super AMOLED 120 Hz",
+        "photo": "8 + 50 + 5 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A37 5G : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-galaxy-a57-a37-5g-pro-features-awesome-price"
+        }
+      ],
+      "aliases": [
+        "A37 5G",
+        "A37"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A27 5G",
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Super AMOLED 120 Hz",
+        "photo": "5 + 50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "processeur": "Snapdragon 6 Gen 3 (4nm) Octa-Core 2.4GHz (4x), 1.8GHz (4x)",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A27 5G : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/galaxy-a27-5g-immersive-display-awesome-intelligence"
+        }
+      ],
+      "aliases": [
+        "A27 5G",
+        "A27"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Fold8 Ultra",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "8,0″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "200 + 50 + 10 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5 Mobile Platform for Galaxy",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Fold8 Ultra : caractéristiques constructeur",
+          "url": "https://samsungmobilepress.com/articles/galaxy-z-fold8-ultra-fold8-flip8-perfected-every-way-living"
+        }
+      ],
+      "aliases": [
+        "Z Fold8 Ultra"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Fold8",
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "ecran": "7,6″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 50 Mpx (arrière)",
+        "batterie": "4 800 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5 Mobile Platform for Galaxy",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Fold8 : caractéristiques constructeur",
+          "url": "https://samsungmobilepress.com/articles/galaxy-z-fold8-ultra-fold8-flip8-perfected-every-way-living"
+        }
+      ],
+      "aliases": [
+        "Z Fold8"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Flip8",
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,9″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 Mpx (arrière)",
+        "batterie": "4 300 mAh",
+        "processeur": "Exynos 2600",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Flip8 : caractéristiques constructeur",
+          "url": "https://samsungmobilepress.com/articles/galaxy-z-fold8-ultra-fold8-flip8-perfected-every-way-living"
+        }
+      ],
+      "aliases": [
+        "Z Flip8"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25 FE",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "12 + 50 + 8 Mpx (arrière)",
+        "batterie": "4 900 mAh",
+        "processeur": "Exynos 2400 (4nm)",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25 FE : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/meet-samsung-galaxy-s25-fe-the-gateway-to-the-galaxy-ai-and-flagship-essentials"
+        }
+      ],
+      "aliases": [
+        "S25 FE"
+      ]
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26 FE",
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "ecran": "6,7″ Dynamic AMOLED 2X 120 Hz",
+        "photo": "12 + 50 + 8 Mpx (arrière)",
+        "batterie": "4 900 mAh",
+        "processeur": "Exynos 2500 (3nm AP)",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26 FE : caractéristiques constructeur",
+          "url": "https://samsungmobilepress.com/articles/galaxy-s26-fe-latest-flagship-experience-what-matters-most"
+        }
+      ],
+      "aliases": [
+        "S26 FE"
+      ]
+    }
+  ]
+}

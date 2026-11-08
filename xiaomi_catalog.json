@@ -1,0 +1,1159 @@
+{
+  "verified_at": "2026-11-08",
+  "note": "Snapshots extraits des sections des fiches techniques officielles Xiaomi France ou Global, conservant modèle exact et choix de stockage usine. Le lecteur dynamique complète les nouvelles générations.",
+  "phones": [
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 13",
+      "aliases": [
+        "Xiaomi 13",
+        "Xiaomi 13 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Gen 2",
+        "ecran": "6,36″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "4 500 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 13 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-13/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 13 Pro",
+      "aliases": [
+        "Xiaomi 13 Pro",
+        "Xiaomi 13 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Gen 2",
+        "ecran": "6,73″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "4 820 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 13 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-13-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 14",
+      "aliases": [
+        "Xiaomi 14",
+        "Xiaomi 14 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Gen 3",
+        "ecran": "6,36″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "4 610 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 14 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-14/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 14 Ultra",
+      "aliases": [
+        "Xiaomi 14 Ultra",
+        "Xiaomi 14 Ultra 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Gen 3",
+        "ecran": "6,73″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 14 Ultra : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-14-ultra/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 14T",
+      "aliases": [
+        "Xiaomi 14T",
+        "Xiaomi 14T 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 8300-Ultra",
+        "ecran": "AMOLED 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 14T : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-14t/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 14T Pro",
+      "aliases": [
+        "Xiaomi 14T Pro",
+        "Xiaomi 14T Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 9300+",
+        "ecran": "AMOLED 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 14T Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-14t-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 15",
+      "aliases": [
+        "Xiaomi 15",
+        "Xiaomi 15 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Elite",
+        "ecran": "6,36″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 240 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 15 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-15/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 15 Ultra",
+      "aliases": [
+        "Xiaomi 15 Ultra",
+        "Xiaomi 15 Ultra 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Elite",
+        "ecran": "6,73″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 410 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 15 Ultra : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-15-ultra/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 15T",
+      "aliases": [
+        "Xiaomi 15T",
+        "Xiaomi 15T 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 8400-Ultra",
+        "ecran": "6,83″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 500 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 15T : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-15t/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 15T Pro",
+      "aliases": [
+        "Xiaomi 15T Pro",
+        "Xiaomi 15T Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 9400+",
+        "ecran": "6,83″ AMOLED 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 500 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 15T Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-15t-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 17",
+      "aliases": [
+        "Xiaomi 17",
+        "Xiaomi 17 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Elite Gen 5",
+        "ecran": "6,3″ OLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 330 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 17 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-17/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 17T",
+      "aliases": [
+        "Xiaomi 17T",
+        "Xiaomi 17T 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 8500-Ultra",
+        "ecran": "6,59″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 17T : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-17t/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Xiaomi 17T Pro",
+      "aliases": [
+        "Xiaomi 17T Pro",
+        "Xiaomi 17T Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 9500",
+        "ecran": "6,83″ AMOLED 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Xiaomi 17T Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/xiaomi-17t-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 12",
+      "aliases": [
+        "Redmi Note 12",
+        "Redmi Note 12 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 685",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 12 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-12/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 12 5G",
+      "aliases": [
+        "Redmi Note 12 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 4 Gen 1",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 12 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-12-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 12 Pro 5G",
+      "aliases": [
+        "Redmi Note 12 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 1080",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 12 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-12-pro-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 12 Pro+ 5G",
+      "aliases": [
+        "Redmi Note 12 Pro+ 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 1080",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 12 Pro+ 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-12-pro-plus-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 13",
+      "aliases": [
+        "Redmi Note 13",
+        "Redmi Note 13 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 685",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 13 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-13/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 13 5G",
+      "aliases": [
+        "Redmi Note 13 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 6080",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 13 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-13-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 13 Pro",
+      "aliases": [
+        "Redmi Note 13 Pro",
+        "Redmi Note 13 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Helio G99-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 13 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-13-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 13 Pro 5G",
+      "aliases": [
+        "Redmi Note 13 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 7s Gen 2",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 100 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 13 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-13-pro-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 13 Pro Plus 5G",
+      "aliases": [
+        "Redmi Note 13 Pro Plus 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 7200-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 13 Pro Plus 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-13-pro-plus-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14",
+      "aliases": [
+        "Redmi Note 14",
+        "Redmi Note 14 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "Helio G99-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 500 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 5G",
+      "aliases": [
+        "Redmi Note 14 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Dimensity 7025-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 Pro",
+      "aliases": [
+        "Redmi Note 14 Pro",
+        "Redmi Note 14 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Helio G100-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 500 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 Pro 5G",
+      "aliases": [
+        "Redmi Note 14 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 7300-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-pro-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 Pro+ 5G",
+      "aliases": [
+        "Redmi Note 14 Pro+ 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 7s Gen 3",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 Pro+ 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-pro-plus-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14S",
+      "aliases": [
+        "Redmi Note 14S",
+        "Redmi Note 14S 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Helio G99-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14S : caractéristiques",
+          "url": "https://www.mi.com/global/product/redmi-note-14s/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15",
+      "aliases": [
+        "REDMI Note 15",
+        "REDMI Note 15 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Helio G100-Ultra",
+        "ecran": "6,77″ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 5G",
+      "aliases": [
+        "REDMI Note 15 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 6 Gen 3",
+        "ecran": "6,77″ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 520 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 Pro",
+      "aliases": [
+        "REDMI Note 15 Pro",
+        "REDMI Note 15 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Helio G200-Ultra",
+        "ecran": "6,77″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 Pro 5G",
+      "aliases": [
+        "REDMI Note 15 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Dimensity 7400-Ultra",
+        "ecran": "6,83″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "6 580 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-pro-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 Pro+ 5G",
+      "aliases": [
+        "REDMI Note 15 Pro+ 5G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 7s Gen 4",
+        "ecran": "6,83″ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 Pro+ 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-pro-plus-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi 13C",
+      "aliases": [
+        "Redmi 13C",
+        "Redmi 13C 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Helio G85",
+        "ecran": "6,74″ 90 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi 13C : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-13c/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI 15C",
+      "aliases": [
+        "REDMI 15C",
+        "REDMI 15C 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Helio G81-Ultra",
+        "ecran": "6,9″ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI 15C : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-15c/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X6",
+      "aliases": [
+        "POCO X6"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 7s Gen 2",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "64 Mpx (principal)",
+        "batterie": "5 100 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X6 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x6/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X6 Pro",
+      "aliases": [
+        "POCO X6 Pro"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Dimensity 8300-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "64 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X6 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x6-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X7 5G",
+      "aliases": [
+        "POCO X7 5G",
+        "POCO X7"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Dimensity 7300-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X7 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x7/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X7 Pro 5G",
+      "aliases": [
+        "POCO X7 Pro 5G",
+        "POCO X7 Pro"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Dimensity 8400-Ultra",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X7 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x7-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F6",
+      "aliases": [
+        "POCO F6"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8s Gen 3",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F6 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f6/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F6 Pro",
+      "aliases": [
+        "POCO F6 Pro"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Gen 2",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F6 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f6-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F7",
+      "aliases": [
+        "POCO F7"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8s Gen 4",
+        "ecran": "6,83″ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F7 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f7/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F7 Pro",
+      "aliases": [
+        "POCO F7 Pro"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Gen 3",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F7 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f7-pro/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F7 Ultra",
+      "aliases": [
+        "POCO F7 Ultra"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 8 Elite",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 300 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F7 Ultra : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f7-ultra/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi 14C",
+      "aliases": [
+        "Redmi 14C",
+        "Redmi 14C 4G"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "MediaTek Helio G81-Ultra",
+        "ecran": "6,88″ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 160 mAh",
+        "reseau": "4G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi 14C : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-14-c/specs/"
+        }
+      ]
+    }
+  ]
+}
