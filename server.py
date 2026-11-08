@@ -28,7 +28,7 @@ from samsung_phones import lookup_samsung_phone
 from manufacturer_pages import lookup_manufacturer_phone
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.14.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.14.1')
 HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36', 'Accept-Language':'fr-FR,fr;q=0.9,en;q=0.8'}
 TIMEOUT = httpx.Timeout(9, connect=4)
 
@@ -57,6 +57,9 @@ def _normalize_model_text(value):
                         ('Galaxy',r'[SAZM]\d|Z\s*(?:Fold|Flip)'),('Nothing',r'Phone'),
                         ('Google',r'Pixel'),('OnePlus',r'\d|Nord'),('OPPO',r'Reno|Find|A\d')]:
   text=re.sub(r'\b'+word+r'(?='+following+r')',word+' ',text,flags=re.I)
+ # Explicit storage can be attached to a model suffix (ProMax512Go, 17T256GB).
+ # Require the unit and end of the option, so generation numbers stay intact.
+ text=re.sub(r'(?<=[A-Za-z+])((?:16|32|64|128|256|512|1024|2048)\s*(?:Go|GB)|[12]\s*(?:To|TB))(?=\s|$)',r' \1',text,flags=re.I)
  return re.sub(r'\s+',' ',text).strip()
 
 async def _search_bing(client, ref: str):
@@ -653,7 +656,7 @@ async def phone_models(query:str=Query(default='',max_length=60),limit:int=Query
 
 @app.get('/api/phones/lookup')
 async def lookup(request:Request, reference:str=Query(min_length=4,max_length=60)):
- ref=reference.strip().upper()
+ ref=_normalize_model_text(reference).upper()
  _check_rate_limit(request)
  if not MODEL_QUERY_OK.fullmatch(ref): raise HTTPException(400,'Recherche invalide : entre un modèle ou une référence constructeur.')
  if _normalize_ref(CAP_RE.sub('',ref)) in ('IPHONESE','APPLEIPHONESE'):

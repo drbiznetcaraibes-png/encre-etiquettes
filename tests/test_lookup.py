@@ -95,6 +95,17 @@ class LookupAPITests(unittest.IsolatedAsyncioTestCase):
                     self.assertTrue(data['sources'])
             ai.assert_not_awaited()
 
+    async def test_storage_attached_to_the_model_is_normalized_before_providers(self):
+        with patch.object(server,'gemini_lookup',new_callable=AsyncMock) as ai:
+            for query,capacity in [('iPhone17ProMax512Go','512 Go'),
+                                   ('iPhone17ProMax1To','1 To'),('Xiaomi17T256GB','256 Go')]:
+                with self.subTest(query=query):
+                    response=await self.client.get('/api/phones/lookup',params={'reference':query})
+                    self.assertEqual(response.status_code,200,response.text)
+                    self.assertEqual(response.json()['capacity'],capacity)
+                    self.assertTrue(response.json()['capacity_confirmed'])
+            ai.assert_not_awaited()
+
     async def test_suggestions_are_fast_and_do_not_consume_lookup_quota(self):
         with patch.object(server, 'online_lookup', new_callable=AsyncMock) as lookup:
             response=await self.client.get('/api/phones/models',params={'query':'xiaomi 17t'})
