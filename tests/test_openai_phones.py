@@ -1,7 +1,8 @@
 import unittest
+import httpx
 from unittest.mock import AsyncMock, patch
 import server
-from openai_phones import parse_openai_response, _safe_source
+from openai_phones import parse_openai_response, _safe_source, search_openai_web, OpenAIServiceError
 
 
 def response(model="Pixel 9", brand="GOOGLE", capacity="128 Go"):
@@ -84,6 +85,32 @@ class OpenAIFallbackTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(found['search_mode'],'openai_grounded')
             for provider in providers.values():provider.assert_awaited_once()
             ai.assert_awaited_once_with('GOOGLE PIXEL 9',is_model_query=True)
+
+
+class OpenAIDiagnosticsTests(unittest.IsolatedAsyncioTestCase):
+    async def test_insufficient_credits_are_distinct_from_rate_limit(self):
+        for code,expected in [('insufficient_quota','Crédits API'),('rate_limit_exceeded','Limite de requêtes')]:
+            with self.subTest(code=code), patch.object(httpx.AsyncClient,'post',new=AsyncMock(return_value=httpx.Response(429,json={'error':{'code':code,'message':'never_print_this_key'}}))):
+                with self.assertRaises(OpenAIServiceError) as error:
+                    await search_openai_web('Google Pixel 9','test-only')
+                self.assertIn(expected,str(error.exception))
+                self.assertNotIn('never_print',str(error.exception))
+
+    async def test_only_allowlisted_request_parameter_is_exposed(self):
+        for param,visible in [('max_tool_calls',True),('never_print_this_key',False)]:
+            with self.subTest(param=param), patch.object(httpx.AsyncClient,'post',new=AsyncMock(return_value=httpx.Response(400,json={'error':{'param':param,'message':'never_print_this_key'}}))):
+                with self.assertRaises(OpenAIServiceError) as error:
+                    await search_openai_web('Google Pixel 9','test-only')
+                message=str(error.exception)
+                self.assertEqual('max_tool_calls' in message,visible)
+                self.assertNotIn('never_print',message)
+
+    async def test_rejected_key_is_not_echoed(self):
+        with patch.object(httpx.AsyncClient,'post',new=AsyncMock(return_value=httpx.Response(401,json={'error':{'message':'never_print_this_key'}}))):
+            with self.assertRaises(OpenAIServiceError) as error:
+                await search_openai_web('Google Pixel 9','test-only')
+            self.assertIn('Clé API OpenAI refusée',str(error.exception))
+            self.assertNotIn('never_print',str(error.exception))
 
 
 if __name__ == "__main__":

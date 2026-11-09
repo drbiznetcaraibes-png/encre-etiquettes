@@ -49,3 +49,8 @@ Le champ numérique « Capacité du téléphone (GB) » fonctionne avant ou apr�
 
 
 Les nouvelles clés serveur Supabase (`sb_secret_…`) sont prises en charge dans `SUPABASE_SECRET_KEY` ou dans la variable existante `SUPABASE_SERVICE_ROLE_KEY`. Elles sont transmises uniquement dans l'en-tête `apikey`. Le mode JWT legacy conserve l'en-tête Bearer pour compatibilité. Préférer une clé dédiée au serveur Render et ne jamais la publier ; remplacer toute clé divulguée.
+
+
+## Diagnostic OpenAI
+
+Le serveur distingue désormais les crédits API insuffisants, les limites de débit, la clé refusée, un modèle indisponible et les paramètres incompatibles. Les messages sont construits localement : le corps d'erreur OpenAI et les clés ne sont jamais renvoyés au navigateur ni consignés dans ces logs. Une réponse incomplète n'est pas enregistrée comme fiche vérifiée. Les tentatives infructueuses restent réservées dans le quota mensuel par prudence.

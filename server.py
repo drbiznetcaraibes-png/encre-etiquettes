@@ -5,6 +5,7 @@ The API key must only be stored as a Render environment variable.
 from __future__ import annotations
 import asyncio
 import secrets
+import logging
 from collections import Counter
 from datetime import datetime, timezone
 from functools import lru_cache
@@ -27,11 +28,11 @@ from official_phones import lookup_official_phone
 from xiaomi_phones import lookup_xiaomi_phone
 from samsung_phones import lookup_samsung_phone
 from manufacturer_pages import lookup_manufacturer_phone
-from openai_phones import search_openai_web
+from openai_phones import search_openai_web, OpenAIServiceError
 from storage import store
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.16.1')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.16.2')
 @app.middleware('http')
 async def protect_access(request, call_next):
     from fastapi.responses import JSONResponse
@@ -646,8 +647,12 @@ async def _online_lookup(ref, is_model_query=False):
     return openai_result
   except asyncio.TimeoutError:
    openai_problem='Délai OpenAI dépassé.'
-  except Exception:
+  except OpenAIServiceError as exc:
+   openai_problem=str(exc)
+   logging.getLogger('uvicorn.error').warning('%s', openai_problem)
+  except Exception as exc:
    openai_problem='Recherche IA indisponible ou budget atteint.'
+   logging.getLogger('uvicorn.error').warning('Recherche IA indisponible (%s)', type(exc).__name__)
  async with httpx.AsyncClient(timeout=TIMEOUT,follow_redirects=True) as client:
   bing,ddg,news,binghtml,official=await asyncio.gather(
    _search_bing(client,ref), _search_ddg(client,ref),

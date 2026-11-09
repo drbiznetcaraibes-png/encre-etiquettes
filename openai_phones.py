@@ -12,6 +12,32 @@ from urllib.parse import urlparse
 import httpx
 
 
+class OpenAIServiceError(RuntimeError):
+    """Message public construit localement, sans corps d'erreur ni clé API."""
+
+
+def _http_error(response):
+    try:
+        error = response.json().get('error', {})
+        if not isinstance(error, dict):
+            error = {}
+    except (ValueError, AttributeError):
+        error = {}
+    code = error.get('code')
+    if response.status_code == 429 and code == 'insufficient_quota':
+        return OpenAIServiceError('Crédits API OpenAI insuffisants : vérifie la facturation du projet OpenAI.')
+    if response.status_code == 429:
+        return OpenAIServiceError('Limite de requêtes OpenAI atteinte. Réessaie plus tard.')
+    if response.status_code in (401, 403):
+        return OpenAIServiceError('Clé API OpenAI refusée : vérifie OPENAI_API_KEY sur Render.')
+    if code == 'model_not_found':
+        return OpenAIServiceError('Modèle OpenAI indisponible pour cette clé API.')
+    param = error.get('param')
+    safe_params = {'model', 'tools', 'tool_choice', 'max_tool_calls', 'max_output_tokens', 'include', 'store'}
+    suffix = ' (paramètre '+param+')' if isinstance(param,str) and param in safe_params else ''
+    return OpenAIServiceError(f'Erreur OpenAI HTTP {response.status_code}'+suffix+'.')
+
+
 def _json_object(text: str):
     """Accepte du JSON brut ou un unique bloc JSON entouré de markdown."""
     value = (text or "").strip()
@@ -89,7 +115,7 @@ def parse_openai_response(payload):
     return parsed, urls
 
 
-async def search_openai_web(query: str, api_key: str, model: str = "gpt-5.4-mini"):
+async def search_openai_web(query: str, api_key: str, model: str = "gpt-5-mini"):
     """One grounded Responses API request (web_search) for an unknown model."""
     if not api_key:
         return None
@@ -128,14 +154,13 @@ retourne {{"verified":false}}.
                 json=body,
             )
     except httpx.TimeoutException as exc:
-        raise RuntimeError("Délai OpenAI dépassé.") from exc
+        raise OpenAIServiceError("Délai OpenAI dépassé.") from exc
     except httpx.RequestError as exc:
-        raise RuntimeError("Connexion au service OpenAI impossible.") from exc
+        raise OpenAIServiceError("Connexion au service OpenAI impossible.") from exc
 
-    if response.status_code == 429:
-        raise RuntimeError("Limite de requêtes ou crédits OpenAI atteints.")
-    if response.status_code in (401, 403):
-        raise RuntimeError("Clé API OpenAI refusée : vérifie OPENAI_API_KEY sur Render.")
     if response.status_code != 200:
-        raise RuntimeError(f"Erreur OpenAI HTTP {response.status_code}.")
-    return parse_openai_response(response.json())
+        raise _http_error(response)
+    payload = response.json()
+    if payload.get('status') == 'incomplete':
+        raise OpenAIServiceError('Réponse OpenAI incomplète : aucune fiche IA enregistrée.')
+    return parse_openai_response(payload)
