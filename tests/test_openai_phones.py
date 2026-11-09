@@ -65,6 +65,26 @@ class OpenAIFallbackTests(unittest.IsolatedAsyncioTestCase):
             self.assertIsNone(await server.openai_lookup("Google Pixel 9",True))
             search.assert_not_awaited()
 
+    async def test_manufacturer_result_avoids_paid_fallback(self):
+        parsed,sources=response()
+        result={**parsed,'status':'verified_online','sources':sources}
+        with patch.object(server,'lookup_official_phone',new=AsyncMock(return_value=result)) as official, patch.object(server,'OPENAI_KEY','test'), patch.object(server,'openai_lookup',new_callable=AsyncMock) as ai:
+            found=await server._online_lookup('GOOGLE PIXEL 9',True)
+            self.assertEqual(found['model'],'Pixel 9')
+            official.assert_awaited_once()
+            ai.assert_not_awaited()
+
+    async def test_paid_fallback_only_after_all_manufacturers(self):
+        parsed,sources=response()
+        result={**parsed,'status':'verified_online','sources':sources,'search_mode':'openai_grounded'}
+        providers={name:AsyncMock(return_value=None) for name in (
+            'lookup_official_phone','lookup_xiaomi_phone','lookup_samsung_phone','lookup_manufacturer_phone')}
+        with patch.multiple(server,**providers), patch.object(server,'OPENAI_KEY','test'), patch.object(server,'openai_lookup',new=AsyncMock(return_value=result)) as ai:
+            found=await server._online_lookup('GOOGLE PIXEL 9',True)
+            self.assertEqual(found['search_mode'],'openai_grounded')
+            for provider in providers.values():provider.assert_awaited_once()
+            ai.assert_awaited_once_with('GOOGLE PIXEL 9',is_model_query=True)
+
 
 if __name__ == "__main__":
     unittest.main()
