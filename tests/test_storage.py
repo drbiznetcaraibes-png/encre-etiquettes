@@ -67,3 +67,20 @@ class PersistenceTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(httpx.AsyncClient,'request',new=AsyncMock(side_effect=httpx.ConnectError('secret upstream data'))):
             with self.assertRaisesRegex(RuntimeError,'Base centralisée indisponible'):
                 await db.get('test')
+
+
+    async def test_modern_secret_only_in_apikey_header(self):
+        from storage import Store
+        db=Store();db.url='https://test.supabase.co';db.key='sb_secret_test_only'
+        with patch.object(httpx.AsyncClient,'request',new=AsyncMock(return_value=httpx.Response(200,json=[]))) as request:
+            await db.get('test')
+            headers=request.call_args.kwargs['headers']
+            self.assertEqual(headers['apikey'],'sb_secret_test_only')
+            self.assertNotIn('Authorization',headers)
+
+    async def test_legacy_jwt_keeps_bearer_header(self):
+        from storage import Store
+        db=Store();db.url='https://test.supabase.co';db.key='legacy-test-only'
+        with patch.object(httpx.AsyncClient,'request',new=AsyncMock(return_value=httpx.Response(200,json=[]))) as request:
+            await db.get('test')
+            self.assertEqual(request.call_args.kwargs['headers']['Authorization'],'Bearer legacy-test-only')

@@ -5,7 +5,7 @@ Aucune migration, import distant, activation planifiée ou opération Render n'a
 ## Supabase
 
 1. Créer d'abord un projet de test. Exécuter **tout** `supabase_schema.sql` dans SQL Editor (réexécutable sur le schéma initial de la PR).
-2. Les tables ont RLS activée, sans accès navigateur. La clé `service_role` contourne RLS : la conserver exclusivement comme secret serveur et secret GitHub Actions pour la maintenance. Ne jamais la copier dans le HTML, un catalogue, un log ou un message.
+2. Les tables ont RLS activée, sans accès navigateur. La clé secrète `sb_secret_…` (recommandée) ou la clé legacy `service_role` contourne RLS : la conserver exclusivement comme secret serveur et secret GitHub Actions pour la maintenance. Ne jamais la copier dans le HTML, un catalogue, un log ou un message.
 3. Configurer `SUPABASE_URL` et `SUPABASE_SERVICE_ROLE_KEY` dans l'environnement local ou de test. Faire `python maintenance.py import` (simulation sans réseau), puis `python maintenance.py import --apply` après validation du projet cible. L'import déduplique les quatre catalogues et conserve les capacités séparément. Il ne remplace pas les fiches déjà vérifiées ; les sources et dates sont celles des catalogues, sans prétendre à une nouvelle vérification réseau.
 4. Vérifier une recherche connue dans `phone_specs`, puis une recherche nouvelle avec des réponses constructeur. Vérifier la persistance après redémarrage. Tester une indisponibilité de Supabase : les sources constructeur restent utilisables ; l'IA est bloquée si sa réservation échoue.
 
@@ -46,3 +46,6 @@ Le test `tests/check_labels.cjs` vérifie les 103 modèles dédupliqués des cat
 ## Saisie de capacité en GB
 
 Le champ numérique « Capacité du téléphone (GB) » fonctionne avant ou après la recherche et lors de la modification d'une étiquette. Il accepte des entiers entre 1 et 2 048 ; 1 024 GB et 2 048 GB sont normalisés en 1 To et 2 To. Les variantes documentées restent prioritaires : une valeur absente de leur liste bloque l'ajout. Sans liste de capacités, la saisie du vendeur est conservée comme donnée manuelle de l'étiquette, sans être présentée ni enregistrée comme une preuve constructeur. Le test `tests/check_capacity.cjs` couvre ces cas dans Chromium.
+
+
+Les nouvelles clés serveur Supabase (`sb_secret_…`) sont prises en charge dans `SUPABASE_SECRET_KEY` ou dans la variable existante `SUPABASE_SERVICE_ROLE_KEY`. Elles sont transmises uniquement dans l'en-tête `apikey`. Le mode JWT legacy conserve l'en-tête Bearer pour compatibilité. Préférer une clé dédiée au serveur Render et ne jamais la publier ; remplacer toute clé divulguée.

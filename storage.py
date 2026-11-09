@@ -6,7 +6,7 @@ import httpx
 class Store:
     def __init__(self):
         self.url = os.getenv('SUPABASE_URL', '').rstrip('/')
-        self.key = os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')
+        self.key = (os.getenv('SUPABASE_SECRET_KEY') or os.getenv('SUPABASE_SERVICE_ROLE_KEY', '')).strip()
 
     @property
     def configured(self):
@@ -15,11 +15,14 @@ class Store:
     async def request(self, method, path, **kwargs):
         if not self.configured:
             raise RuntimeError('Base centralisée non configurée.')
+        headers = {'apikey': self.key, 'Prefer': 'return=representation,resolution=merge-duplicates'}
+        # Modern keys are opaque API keys, not JWT bearer tokens.
+        if not self.key.startswith('sb_secret_'):
+            headers['Authorization'] = 'Bearer ' + self.key
         try:
             async with httpx.AsyncClient(timeout=10) as client:
                 response = await client.request(method, self.url + '/rest/v1/' + path,
-                    headers={'apikey': self.key, 'Authorization': 'Bearer ' + self.key,
-                             'Prefer': 'return=representation,resolution=merge-duplicates'}, **kwargs)
+                    headers=headers, **kwargs)
         except httpx.HTTPError:
             raise RuntimeError('Base centralisée indisponible.') from None
         if response.is_error:

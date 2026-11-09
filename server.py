@@ -31,7 +31,7 @@ from openai_phones import search_openai_web
 from storage import store
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.16.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.16.1')
 @app.middleware('http')
 async def protect_access(request, call_next):
     from fastapi.responses import JSONResponse
