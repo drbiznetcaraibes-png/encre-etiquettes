@@ -54,10 +54,8 @@ python -m venv .venv
 
 Les tests ne nécessitent aucune clé Gemini. Ils couvrent les références et variantes, les capacités, les erreurs et la lecture des sections Apple avec des réponses simulées. L’accès réel aux sites constructeur doit également être vérifié lors d’un déploiement.
 
-## Recherche OpenAI (facultative, proposée dans une branche de développement)
+## Base centralisée et recherche OpenAI
 
-Le serveur tente d'abord les fiches constructeur (inchangées), puis OpenAI si `OPENAI_API_KEY` est configurée, ensuite Gemini si `GEMINI_API_KEY` existe, puis les recherches publiques. OpenAI utilise l'API Responses avec `web_search` et renvoie les sources consultables. Les modèles, variantes 4G/5G, Pro/Ultra, références et capacités font l'objet des mêmes contrôles stricts. Sans clé OpenAI, l'application continue de fonctionner comme avant.
+La recherche consulte Supabase, les catalogues et les sources constructeur, puis OpenAI si nécessaire et si le budget persistant l'autorise. Les nouvelles fiches vérifiées sont sauvegardées ; les recherches incomplètes sont placées dans une file hebdomadaire ciblée. Gemini n'est plus appelé dans ce parcours.
 
-Dans **Render → Environment**, ajouter `OPENAI_API_KEY` (clé secrète créée sur https://platform.openai.com/api-keys), et éventuellement `OPENAI_MODEL=gpt-5-mini` et `OPENAI_DAILY_MAX=15`. Ne jamais placer la clé dans GitHub ou dans le navigateur. Le plafond local de 15 appels par jour est par processus et peut être réinitialisé au redémarrage ; pour un service public payant, ajouter authentification, quota durable et limite budgétaire au compte OpenAI avant déploiement.
-
-La facturation de l'API OpenAI est distincte d'un abonnement ChatGPT. Tester une recherche sur un téléphone absent des catalogues, vérifier le modèle, les liens des sources et le stockage, puis contrôler le coût sur le tableau de bord API. Cette version ne modifie aucun gabarit imprimé.
+Le site exige un accès salarié (utilisateur `encre`, secret `APP_ACCESS_TOKEN`). Voir [OPERATIONS.md](OPERATIONS.md) pour la configuration Supabase/Render, l'import des quatre catalogues, les limites IA, les tests et l'activation facultative de la maintenance. Aucun déploiement automatique n'est prévu : validation obligatoire avant production.

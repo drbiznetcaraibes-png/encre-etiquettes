@@ -1,0 +1,20 @@
+name: Tests
+on: [push, pull_request]
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python -m unittest discover -s tests -v
+      - run: python maintenance.py import
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --prefix /tmp/sqlcheck --no-audit --no-fund @electric-sql/pglite@0.5.15
+      - run: node tests/check_schema.cjs
+        env:
+          PGLITE_MODULE: /tmp/sqlcheck/node_modules/@electric-sql/pglite

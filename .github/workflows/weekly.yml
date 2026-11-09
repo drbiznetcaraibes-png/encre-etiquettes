@@ -1,0 +1,23 @@
+name: Vérification ciblée des smartphones
+on:
+  schedule:
+    - cron: '0 10 * * 1'
+  workflow_dispatch:
+jobs:
+  verify:
+    if: vars.ENABLE_WEEKLY_CHECK == 'true'
+    runs-on: ubuntu-latest
+    concurrency: phone-weekly-check
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python maintenance.py weekly --apply
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}

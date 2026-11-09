@@ -31,6 +31,15 @@ class OpenAIResponseTests(unittest.TestCase):
 
 class OpenAIFallbackTests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
+        self.config = patch.object(server.store, 'url', 'https://test.supabase.co')
+        self.config.start()
+        self.key = patch.object(server.store, 'key', 'test')
+        self.key.start()
+        self.reserve = patch.object(server.store, 'reserve', new=AsyncMock(return_value=True))
+        self.reserve.start()
+        self.addCleanup(self.config.stop)
+        self.addCleanup(self.key.stop)
+        self.addCleanup(self.reserve.stop)
         server.CACHE.clear()
         server.OPENAI_CALL_LOG.clear()
 

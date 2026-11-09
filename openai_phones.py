@@ -117,6 +117,7 @@ retourne {{"verified":false}}.
         "tool_choice": "required",
         "include": ["web_search_call.action.sources"],
         "max_output_tokens": 2200,
+        "max_tool_calls": 1,
         "store": False,
     }
     try:

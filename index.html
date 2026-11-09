@@ -266,7 +266,7 @@ $('refreshAll').onclick=async()=>{
 $('diagnostic').onclick=async()=>{
  const b=$('diagnostic');b.disabled=true;$('status').textContent='Diagnostic du serveur…';
  try{
-  const res=await fetch('/health',{cache:'no-store'});if(!res.ok)throw Error();const d=await res.json();
+  const res=await fetch('/api/status',{cache:'no-store'});if(!res.ok)throw Error();const d=await res.json();
   $('status').textContent=d.ai_configured?`Serveur actif · fiches constructeur disponibles · IA complémentaire configurée (${d.openai_configured?'OpenAI '+(d.openai_model||''):'Gemini '+(d.gemini_model||'auto')}). Ce test ne vérifie pas les quotas IA.`:'Serveur actif · les fiches constructeur sont disponibles. L’IA complémentaire n’est pas configurée.';
  }catch(e){$('status').textContent='Le serveur ne répond pas : vérifie le statut Live sur Render.'}
  finally{b.disabled=false}
