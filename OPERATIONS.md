@@ -41,3 +41,8 @@ Alternative Render : Cron Job `python maintenance.py weekly --apply`, planning `
 Le modèle imprimé reprend le bandeau marine, le logo sans les trois rayons jaunes, les caractéristiques à gauche sans photo, les mensualités avec liseré bleu fin et les panneaux jaunes à droite, puis le prix comptant sur fond blanc. Les pictogrammes et les textes sont vectoriels/HTML : le rendu reste net et les données restent propres à chaque téléphone. Aucun visuel de maquette n'est utilisé comme fiche technique.
 
 Le test `tests/check_labels.cjs` vérifie les 103 modèles dédupliqués des catalogues : absence de débordement, format 88 × 52 mm, pagination (11 étiquettes sur deux pages A4), affichage mobile, modification d'une étiquette sauvegardée et coefficients. Il tourne également en CI avec Playwright/Chromium. Pour le lancer localement, démarrer le serveur avec `APP_ACCESS_TOKEN=browser-test`, installer Playwright, puis `APP_ACCESS_TOKEN=browser-test TEST_PORT=8002 node tests/check_labels.cjs` (définir `CHROMIUM_PATH` si Chromium est déjà installé). Le PDF de test et l'aperçu sont enregistrés dans `/tmp`, jamais envoyés en production.
+
+
+## Saisie de capacité en GB
+
+Le champ numérique « Capacité du téléphone (GB) » fonctionne avant ou après la recherche et lors de la modification d'une étiquette. Il accepte des entiers entre 1 et 2 048 ; 1 024 GB et 2 048 GB sont normalisés en 1 To et 2 To. Les variantes documentées restent prioritaires : une valeur absente de leur liste bloque l'ajout. Sans liste de capacités, la saisie du vendeur est conservée comme donnée manuelle de l'étiquette, sans être présentée ni enregistrée comme une preuve constructeur. Le test `tests/check_capacity.cjs` couvre ces cas dans Chromium.

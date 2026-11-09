@@ -31,3 +31,4 @@ jobs:
             sleep 1
           done
           node tests/check_labels.cjs
+          node tests/check_capacity.cjs
