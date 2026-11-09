@@ -26,9 +26,10 @@ from official_phones import lookup_official_phone
 from xiaomi_phones import lookup_xiaomi_phone
 from samsung_phones import lookup_samsung_phone
 from manufacturer_pages import lookup_manufacturer_phone
+from openai_phones import search_openai_web
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.14.1')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.15.0')
 HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/124.0 Safari/537.36', 'Accept-Language':'fr-FR,fr;q=0.9,en;q=0.8'}
 TIMEOUT = httpx.Timeout(9, connect=4)
 
@@ -272,6 +273,10 @@ async def _search_official_samsung(client, ref: str):
   return [{'title':title,'snippet':h1+' '+description,'url':str(r.url)}]
  except Exception:return []
 
+OPENAI_KEY = os.environ.get('OPENAI_API_KEY', '').strip()
+OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5-mini').strip() or 'gpt-5-mini'
+OPENAI_DAILY_MAX = max(0, min(100, int(os.environ.get('OPENAI_DAILY_MAX', '15'))))
+OPENAI_CALL_LOG = []
 GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '').strip()
 # Explicit model override is supported; 'auto' tries current models compatible with a free API key.
 # 2.5 Flash-Lite can be unavailable for newer API projects, so prefer current Flash-Lite.
@@ -443,6 +448,47 @@ Les valeurs du schéma sont UNIQUEMENT des exemples : ne les copie pas sans vér
             'input_type':'model_name' if is_model_query else 'manufacturer_sku',
             'search_mode':'gemini_grounded','matching_results':len(sources)}
 
+async def openai_lookup(query, is_model_query=False):
+    """Fallback OpenAI with strict identity and storage checks."""
+    if not OPENAI_KEY or OPENAI_DAILY_MAX == 0:
+        return None
+    now = time.time()
+    OPENAI_CALL_LOG[:] = [t for t in OPENAI_CALL_LOG if now-t < 86400]
+    if len(OPENAI_CALL_LOG) >= OPENAI_DAILY_MAX:
+        raise RuntimeError("Plafond quotidien des recherches OpenAI atteint.")
+    OPENAI_CALL_LOG.append(now)
+    evidence = await search_openai_web(query, OPENAI_KEY, OPENAI_MODEL)
+    if not evidence:
+        return None
+    parsed, sources = evidence
+    if parsed.get('verified') is not True or not sources:
+        return None
+    brand = str(parsed.get('brand') or '').strip().upper()[:35]
+    model = str(parsed.get('model') or '').strip()[:105]
+    capacity = str(parsed.get('capacity') or 'Non précisée').strip()[:32]
+    specs = _clean_specs(parsed.get('specs'))
+    if not brand or not model or len(specs) < 3:
+        return None
+    if is_model_query:
+        expected = _query_model(query)
+        if not expected or expected[1] != brand or not _same_model(expected[0], model, brand):
+            return None
+    else:
+        sku = str(parsed.get('manufacturer_reference') or '').strip()
+        if not sku or _normalize_ref(query.split('/')[0]) not in _normalize_ref(sku):
+            return None
+    requested = _parse_capacity(query)
+    if not requested or _parse_capacity(capacity) != requested:
+        capacity = 'Non précisée'
+    else:
+        capacity = requested
+    return {'brand':brand,'model':model,'capacity':capacity,
+            'capacity_confirmed':capacity!='Non précisée',
+            'feature':_spec_feature(specs),'specs':specs,'sources':sources,
+            'status':'verified_online',
+            'input_type':'model_name' if is_model_query else 'manufacturer_sku',
+            'search_mode':'openai_grounded','matching_results':len(sources)}
+
 # Compact structured facts for reliable typography on 88 x 52 mm labels.
 SPEC_LABELS = {'ecran':'Écran','photo':'Photo','batterie':'Batterie','processeur':'Puce','reseau':'Réseau','ram':'RAM'}
 def _clean_specs(obj):
@@ -542,7 +588,7 @@ def _check_rate_limit(request):
     GLOBAL_REQUEST_LOG.append(now)
 
 async def online_lookup(ref, is_model_query=False):
- key='V14:'+('MODEL:' if is_model_query else 'SKU:')+ref.upper()+':'+('GEMINI' if GEMINI_KEY else 'PUBLIC')
+ key='V14:'+('MODEL:' if is_model_query else 'SKU:')+ref.upper()+':'+('OPENAI' if OPENAI_KEY else 'GEMINI' if GEMINI_KEY else 'PUBLIC')
  now=time.time()
  if key in CACHE:
   saved_at,saved=CACHE[key]
@@ -568,6 +614,17 @@ async def online_lookup(ref, is_model_query=False):
  if official:
   CACHE[key]=(now,official)
   return official
+ openai_problem = None
+ if OPENAI_KEY:
+  try:
+   openai_result = await asyncio.wait_for(openai_lookup(ref, is_model_query=is_model_query), timeout=22)
+   if openai_result:
+    CACHE[key]=(now,openai_result)
+    return openai_result
+  except asyncio.TimeoutError:
+   openai_problem='Délai OpenAI dépassé.'
+  except Exception as exc:
+   openai_problem=str(exc)
  gemini_problem = None
  if GEMINI_KEY:
   try:
@@ -597,20 +654,21 @@ async def online_lookup(ref, is_model_query=False):
  result=_analyze_model_query(ref,items) if is_model_query else _analyze(ref,items)
  counts={'bing':len(bing),'duckduckgo':len(ddg),'google_news':len(news),'bing_html':len(binghtml),'official':len(official),'all_results':len(items)}
  # Public search fallback if Gemini has no grounded/verified result.
+ ai_problem = gemini_problem or openai_problem
  if result and len(result.get('specs') or {}) < 3:
   result={'status':'insufficient_specs','sources':result.get('sources',[]),'search_engines':counts,
-          'ai_warning':gemini_problem or ('Gemini n’a pas retourné 3 caractéristiques techniques vérifiables.' if GEMINI_KEY else 'IA non configurée sur Render (GEMINI_API_KEY manquante).')}
+          'ai_warning':ai_problem or ('Gemini n’a pas retourné 3 caractéristiques techniques vérifiables.' if GEMINI_KEY else 'IA non configurée sur Render (GEMINI_API_KEY manquante).')}
  if result and result.get('status')!='insufficient_specs':
   if result.get('status')!='manufacturer_reference':
    result['status']='verified_online' if result['capacity'] else 'missing_capacity'
   result['search_engines']=counts
   result['search_mode']='public_search'
-  if gemini_problem: result['ai_warning']=gemini_problem
+  if ai_problem: result['ai_warning']=ai_problem
  else:
   if not result or result.get('status')!='insufficient_specs':
    result={'status':'not_found','sources':[],'search_engines':counts}
-  if gemini_problem: result['ai_warning']=gemini_problem
-  if not GEMINI_KEY: result['ai_warning']='IA non configurée sur Render (GEMINI_API_KEY manquante).' 
+  if ai_problem: result['ai_warning']=ai_problem
+  if not GEMINI_KEY and not OPENAI_KEY: result['ai_warning']='IA non configurée sur Render (OPENAI_API_KEY ou GEMINI_API_KEY manquante).' 
  CACHE[key]=(now,result)
  # Bound process memory without turning an old quota failure into a long outage.
  if len(CACHE)>500:
@@ -621,7 +679,7 @@ async def online_lookup(ref, is_model_query=False):
 async def home():return FileResponse(BASE/'index.html')
 
 @app.get('/health')
-async def health():return {'ok':True,'service':'encre-phones','version':app.version,'official_lookup':True,'catalogue_models':len(_known_phone_models()),'ai_configured':bool(GEMINI_KEY),'gemini_model':GEMINI_MODEL if GEMINI_KEY else None,'lookup_mode':'Fiches constructeur Apple, Xiaomi, Redmi, POCO, Samsung et recherche en ligne','timestamp':datetime.now(timezone.utc).isoformat()}
+async def health():return {'ok':True,'service':'encre-phones','version':app.version,'official_lookup':True,'catalogue_models':len(_known_phone_models()),'ai_configured':bool(GEMINI_KEY or OPENAI_KEY),'gemini_model':GEMINI_MODEL if GEMINI_KEY else None,'openai_configured':bool(OPENAI_KEY),'openai_model':OPENAI_MODEL if OPENAI_KEY else None,'lookup_mode':'Fiches constructeur Apple, Xiaomi, Redmi, POCO, Samsung et recherche en ligne','timestamp':datetime.now(timezone.utc).isoformat()}
 
 @lru_cache(maxsize=1)
 def _known_phone_models():
