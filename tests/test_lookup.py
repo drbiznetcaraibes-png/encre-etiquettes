@@ -1,4 +1,5 @@
 import asyncio
+import os
 import unittest
 from unittest.mock import AsyncMock, patch
 
@@ -58,10 +59,13 @@ class ModelEvidenceTests(unittest.TestCase):
 
 class LookupAPITests(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
+        self.access = patch.dict(os.environ, {'APP_ACCESS_TOKEN':'test-access'})
+        self.access.start()
+        self.addCleanup(self.access.stop)
         server.CACHE.clear()
         server.REQUEST_LOG.clear()
         server.GLOBAL_REQUEST_LOG.clear()
-        self.client = httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url='http://test')
+        self.client = httpx.AsyncClient(transport=httpx.ASGITransport(app=server.app), base_url='http://test', auth=('encre','test-access'))
 
     async def asyncTearDown(self):
         await self.client.aclose()
