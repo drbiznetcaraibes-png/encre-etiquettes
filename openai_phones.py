@@ -1,0 +1,140 @@
+"""Recherche web OpenAI facultative pour les fiches smartphones.
+
+Appels uniquement côté serveur : la clé OpenAI ne doit jamais arriver au navigateur.
+Les résultats IA ne sont pas des sources officielles et sont revalidés dans server.py.
+"""
+from __future__ import annotations
+
+import json
+import re
+from urllib.parse import urlparse
+
+import httpx
+
+
+def _json_object(text: str):
+    """Accepte du JSON brut ou un unique bloc JSON entouré de markdown."""
+    value = (text or "").strip()
+    value = re.sub(r"^\x60\x60\x60(?:json)?\s*", "", value, flags=re.I)
+    value = re.sub(r"\s*\x60\x60\x60$", "", value)
+    try:
+        obj = json.loads(value)
+        return obj if isinstance(obj, dict) else None
+    except (ValueError, TypeError):
+        match = re.search(r"\{[\s\S]*\}", value)
+        if not match:
+            return None
+        try:
+            obj = json.loads(match.group())
+            return obj if isinstance(obj, dict) else None
+        except ValueError:
+            return None
+
+
+def _safe_source(url, title="Source web"):
+    if not isinstance(url, str) or len(url) > 2048:
+        return None
+    parsed = urlparse(url)
+    host = (parsed.hostname or "").lower()
+    # Only external HTTPS sources. Reject local/internal addresses and userinfo.
+    if parsed.scheme != "https" or not host or parsed.username or parsed.password:
+        return None
+    if host == "localhost" or host.endswith(".local") or "." not in host:
+        return None
+    if re.match(r"^(?:127\.|10\.|192\.168\.|169\.254\.|172\.(?:1[6-9]|2\d|3[01])\.)", host):
+        return None
+    return {"title": str(title or host)[:150], "url": url}
+
+
+def parse_openai_response(payload):
+    """Extrait uniquement la réponse textuelle et des URL effectivement renvoyées par l'outil."""
+    if not isinstance(payload, dict):
+        return None
+    output = payload.get("output") or []
+    if not isinstance(output, list) or not any(
+        isinstance(part, dict) and part.get("type") == "web_search_call"
+        for part in output
+    ):
+        return None
+
+    texts, urls, seen = [], [], set()
+
+    def add(url, title):
+        item = _safe_source(url, title)
+        if item and item["url"] not in seen and len(urls) < 6:
+            seen.add(item["url"])
+            urls.append(item)
+
+    for part in output:
+        if not isinstance(part, dict):
+            continue
+        if part.get("type") == "message":
+            for content in part.get("content") or []:
+                if not isinstance(content, dict) or content.get("type") != "output_text":
+                    continue
+                if isinstance(content.get("text"), str):
+                    texts.append(content["text"])
+                for annotation in content.get("annotations") or []:
+                    if isinstance(annotation, dict) and annotation.get("type") == "url_citation":
+                        add(annotation.get("url"), annotation.get("title"))
+        elif part.get("type") == "web_search_call":
+            action = part.get("action") or {}
+            for source in action.get("sources") or []:
+                if isinstance(source, dict):
+                    add(source.get("url"), source.get("title"))
+
+    parsed = _json_object("\n".join(texts))
+    if not parsed or not urls:
+        return None
+    return parsed, urls
+
+
+async def search_openai_web(query: str, api_key: str, model: str = "gpt-5.4-mini"):
+    """One grounded Responses API request (web_search) for an unknown model."""
+    if not api_key:
+        return None
+    prompt = f"""Tu prépares une fiche technique commerciale française pour un smartphone.
+Recherche réellement sur le Web la référence ou le modèle EXACT : {query!r}.
+Priorité aux pages constructeur officielles (Apple, Samsung, Xiaomi, etc.).
+N'utilise jamais une fiche d'une variante voisine, ni un comparatif confondant deux modèles.
+Vérifie soigneusement 4G/5G, Plus/Pro/Ultra/Pro Max, année et génération.
+Une référence constructeur familiale ne prouve jamais le stockage de l'exemplaire.
+Ne confirme une capacité demandée que si les sources prouvent que le modèle existe en cette capacité.
+Si la capacité n'est pas documentée, écris exactement "Non précisée".
+Une donnée non confirmée doit être une chaîne vide. N'invente rien.
+Retourne exclusivement un objet JSON valide, sans markdown et sans explication :
+{{"verified":true,"brand":"SAMSUNG","model":"Galaxy A56 5G","capacity":"Non précisée",
+"manufacturer_reference":"","specs":{{"ecran":"6,7 pouces AMOLED 120 Hz","photo":"50 Mpx",
+"batterie":"5000 mAh","processeur":"Exynos 1580","reseau":"5G","ram":"8 Go"}}}}
+Ce JSON est un EXEMPLE de format : n'en recopie aucune valeur sans preuve.
+Si tu ne peux confirmer au moins 3 caractéristiques spécifiques du modèle exact,
+retourne {{"verified":false}}.
+"""
+    body = {
+        "model": model,
+        "input": prompt,
+        "tools": [{"type": "web_search", "search_context_size": "low"}],
+        "tool_choice": "required",
+        "include": ["web_search_call.action.sources"],
+        "max_output_tokens": 2200,
+        "store": False,
+    }
+    try:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(19, connect=4)) as client:
+            response = await client.post(
+                "https://api.openai.com/v1/responses",
+                headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                json=body,
+            )
+    except httpx.TimeoutException as exc:
+        raise RuntimeError("Délai OpenAI dépassé.") from exc
+    except httpx.RequestError as exc:
+        raise RuntimeError("Connexion au service OpenAI impossible.") from exc
+
+    if response.status_code == 429:
+        raise RuntimeError("Limite de requêtes ou crédits OpenAI atteints.")
+    if response.status_code in (401, 403):
+        raise RuntimeError("Clé API OpenAI refusée : vérifie OPENAI_API_KEY sur Render.")
+    if response.status_code != 200:
+        raise RuntimeError(f"Erreur OpenAI HTTP {response.status_code}.")
+    return parse_openai_response(response.json())
