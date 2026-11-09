@@ -12,34 +12,37 @@
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-Medium.woff2') format('woff2');font-style:normal;font-weight:500;font-display:swap}
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-SemiBold.woff2') format('woff2');font-style:normal;font-weight:600;font-display:swap}
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-Bold.woff2') format('woff2');font-style:normal;font-weight:700;font-display:swap}
-.labelcard{width:88mm;height:52mm;position:relative;overflow:hidden;border:.22mm solid #cad3df;border-radius:2mm;background:#fff;color:#10233e;font-family:Inter,Arial,sans-serif;font-optical-sizing:auto;isolation:isolate;font-synthesis:none}
-.body{position:relative;height:100%}
+.labelcard{width:88mm;height:52mm;position:relative;overflow:hidden;border:.22mm solid #c4cedc;border-radius:2.5mm;background:linear-gradient(135deg,#fffefa 0%,#f8faff 45%,#e8eef9 100%);color:#122039;font-family:Inter,Arial,sans-serif;font-optical-sizing:auto;isolation:isolate;font-synthesis:none}
+.body{position:relative;height:100%;z-index:1}
 .product-side{position:absolute;left:3mm;top:3mm;width:48.5mm;height:45.5mm;display:flex;flex-direction:column;min-width:0}
-.product-brand{font-size:2.4mm;line-height:1.1;font-weight:600;letter-spacing:.35mm;color:#52647c;margin-bottom:.8mm}
-.phone-name{min-height:0;font-size:6.1mm;line-height:1.04;font-weight:700;letter-spacing:-.23mm;overflow-wrap:anywhere}
+.product-brand{align-self:flex-start;font-size:2.2mm;line-height:1;font-weight:600;letter-spacing:.32mm;color:#61718a;margin-bottom:1mm}
+.phone-name{min-height:0;font-size:6.5mm;line-height:1.04;font-weight:700;letter-spacing:-.27mm;overflow-wrap:anywhere;color:#142c55}
 .phone-name.medium{font-size:4.9mm}.phone-name.long{font-size:4.3mm}.phone-name.verylong{font-size:3.6mm}
-.storage{align-self:flex-start;min-width:19mm;margin:.8mm 0 1.2mm;padding:.6mm 2.4mm;border-radius:1.3mm;background:#fff0a8;color:#142b49;font-size:3mm;line-height:1;font-weight:600;white-space:nowrap}
-.storage.unconfirmed{font-size:2.3mm;padding:.9mm 1.5mm}
-.features{display:flex;flex:1;min-height:0;flex-direction:column;justify-content:space-evenly;gap:.4mm;font-size:2.8mm;line-height:1.16;font-weight:500}
-.spec-line{display:flex;align-items:center;gap:1.5mm;min-height:3.8mm;flex:1}
-.spec-ico{display:flex;align-items:center;justify-content:center;flex:0 0 3.8mm;width:3.8mm;height:3.8mm;border-radius:1.1mm;background:#f0f4f9;color:#334e72}
-.spec-ico svg{width:2.9mm;height:2.9mm;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.storage{align-self:flex-start;display:flex;align-items:center;gap:1.2mm;min-width:19mm;margin:.9mm 0 1.4mm;padding:.65mm 2.1mm;border:.15mm solid #dfc67b;border-radius:4mm;background:linear-gradient(120deg,#fff9e7,#f2dfa0);color:#5c4a20;font-size:2.9mm;line-height:1;font-weight:600;white-space:nowrap}
+.storage::before{content:'';width:1.15mm;height:1.15mm;border-radius:50%;background:#b99336}
+.storage.unconfirmed{font-size:2.3mm;padding:.8mm 1.4mm}
+.features{display:flex;flex:1;min-height:0;flex-direction:column;justify-content:space-evenly;gap:.35mm;font-size:2.8mm;line-height:1.16;font-weight:500;border:.16mm solid #fff;border-radius:1.8mm;background:linear-gradient(130deg,#ffffffd9,#edf3fccc);padding:.9mm 1.1mm}
+.spec-line{display:flex;align-items:center;gap:1.1mm;min-height:3.7mm;flex:1}
+.spec-ico{display:flex;align-items:center;justify-content:center;flex:0 0 3.5mm;width:3.5mm;height:3.5mm;border-radius:1mm;background:linear-gradient(145deg,#ffffff,#dce7f6);border:.12mm solid #cdd9ea;color:#2d527e}
+.spec-ico svg{width:2.7mm;height:2.7mm;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
 .spec-text{flex:1;min-width:0;overflow-wrap:anywhere}
-.ref{font-size:1.5mm;line-height:1.2;color:#65748a;margin-top:1mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref{font-size:1.45mm;line-height:1.2;color:#6a7890;margin-top:.75mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .spec-missing{font-size:2.5mm;color:#9c392c}
-.fin{position:absolute;right:2.2mm;top:2.2mm;width:31.5mm;height:47.2mm;border-radius:1.7mm;background:#102a4d;color:#fff;padding:1.8mm 1.3mm 1.2mm;display:grid;grid-template-rows:6mm repeat(3,7mm) minmax(0,1fr);gap:1.1mm}
-.fin .title{display:flex;align-items:center;justify-content:center;text-align:center;font-size:2.55mm;line-height:1.18;letter-spacing:.06mm;font-weight:600}
-.finrow{display:flex;align-items:stretch;gap:.8mm;min-width:0}
-.finrow .count{display:flex;align-items:center;justify-content:flex-start;flex:0 0 6.2mm;color:#dbe6f7;font-size:3.9mm;line-height:1;font-weight:500;letter-spacing:-.12mm}
-.finrow .amount{display:flex;align-items:center;justify-content:center;flex:1;min-width:0;padding:.4mm .6mm;border-radius:1mm;background:#ffe268;color:#10233e}
+.fin{position:absolute;right:2.2mm;top:2.2mm;width:31.5mm;height:47.2mm;border:.2mm solid #fff;border-radius:2.3mm;background:linear-gradient(155deg,#fffefc,#edf2fb 70%,#d8e3f5);color:#162a49;padding:1.5mm 1.2mm 1.1mm;display:grid;grid-template-rows:6mm repeat(3,7mm) minmax(0,1fr);gap:1.1mm}
+.fin .title{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.65mm;text-align:center;font-size:2.75mm;line-height:1;font-weight:600;letter-spacing:-.05mm}
+.fin .title span{font-size:1.65mm;letter-spacing:.28mm;font-weight:500;color:#65758f}
+.finrow{display:flex;align-items:center;gap:.7mm;min-width:0;padding:.3mm .7mm;border:.15mm solid #afc2df;border-radius:1.6mm;background:linear-gradient(150deg,#ffffff,#f3f7fe 55%,#dce8fa)}
+.finrow .count{display:flex;align-items:center;justify-content:flex-start;flex:0 0 6mm;color:#587396;font-size:3.65mm;line-height:1;font-weight:500;letter-spacing:-.18mm}
+.finrow .amount{display:flex;align-items:center;justify-content:center;flex:1;min-width:0;padding:.25mm 0;color:#142e55}
 .amount-content{display:flex;align-items:baseline;justify-content:center;gap:.4mm;white-space:nowrap}
-.finrow .amount b{font-size:5.5mm;font-weight:700;letter-spacing:-.25mm;line-height:1;font-variant-numeric:tabular-nums}
+.finrow .amount b{font-size:5.7mm;font-weight:700;letter-spacing:-.26mm;line-height:1;font-variant-numeric:tabular-nums}
 .currency{font-size:.57em;letter-spacing:-.06mm}
-.finrow .amount small{font-size:1.85mm;font-weight:500;letter-spacing:-.05mm}
-.finrow .amount.longamount b{font-size:4.3mm}.finrow .amount.longamount small{font-size:1.6mm}
-.cash{display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:.8mm;min-height:0;padding:1mm 1.2mm;border-radius:1mm;background:#fff;color:#10233e}
-.cash small{display:block;font-size:1.95mm;font-weight:600;line-height:1.1;letter-spacing:.12mm;color:#53647c}
-.cash b{font-size:7.3mm;line-height:1;letter-spacing:-.35mm;white-space:nowrap;font-weight:700;font-variant-numeric:tabular-nums}
+.finrow .amount small{font-size:1.75mm;font-weight:500;letter-spacing:-.06mm;color:#617493}
+.finrow .amount.longamount b{font-size:4.2mm}.finrow .amount.longamount small{font-size:1.5mm}
+.cash{position:relative;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:.85mm;min-height:0;padding:1.1mm 1.2mm;border:.15mm solid #284978;border-radius:1.5mm;background:linear-gradient(140deg,#28517f,#112b4d 55%,#0b1c36);color:#fff}
+.cash::before{content:'';position:absolute;left:1.2mm;right:1.2mm;top:0;height:.23mm;background:linear-gradient(90deg,#e8c85f,#f8edd0 50%,#b5c8df)}
+.cash small{display:block;font-size:1.75mm;font-weight:500;line-height:1.1;letter-spacing:.18mm;color:#baccdf}
+.cash b{font-size:7.3mm;line-height:1;letter-spacing:-.35mm;white-space:nowrap;font-weight:600;font-variant-numeric:tabular-nums}
 .cash b.longcash{font-size:5.6mm;letter-spacing:-.2mm}
 .slot[role=button]{cursor:zoom-in}.slot:focus-visible{outline:.5mm solid #245f9f}
 .preview-hint{font-weight:400;margin-left:auto}
@@ -89,7 +92,7 @@ const specLines=order.filter(([k])=>specs[k]).slice(0,5).map(([k,label])=>`<div 
 const modelHTML=esc(model);
 return `<div class="labelcard">
  <div class="body"><div class="product-side"><div class="product-brand">${esc(brand)}</div><div class="phone-name ${sizeClass}">${modelHTML}</div><div class="storage ${!r.capacity||/précisée|confirmer/i.test(r.capacity)?'unconfirmed':''}">${esc(r.capacity||'Capacité à confirmer')}</div><div class="features">${specLines||'<span class="spec-missing">Fiche à actualiser avant impression</span>'}</div><div class="ref">Réf. ${esc(r.ref)}</div></div>
- <div class="fin"><div class="title">PAYEZ EN<br>PLUSIEURS FOIS</div>${[['×5',r.p5],['×10',r.p10],['×20',r.p20]].map(([n,v])=>`<div class="finrow"><span class="count">${n}</span><span class="amount ${euro(v).length>3?'longamount':''}"><span class="amount-content"><b>${euro(v)}<span class="currency">€</span></b><small>/mois</small></span></span></div>`).join('')}
+ <div class="fin"><div class="title"><span>À VOTRE RYTHME</span>En plusieurs fois</div>${[['×5',r.p5],['×10',r.p10],['×20',r.p20]].map(([n,v])=>`<div class="finrow"><span class="count">${n}</span><span class="amount ${euro(v).length>3?'longamount':''}"><span class="amount-content"><b>${euro(v)}<span class="currency">€</span></b><small>/mois</small></span></span></div>`).join('')}
  <div class="cash"><small>PRIX COMPTANT</small><b class="${euro(r.cash).length>3?'longcash':''}">${euro(r.cash)}<span class="currency">€</span></b></div></div></div></div>`
 }
 function fitLabelText(){
