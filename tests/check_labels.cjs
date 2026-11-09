@@ -1,0 +1,53 @@
+// Local browser regression: no remote searches, real shipped catalogue fixtures.
+// APP_ACCESS_TOKEN must match the local server. Never point this at production.
+const assert=require('node:assert/strict');
+const fs=require('node:fs');
+const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
+(async()=>{
+ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH || undefined,headless:true,args:['--no-sandbox']});
+ try{
+ const context=await browser.newContext({viewport:{width:1440,height:1200},httpCredentials:{username:'encre',password:process.env.APP_ACCESS_TOKEN || 'browser-test'}});
+ const page=await context.newPage(); const errors=[];
+ page.on('pageerror',e=>errors.push(e.message));
+ await page.goto('http://127.0.0.1:'+(process.env.TEST_PORT || '8002'));
+ const fixture=[...new Map(['phone','apple','xiaomi','samsung'].flatMap(name=>JSON.parse(fs.readFileSync(name+'_catalog.json','utf8')).phones).map(p=>[p.brand+p.model,p])).values()];
+ await page.evaluate(phones=>{
+  rows=phones.map((p,i)=>({...p,ref:p.brand+' '+p.model,capacity:p.capacities[0] || 'Non précisée',cash:i===0?450:1299.99,...calcFin(i===0?450:1299.99)}));
+  draw();
+ },fixture);
+ const inspect=()=>page.evaluate(()=>[...document.querySelectorAll('.labelcard')].flatMap((card,i)=>{
+  const issues=[];
+  if(Math.abs(card.offsetWidth-88*96/25.4)>1 || Math.abs(card.offsetHeight-52*96/25.4)>1)issues.push('wrong dimensions');
+  card.querySelectorAll('.spec-text').forEach(t=>{
+   if(t.scrollHeight>t.parentElement.clientHeight+1 || t.scrollWidth>t.clientWidth+1)issues.push('spec clipped: '+t.textContent);
+  });
+  const cash=card.querySelector('.cash');
+  card.querySelectorAll('.amount').forEach(amount=>{if(amount.scrollWidth>amount.clientWidth+1)issues.push('monthly amount overflow')});
+  if(cash.scrollWidth>cash.clientWidth+1)issues.push('cash overflow');
+  if(card.querySelector('.features').getBoundingClientRect().bottom>card.querySelector('.ref').getBoundingClientRect().top+1)issues.push('features overlap reference');
+  return issues.map(issue=>({model:rows[i].model,issue}));
+ }));
+ await page.emulateMedia({media:'print'});
+ assert.deepEqual(await inspect(),[]);
+ await page.locator('.labelcard').first().screenshot({path:process.env.LABEL_PREVIEW || '/tmp/encre-label-preview.png'});
+ const expected=await page.evaluate(()=>Math.max(1,Math.ceil(rows.length/10)));
+ assert.equal(await page.locator('.sheet').count(),expected);
+ // Eleven labels must produce two physical A4 pages; retain PDF for inspection.
+ await page.evaluate(()=>{rows=rows.slice(0,11);draw()});
+ assert.equal(await page.locator('.sheet').count(),2);
+ await page.pdf({path:process.env.LABEL_PDF || '/tmp/encre-labels.pdf',preferCSSPageSize:true});
+ await page.emulateMedia({media:'screen'});
+ await page.setViewportSize({width:390,height:844});
+ await page.evaluate(()=>draw());
+ assert.deepEqual(await inspect(),[]);
+ // Existing saved labels remain editable and use the exact financing coefficients.
+ await page.locator('[data-act="edit"]').first().click();
+ await page.fill('#cash','1000');
+ assert.deepEqual(await page.locator('#p5,#p10,#p20').evaluateAll(es=>es.map(e=>e.value)),['208','107','56']);
+ await page.click('#add');
+ assert.equal(await page.locator('.labelcard img').count(),0);
+ assert.equal(await page.locator('.logo-phone').first().locator('path').count(),1); // speaker, no decorative rays
+ assert.deepEqual(errors,[]);
+ console.log('Labels OK: '+fixture.length+' catalogue models, 88×52 mm, two A4 pages, mobile, saved-label editing, financing');
+ }finally{await browser.close()}
+})().catch(e=>{console.error(e);process.exit(1)});

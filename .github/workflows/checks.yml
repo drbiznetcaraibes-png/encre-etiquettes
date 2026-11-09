@@ -18,3 +18,16 @@ jobs:
       - run: node tests/check_schema.cjs
         env:
           PGLITE_MODULE: /tmp/sqlcheck/node_modules/@electric-sql/pglite
+      - run: npm install --prefix /tmp/browsercheck --no-audit --no-fund playwright@1.62.1
+      - run: /tmp/browsercheck/node_modules/.bin/playwright install --with-deps chromium
+      - name: Tester le gabarit et l'impression dans Chromium
+        env:
+          APP_ACCESS_TOKEN: browser-test
+          PLAYWRIGHT_MODULE: /tmp/browsercheck/node_modules/playwright
+        run: |
+          uvicorn server:app --host 127.0.0.1 --port 8002 > /tmp/encre-server.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent http://127.0.0.1:8002/health; then break; fi
+            sleep 1
+          done
+          node tests/check_labels.cjs

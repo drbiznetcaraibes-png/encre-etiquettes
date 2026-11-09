@@ -1,6 +1,6 @@
 # Mise en service après validation
 
-Aucune migration, import distant, activation planifiée ou opération Render n'a été effectuée par cette modification. La PR reste à valider avant fusion. Le gabarit imprimé, le CSS, la planche A4 et les coefficients 0,20748 / 0,10693 / 0,055885 restent inchangés.
+Aucune migration, import distant, activation planifiée ou opération Render n'a été effectuée par cette modification. La PR reste à valider avant fusion. Le nouveau visuel a été validé dans la conversation. Les dimensions 88 × 52 mm, la planche A4 et les coefficients 0,20748 / 0,10693 / 0,055885 restent inchangés.
 
 ## Supabase
 
@@ -34,3 +34,10 @@ Alternative Render : Cron Job `python maintenance.py weekly --apply`, planning `
 ## Validation
 
 `python -m unittest discover -s tests -v` et `python maintenance.py import`. Les tests n'utilisent ni secrets réels ni appels payants. Tests navigateur : recherche iPhone 16 128 Go, prix 1 000 EUR donnant 208 / 107 / 56 EUR, ajout à la planche et impression PDF A4. Le schéma a aussi été exécuté deux fois dans PostgreSQL embarqué (PGlite) : 40 réservations acceptées sur 60 demandes, plafond de 4 EUR et permissions vérifiés. Cela ne remplace pas une validation multi-connexions sur un vrai projet Supabase de test avant production. Le test reproductible est `tests/check_schema.cjs`, exécuté dans la CI.
+
+
+## Gabarit graphique validé
+
+Le modèle imprimé reprend le bandeau marine, le logo sans les trois rayons jaunes, les caractéristiques à gauche sans photo, les mensualités avec liseré bleu fin et les panneaux jaunes à droite, puis le prix comptant sur fond blanc. Les pictogrammes et les textes sont vectoriels/HTML : le rendu reste net et les données restent propres à chaque téléphone. Aucun visuel de maquette n'est utilisé comme fiche technique.
+
+Le test `tests/check_labels.cjs` vérifie les 103 modèles dédupliqués des catalogues : absence de débordement, format 88 × 52 mm, pagination (11 étiquettes sur deux pages A4), affichage mobile, modification d'une étiquette sauvegardée et coefficients. Il tourne également en CI avec Playwright/Chromium. Pour le lancer localement, démarrer le serveur avec `APP_ACCESS_TOKEN=browser-test`, installer Playwright, puis `APP_ACCESS_TOKEN=browser-test TEST_PORT=8002 node tests/check_labels.cjs` (définir `CHROMIUM_PATH` si Chromium est déjà installé). Le PDF de test et l'aperçu sont enregistrés dans `/tmp`, jamais envoyés en production.

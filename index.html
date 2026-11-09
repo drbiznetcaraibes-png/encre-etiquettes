@@ -1,107 +1,53 @@
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Encre pour tous | Étiquettes téléphones V14</title><style>
 :root{--navy:#092454;--navy2:#123f80;--gold:#f6c431;--bg:#edf1f7}*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px system-ui,Arial,sans-serif;color:#142b4c}header{padding:17px 22px;background:#091e42;color:white;display:flex;justify-content:space-between;align-items:center;gap:12px}header strong{font-size:19px}header em{color:#ffd34d;font-style:normal}main{display:grid;grid-template-columns:minmax(350px,420px) 1fr;gap:20px;padding:20px;align-items:start}.panel{background:#fff;padding:19px;border-radius:13px;box-shadow:0 5px 24px #12304b18}.panel h2{margin:0 0 7px;font-size:19px}.sub{color:#61718b;margin:0 0 12px;line-height:1.5}.cols{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.three{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}label{display:block;margin:11px 0 5px;font-size:12px;font-weight:750}input,select{width:100%;border:1px solid #cbd6e2;border-radius:8px;padding:10px;font:inherit}input:focus,select:focus{outline:2px solid #f9ce51}.btn{background:#082856;color:white;border:0;padding:11px 12px;border-radius:9px;cursor:pointer;font-weight:750}.btn.gold{background:#f7c83f;color:#10234a}.btn.light{background:#e9eff6;color:#193653}.btn.tiny{padding:6px 9px;font-size:12px}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.message{font-size:12px;color:#687994;margin-top:10px}.result{background:#f5f8fc;border:1px solid #e4ebf3;border-radius:9px;padding:11px;margin-top:12px;min-height:45px;line-height:1.5}.result strong{font-size:15px}.result .pill{font-size:10px;background:#dfe9f7;padding:3px 6px;border-radius:5px;color:#24456d}.list{list-style:none;margin:8px 0;padding:0;max-height:285px;overflow-y:auto}.list li{padding:8px 0;display:flex;gap:7px;align-items:center;border-bottom:1px solid #edf0f4}.grow{flex:1;min-width:0}.grow b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.grow small{color:#6c788c}.righthead{display:flex;justify-content:space-between;margin:0 0 12px;gap:12px}.pages{display:flex;flex-wrap:wrap;gap:18px;justify-content:center}.sheet{width:210mm;height:297mm;background:white;box-shadow:0 8px 25px #192b4322;display:grid;grid-template-columns:88mm 88mm;grid-template-rows:repeat(5,52mm);column-gap:5mm;row-gap:4mm;align-content:center;justify-content:center;flex-shrink:0}.slot{width:88mm;height:52mm;overflow:hidden;border:.18mm dashed #a7b0c3}.slot.empty{border-color:#e9edf2}
-/* Gabarit premium validé, adapté à 88 x 52 mm sans photographie. */
-.labelcard{width:88mm;height:52mm;position:relative;overflow:hidden;background:linear-gradient(115deg,#ffffff 0%,#f7f9ff 67%,#e4eefa 100%);font-family:Arial,Helvetica,sans-serif;color:#071b41;isolation:isolate}
-.labelcard::before{content:"";position:absolute;left:-20mm;bottom:-13mm;width:67mm;height:24mm;background:radial-gradient(ellipse,#f4f8ff,transparent 75%);pointer-events:none}
-.labelcard::after{content:"";position:absolute;right:-8mm;top:5mm;width:32mm;height:55mm;border:2.8mm solid #ffd02c;border-radius:45%;transform:rotate(35deg);opacity:.13;pointer-events:none}
-.stripe{height:8.4mm;background:linear-gradient(110deg,#061735 2%,#0b3270 72%,#154e90 100%);color:white;position:relative;display:flex;align-items:center;padding:0 2.5mm 0 2.7mm;overflow:hidden}
-.stripe::after{content:"";position:absolute;width:52mm;height:6mm;right:-5mm;bottom:-5.4mm;border-radius:55%;background:#ffce19;transform:rotate(-6deg)}
-.logo-phone{width:3.9mm;height:5.9mm;display:inline-block;flex:none;border:.55mm solid #fff;border-radius:.7mm;margin-right:1.7mm;transform:rotate(12deg);position:relative}
-.logo-phone::after{content:"";position:absolute;right:-.9mm;top:-.65mm;width:1.7mm;height:1.25mm;border-radius:.4mm;background:#ffcd26}
-.logo-name{font-family:Arial,Helvetica,sans-serif;font-weight:1000;font-style:italic;font-size:4.3mm;letter-spacing:-.14mm;white-space:nowrap;line-height:1;z-index:1}
-.logo-name em{font-style:italic;color:#ffcd27}
-.stripe-tag{margin-left:auto;color:#fff;font-size:1.9mm;font-weight:750;letter-spacing:.07mm;z-index:1;align-self:center}
-.accent-line{position:absolute;height:1mm;width:100%;left:0;top:8.35mm;background:linear-gradient(90deg,#ffc518,#f7db70,#ffc518);z-index:2}
-.body{position:relative;height:43.6mm}
-.product-side{position:absolute;left:2.6mm;top:1.9mm;width:45.7mm;height:39.4mm;display:flex;flex-direction:column;min-width:0;z-index:2}
-.product-brand{font-size:2.4mm;font-weight:900;letter-spacing:.22mm;color:#123a74;margin-bottom:.5mm}
-.phone-name{font-weight:1000;letter-spacing:-.13mm;font-size:4.3mm;line-height:1.03;color:#061b42;overflow-wrap:anywhere;word-break:normal;min-height:8.5mm;max-height:17.9mm;overflow:visible}
-.phone-name.medium{font-size:3.8mm;line-height:1.05}
-.phone-name.long{font-size:3.28mm;line-height:1.1;letter-spacing:-.07mm}
-.phone-name.verylong{font-size:2.9mm;line-height:1.12;letter-spacing:-.05mm}
-.storage{align-self:flex-start;background:linear-gradient(110deg,#ffd426,#ffbb00);color:#071b42;border-radius:1.8mm;font-weight:1000;font-size:3.3mm;padding:.75mm 2.5mm;margin:1.25mm 0 .95mm 0;box-shadow:0 .3mm .5mm #e0a91e38}
-.features{font-size:2.25mm;line-height:1.2;font-weight:700;min-height:9mm;max-height:12.6mm;overflow:hidden;display:flex;flex-direction:column;gap:.42mm}.spec-line{display:flex;align-items:baseline;gap:.7mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.spec-ico{flex:none;min-width:2.8mm;color:#094387;font-size:2.2mm}.spec-line span:last-child{overflow:hidden;text-overflow:ellipsis}
-
-.ref{font-size:1.85mm;color:#5b6a87;margin-top:auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;padding-bottom:.4mm}
-.fin{position:absolute;right:1.8mm;top:1.4mm;width:35.5mm;height:40.8mm;background:linear-gradient(145deg,#062052 3%,#104589 66%,#071939);border-radius:3.5mm 3.5mm 1.9mm 1.9mm;padding:1.55mm 1.2mm 1.25mm;box-shadow:0 .5mm 1.2mm #071c4552;border:.22mm solid #e5b81f;z-index:3}
-.fin .title{background:linear-gradient(110deg,#ffd500,#ffbb08);border-radius:1.5mm;transform:skew(-7deg);text-align:center;color:#072451;font-weight:1000;font-style:italic;font-size:2.25mm;letter-spacing:.04mm;padding:.8mm .2mm;margin:-.35mm -.6mm .65mm;white-space:nowrap;box-shadow:0 .5mm .5mm #02112c40}
-.finrow{display:flex;align-items:center;gap:.8mm;height:7.8mm;margin:0 0 .32mm;border:.22mm solid #43bfff;border-radius:1.9mm;box-shadow:0 0 1.4mm #00b8ff9c;background:linear-gradient(100deg,#08346c,#05356a)}
-.finrow .count{color:#fff;font-weight:1000;font-style:italic;font-size:4.05mm;width:8mm;text-align:center;line-height:1}
-.finrow .amount{align-self:stretch;min-width:0;flex:1;background:linear-gradient(115deg,#ffec48,#ffd017 60%,#ffc023);border-radius:1.6mm;display:flex;justify-content:center;align-items:baseline;gap:.3mm;white-space:nowrap;color:#06183a;padding:.6mm .1mm 0;transform:skew(-4deg);box-shadow:inset .15mm .2mm .4mm #fff6a0}
-.finrow .amount b{font-weight:1000;font-size:5.2mm;letter-spacing:-.18mm;line-height:1.1}
-.finrow .amount small{font-size:1.6mm;font-weight:900;align-self:flex-end;margin-bottom:1.2mm;letter-spacing:-.08mm}
-.cash{height:7.5mm;margin-top:.3mm;background:linear-gradient(#fff,#f9fbff);border:.25mm solid #f6c12b;border-radius:1.8mm;box-shadow:0 .3mm .5mm #02142b4a;display:flex;align-items:center;justify-content:space-between;padding:.65mm 1.45mm;color:#061b42}
-.cash small{font-size:1.9mm;font-style:italic;font-weight:900;line-height:1.06}
-.cash b{font-size:5mm;letter-spacing:-.15mm;font-weight:1000;white-space:nowrap}
-/* Détails de lisibilité au format réel : aucune information ne doit être masquée. */
-.slot{border:.15mm dashed #9baac1}
-@media print{.labelcard{-webkit-print-color-adjust:exact;print-color-adjust:exact}.sheet{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
 .hint{font-size:12px;color:#6c7c96}.info{font-size:12px;line-height:1.5;background:#fff8e8;border-radius:8px;padding:10px;color:#725015;margin-top:12px}@page{size:A4 portrait;margin:0}@media(max-width:1160px){main{display:block}.right{margin-top:20px}.sheet{zoom:.72}}@media(max-width:610px){main{padding:10px}.sheet{zoom:.45}.panel{padding:14px}}@media print{body{background:white}header,.left,.righthead{display:none!important}main{display:block;margin:0;padding:0}.right{margin:0;padding:0}.pages{display:block}.sheet{zoom:1!important;box-shadow:none;margin:0;break-after:page;page-break-after:always}.sheet:last-child{break-after:auto}.slot.empty{border:0}}
 
 .spec-missing{color:#ac3b2b;font-size:2.1mm;font-weight:800;line-height:1.2}
-/* V8 — Maquette commerciale approuvée adaptée à la taille de vente 88 × 52 mm. */
-.labelcard{background:linear-gradient(140deg,#fff 0%,#f7fbff 61%,#e8effa 100%);border-radius:2.4mm;border:.18mm solid #072965;box-shadow:inset 0 0 0 .35mm #fff;color:#061c45}
-.labelcard::before{left:-11mm;bottom:-10mm;width:64mm;height:27mm;background:radial-gradient(ellipse,#dbe8ff75,transparent 70%)}
-.labelcard::after{right:-18mm;top:-20mm;width:55mm;height:45mm;border:1.1mm solid #ffd318;border-radius:42%;transform:rotate(-18deg);opacity:.25}
-.stripe{height:9mm;background:linear-gradient(106deg,#051839 0%,#07265a 70%,#0c3a7a 100%);padding-left:2.8mm;border-bottom:1mm solid #ffcf0a}
-.stripe::after{width:50mm;height:7.4mm;right:-7mm;bottom:-6.8mm;background:linear-gradient(115deg,#ffe45a,#ffbf04);border-radius:50%;transform:rotate(-7deg)}
-.logo-phone{width:4mm;height:5.75mm;border-width:.52mm;border-radius:1mm}
-.logo-name{font-family:Arial,Helvetica,sans-serif;font-size:4.1mm;font-style:italic;font-weight:900;letter-spacing:-.17mm;text-shadow:0 .14mm .25mm #030b22}
-.logo-name em{color:#ffdb05}
-.stripe-tag{font-size:1.72mm;letter-spacing:.12mm}
-.accent-line{top:9mm;height:.4mm;background:#ffdc25}
-.body{height:42.7mm}
-.product-side{left:2.3mm;top:2.5mm;width:46.2mm;height:38.5mm}
-.product-brand{font-size:2.95mm;font-weight:900;letter-spacing:.35mm;color:#093b84;margin-bottom:1mm}
-.phone-name{font-size:4.65mm;line-height:1.03;min-height:8.5mm;max-height:15.2mm;font-weight:900;letter-spacing:-.12mm;text-wrap:balance}
-.phone-name.medium{font-size:4.2mm}
-.phone-name.long{font-size:3.62mm}
-.phone-name.verylong{font-size:3.1mm}
-.storage{font-size:3.4mm;background:linear-gradient(100deg,#ffdd1d,#ffb900);border-radius:2.5mm;color:#051d49;padding:.75mm 2.3mm;margin:1.15mm 0 1.3mm;box-shadow:0 .45mm .65mm #cf9d1640}
-.features{font-size:2.3mm;line-height:1.12;max-height:14.9mm;min-height:12.6mm;gap:.45mm;font-weight:700}
-.spec-line{background:linear-gradient(90deg,#eef4ff 0%,#fff0 85%);border-radius:.55mm;gap:.8mm;line-height:1.25}
-.spec-ico{display:inline-flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#0a4081,#061d4e);color:#fff;font-size:2.05mm;min-width:3.7mm;width:3.7mm;height:3.25mm;border-radius:.7mm;text-align:center;line-height:1}
-.spec-line span:last-child{flex:1;overflow:hidden;text-overflow:ellipsis}
-.ref{font-size:1.73mm;color:#69758d;padding-bottom:.5mm}
-.fin{right:1.35mm;top:1.85mm;width:36.6mm;height:39.45mm;background:linear-gradient(150deg,#08285c 2%,#062052 60%,#061a3c 100%);border-radius:5.1mm;padding:1.75mm 1.4mm 1.4mm;border:.18mm solid #12478f;box-shadow:0 .7mm 1.45mm #071a474f}
-.fin .title{height:5.55mm;display:flex;align-items:center;justify-content:center;background:linear-gradient(110deg,#ffe720,#ffbd00);border:0;border-radius:2.4mm 1.1mm 2.4mm 1.4mm;color:#061f4c;font-size:2.48mm;line-height:1;font-weight:900;letter-spacing:-.06mm;padding:.6mm .5mm;margin:-1.1mm .4mm .7mm;box-shadow:0 .4mm 1mm #030e2440;transform:skew(-6deg)}
-.finrow{height:7.65mm;margin:0 0 .38mm;border:.23mm solid #28d6ff;border-radius:2.3mm;background:linear-gradient(100deg,#12488b,#08285a);box-shadow:0 0 .95mm #31c7ff84, inset 0 .15mm .6mm #5cb9ff85;gap:.3mm}
-.finrow .count{font-size:5.1mm;font-weight:1000;font-style:italic;width:9.5mm;flex:0 0 9.5mm;letter-spacing:-.18mm;text-shadow:0 .25mm .5mm #000c;-webkit-text-stroke:.13mm #fff}
-.finrow .amount{background:linear-gradient(105deg,#fff274,#ffe516 48%,#ffc400 100%);border-radius:2.2mm;box-shadow:inset 0 .15mm .5mm #fff,0 .2mm .5mm #ffd54466;display:flex;align-items:center;justify-content:center;transform:skew(-5deg);padding:.3mm .3mm;gap:.3mm}
-.finrow .amount b{font-size:5.5mm;font-weight:900;letter-spacing:-.2mm;line-height:1}
-.finrow .amount small{font-size:1.75mm;margin-bottom:.9mm;font-style:italic}
-.cash{height:7.15mm;margin-top:.6mm;background:linear-gradient(160deg,#fff,#f5f8ff);border:.35mm solid #ffc910;border-radius:2.2mm;box-shadow:0 .3mm .9mm #05112d73;color:#071d4c;padding:.6mm 1mm}
-.cash small{font-size:2.08mm;font-style:italic;font-weight:900}
-.cash b{font-size:5.4mm;font-weight:900;letter-spacing:-.18mm}
-.labelcard:before,.labelcard:after{z-index:0}
-/* When generated labels are printed, preserve the premium background and accurately sized sheets. */
-@media print{.labelcard,.fin,.stripe,.storage,.finrow,.amount,.cash,.spec-ico{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
-
-/* V10 — Prix comptant mis en avant sans réduire la lisibilité des mensualités. */
-.fin{padding-bottom:1.05mm}
-.fin .title{height:5mm;margin-bottom:.48mm}
-.finrow{height:7.1mm;margin-bottom:.22mm}
-.finrow .count{font-size:5.3mm;font-weight:1000}
-.finrow .amount b{font-size:5.6mm}
-.cash{height:9.7mm;margin-top:.55mm;padding:.6mm 1mm;background:linear-gradient(112deg,#fff47b 0%,#ffdf22 55%,#ffbf05 100%);border:.45mm solid #fff;border-radius:2.5mm;box-shadow:0 0 1mm #ffd01c9a,0 .4mm .8mm #05112d77}
-.cash small{color:#0a295b;font-size:2.25mm;line-height:1.1;font-weight:1000;font-style:normal}
-.cash b{font-size:6.35mm;letter-spacing:-.29mm;color:#06183b;font-weight:1000;text-shadow:0 .15mm 0 #ffffff55}
-.cash b.longcash{font-size:5.35mm;letter-spacing:-.22mm}
-
-/* V11 : prix TTC épuré, sans libellé. Blanc premium, liseré bleu et filet or. */
-.cash{
-  position:relative;display:flex;align-items:center;justify-content:center;
-  height:9.7mm;margin-top:.55mm;padding:.4mm 1.05mm;
-  background:linear-gradient(155deg,#ffffff 0%,#ffffff 54%,#eef4fe 100%);
-  border:.37mm solid #14396f;border-radius:2.5mm;
-  box-shadow:0 .28mm .75mm #030d2a55,inset 0 .12mm .25mm #ffffff;
-  overflow:hidden;
-}
-.cash::before{content:'';position:absolute;left:1.25mm;top:1.1mm;bottom:1.1mm;width:.75mm;border-radius:1mm;background:#ffcf18}
-.cash small{display:none!important}
-.cash b{display:block;flex:0 1 auto;font-size:7.1mm;font-weight:1000;line-height:1;letter-spacing:-.22mm;color:#061c48;white-space:nowrap;text-shadow:none}
-.cash b.longcash{font-size:6.05mm;letter-spacing:-.19mm}
 .product-specs{margin:9px 0;display:grid;gap:3px}.product-specs b{display:inline-block;min-width:65px}.product-sources{font-size:11px;margin-top:9px;overflow-wrap:anywhere}.product-sources a{display:inline-block;margin-right:9px;color:#214c87}.capacity-hint{margin:5px 0 0;color:#61718b;font-size:12px}
+
+.slot{border:0;outline:.15mm dashed #a7b0c3;outline-offset:.1mm}.slot.empty{outline-color:#e9edf2}
+@media print{.slot.empty{outline:none}}
+/* Modèle validé : 88 × 52 mm, sans photo, logo sans rayons, néon fin. */
+.labelcard{width:88mm;height:52mm;position:relative;overflow:hidden;border:.25mm solid #08235d;border-radius:2.5mm;background:#fff;color:#04183e;font-family:Arial,Helvetica,sans-serif;isolation:isolate;box-shadow:inset 0 -1.05mm #08265e,inset 0 -1.65mm #ffdc00}
+.stripe{position:relative;height:8mm;display:flex;align-items:center;gap:1.25mm;padding:0 2.3mm;background:linear-gradient(115deg,#021535,#062859);color:white;z-index:1}
+.logo-phone{display:block;flex:none;width:4.3mm;height:6.2mm;transform:rotate(17deg);color:white}
+.logo-name{position:relative;font-size:4.55mm;line-height:1;font-style:italic;font-weight:900;letter-spacing:-.2mm;white-space:nowrap}
+.logo-name em{color:#ffe000;font-style:inherit}
+.logo-name::after{content:'';position:absolute;left:0;right:0;bottom:-1.3mm;height:.7mm;border-radius:90% 60% 0 0;background:#ffe000;clip-path:polygon(0 100%,10% 36%,40% 0,72% 18%,100% 100%,70% 73%,40% 46%,15% 70%)}
+.stripe-tag{margin-left:auto;font-size:2.35mm;font-weight:900;font-style:italic;white-space:nowrap}
+.accent-line{position:absolute;left:0;top:6.7mm;width:100%;height:2.7mm;z-index:2;pointer-events:none}
+.body{position:relative;height:43.5mm;z-index:3}
+.product-side{position:absolute;left:2.4mm;top:1mm;width:47.3mm;height:40.6mm;display:flex;flex-direction:column;gap:0;min-width:0}
+.product-brand{font-size:2.8mm;line-height:1.1;font-weight:900;letter-spacing:.16mm;color:#09358b;margin-bottom:.3mm}
+.phone-name{font-size:5.6mm;line-height:1.03;font-weight:900;font-style:italic;letter-spacing:-.24mm;overflow-wrap:anywhere}
+.phone-name.medium{font-size:4.6mm}.phone-name.long{font-size:4mm}.phone-name.verylong{font-size:3.3mm}
+.model-highlight{display:inline-block;border-radius:1.15mm;background:linear-gradient(110deg,#ffef58,#ffe000);padding:0 .4mm}
+.storage{align-self:center;min-width:25mm;margin:1mm 0 .75mm;padding:.25mm 2mm;border:.35mm solid #ffdc00;border-radius:5mm;background:linear-gradient(#095199,#021a43 80%);color:white;font-size:4.2mm;line-height:1.05;font-weight:900;font-style:italic;text-align:center;white-space:nowrap}
+.storage.unconfirmed{font-size:2.25mm;padding:.6mm 1.3mm}
+.features{display:flex;flex:1;min-height:0;flex-direction:column;justify-content:space-evenly;gap:.4mm;font-weight:700;font-size:2.7mm;line-height:1.08}
+.spec-line{display:flex;align-items:center;gap:1mm;min-height:0;flex:1}
+.spec-ico{position:relative;display:flex;align-items:center;justify-content:center;flex:0 0 5.15mm;width:5.15mm;height:4.3mm;margin-right:1.5mm;border-radius:.85mm;background:linear-gradient(145deg,#0866b5,#021538 85%);box-shadow:inset 0 .15mm .25mm #a5d8ff77;color:white}
+.spec-ico::after{content:'';position:absolute;right:-1.6mm;width:.5mm;top:0;bottom:0;border-radius:.4mm;background:linear-gradient(#ffe300,#ffc200)}
+.spec-ico svg{width:3.6mm;height:3.6mm;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.spec-text{min-width:0;flex:1;overflow-wrap:anywhere}
+.ref{font-size:1.5mm;line-height:1.1;color:#61718b;margin-top:.6mm;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.spec-missing{font-size:2.3mm;color:#ac3b2b}
+.fin{position:absolute;right:.9mm;top:1mm;width:36mm;height:40.6mm;border:.15mm solid #0e3882;border-radius:4mm;background:linear-gradient(125deg,#082d66,#02183c 65%,#092f6b);padding:0 .95mm .6mm;display:flex;flex-direction:column;gap:.8mm}
+.fin .title{position:relative;flex:none;align-self:center;display:flex;align-items:center;justify-content:center;width:31.7mm;height:7.3mm;margin-top:-.6mm;margin-bottom:.5mm;border-radius:3mm 2mm 2mm 1.8mm;background:linear-gradient(120deg,#fff46c 0%,#ffe100 22%,#ffdd00 85%,#fff13b);box-shadow:inset 0 .15mm .4mm #fff7ad,0 .2mm .7mm #01132b66;transform:skew(-8deg);font-weight:900;font-style:italic;text-align:center;font-size:3.05mm;line-height:.96;letter-spacing:-.06mm}
+.finrow{position:relative;isolation:isolate;display:flex;align-items:stretch;flex:none;height:6.55mm;border:.17mm solid transparent;border-radius:2.6mm;background:linear-gradient(#073770,#031434 70%,#082f60)}
+.finrow::before{content:'';position:absolute;left:-.17mm;top:-.17mm;bottom:-.17mm;width:14mm;border:.16mm solid #60e5ff;border-right:0;border-radius:2.6mm 0 0 2.6mm;box-shadow:-.1mm 0 .3mm #00c8ffbb,0 -.15mm .35mm #00cfff99,0 .15mm .35mm #00beff88;z-index:-1}
+.finrow .count{display:flex;align-items:center;justify-content:center;flex:0 0 11.2mm;color:#fff;font-size:5.1mm;line-height:1;font-weight:900;font-style:italic;letter-spacing:-.2mm;text-shadow:0 .2mm .3mm #0007}
+.finrow .amount{position:relative;display:flex;align-items:center;justify-content:center;gap:.3mm;flex:1;min-width:0;margin:-.17mm -.17mm -.17mm -1mm;padding-left:1.3mm;padding-right:.7mm;border:.18mm solid #fff9ce;border-radius:1.5mm 2.5mm 2.5mm 0;background:linear-gradient(115deg,#fff575,#ffe500 27%,#ffdb00 76%,#fff248);box-shadow:inset .1mm .18mm .45mm #fffbd5;transform:skew(-9deg);color:#04183e}
+.amount-content{display:flex;align-items:baseline;justify-content:center;gap:.35mm;transform:skew(9deg);white-space:nowrap;font-style:italic}
+.finrow .amount b{font-size:5.5mm;font-weight:900;letter-spacing:-.3mm;line-height:1}
+.finrow .amount .currency{font-size:.6em;vertical-align:top;letter-spacing:-.15mm}
+.finrow .amount small{font-size:2.2mm;letter-spacing:-.12mm;font-weight:800}
+.finrow .amount.longamount b{font-size:4.4mm}.finrow .amount.longamount small{font-size:1.85mm}
+.cash{display:flex;align-items:center;justify-content:space-between;gap:.7mm;flex:1;min-height:0;margin-top:1mm;margin-left:-.95mm;margin-right:-.95mm;padding:.6mm 1.25mm;border:.3mm solid #ffdc00;border-radius:3.4mm;background:linear-gradient(145deg,#fff,#fff 65%,#eef4ff);box-shadow:0 .18mm .4mm #0005;color:#02173b}
+.cash small{display:flex;align-items:center;flex:none;align-self:stretch;border-right:.4mm solid #ffd000;padding-right:1.1mm;font-size:2.5mm;font-style:italic;line-height:1;font-weight:900}
+.cash b{font-size:7mm;line-height:1;font-style:italic;letter-spacing:-.4mm;white-space:nowrap;font-weight:900}
+.cash .currency{font-size:.6em;vertical-align:top}.cash b.longcash{font-size:5.1mm;letter-spacing:-.3mm}
+@media print{.labelcard,.labelcard *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
 </style></head><body><header><strong>ENCRE POUR <em>TOUS</em> <small style="font-size:12px;font-weight:400">/ Étiquettes smartphones</small></strong><span id="counter">0 étiquette</span></header><main><div class="left"><section class="panel"><h2>Ajouter un téléphone</h2><p class="sub">Saisis la référence constructeur ou le nom complet du téléphone (ex. Samsung A56 5G 256 Go). Les fiches constructeur sont utilisées en priorité, avec une recherche Internet et IA en complément. Choisis ensuite le stockage du téléphone si plusieurs capacités sont disponibles.</p><label for="reference">Référence ou nom du téléphone</label><div class="cols" style="grid-template-columns:1fr auto;align-items:end"><input id="reference" placeholder="Ex. Xiaomi 17T ou iPhone 17 Pro" autocomplete="off" list="phoneModels" aria-describedby="referenceHint"><button id="search" class="btn">Rechercher</button></div><datalist id="phoneModels"></datalist><p id="referenceHint" class="hint">Choisis une suggestion ou saisis librement le nom d’un autre modèle, puis clique sur Rechercher.</p><div class="actions" style="margin-top:8px"><button id="diagnostic" class="btn light tiny" type="button">Tester le serveur</button></div><div class="result" id="product" aria-live="polite"><span style="color:#687a95">Aucun téléphone sélectionné.</span></div><label>Prix TTC à saisir (mensualités calculées automatiquement et arrondies à l’euro supérieur)</label><div><label for="cash">Prix TTC comptant (€)</label><input id="cash" type="number" min="0" step="0.01" placeholder="Ex. 1259"></div><div class="three"><div><label for="p5">×5 (€/mois)</label><input id="p5" type="number" min="0" step="1" readonly></div><div><label for="p10">×10 (€/mois)</label><input id="p10" type="number" min="0" step="1" readonly></div><div><label for="p20">×20 (€/mois)</label><input id="p20" type="number" min="0" step="1" readonly></div></div><div class="info">Aucune caractéristique ni mensualité à saisir : montants calculés automatiquement à partir du prix TTC. Coefficients : ×5 = 0,20748 ; ×10 = 0,10693 ; ×20 = 0,055885. Sous réserve des conditions et de l’acceptation de l’organisme de financement.</div><div class="actions"><button id="add" class="btn gold">+ Ajouter à la planche</button><button id="clearForm" class="btn light">Nouvelle référence</button></div><div id="status" class="message" role="status" aria-live="polite"></div></section><section class="panel" style="margin-top:16px"><h2>Planche d'impression</h2><ul id="list" class="list"></ul><div class="actions"><button id="print" class="btn">Imprimer en A4</button><button id="refreshAll" class="btn gold">↻ Actualiser les caractéristiques</button><button id="backup" class="btn light">Exporter la liste</button><button id="import" class="btn light">Importer</button><input id="importfile" type="file" accept="application/json" hidden><button id="wipe" class="btn light">Tout effacer</button></div><p class="hint">10 étiquettes premium (88 × 52 mm) maximum par feuille A4, sans photo et avec nom du modèle sur plusieurs lignes. Fiches constructeur et recherche Internet, avec sources consultables. Mensualités calculées automatiquement à partir du prix TTC. Étiquettes et fiches trouvées conservées dans ce navigateur (sauvegarde via Exporter la liste).</p></section></div><div class="right"><div class="righthead"><strong>Aperçu A4 portrait</strong><span id="countPages" class="hint">1 page</span></div><div id="pages" class="pages"></div></div></main><script>
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const FIN_COEFFICIENTS={p5:0.20748,p10:0.10693,p20:0.055885};const calcFin=(price)=>{const p=Number(price);return Object.fromEntries(Object.entries(FIN_COEFFICIENTS).map(([key,coefficient])=>[key,Number.isFinite(p)&&p>0?String(Math.ceil(p*coefficient-1e-9)):'']))};function refreshFin(){const amounts=calcFin($('cash').value);for(const key of Object.keys(FIN_COEFFICIENTS))$(key).value=amounts[key]}const PRODUCT_CACHE_KEY='encre_verified_products_v14';
 let verifiedProducts={};
@@ -121,16 +67,45 @@ let model=String(r.model||'').trim();
 if(brand&&model.toLocaleUpperCase('fr').startsWith(brand.toLocaleUpperCase('fr')+' '))model=model.slice(brand.length).trim();
 const total=model.length;const sizeClass=total>41?'verylong':total>31?'long':total>24?'medium':'';
 const specs=(r.specs&&typeof r.specs==='object')?r.specs:{};
-const labelSpec=(key,value)=>key==='ecran'?String(value).replace(/\bDynamic\s+AMOLED\s+2X\b/gi,'AMOLED 2X'):value;
-const order=[['ecran','▣','Écran'],['photo','◉','Photo'],['batterie','▰','Batterie'],['processeur','◆','Puce'],['reseau','⌁','Réseau'],['ram','▥','RAM']];
-const specLines=order.filter(([k])=>specs[k]).slice(0,5).map(([k,ico,label])=>`<div class="spec-line"><span class="spec-ico">${ico}</span><span>${esc(label)} : ${esc(labelSpec(k,specs[k]))}</span></div>`).join('');
+const labelSpec=(key,value)=>{
+ let text=String(value);
+ if(key==='ecran')text=text.replace(/\bDynamic\s+AMOLED\s+2X\b/gi,'AMOLED 2X');
+ const prefix={ecran:'Écran',photo:'Photo',batterie:'Batterie'}[key];
+ return prefix&&!text.toLocaleLowerCase('fr').startsWith(prefix.toLocaleLowerCase('fr'))?prefix+' '+text:text;
+};
+const icons={
+ processeur:'<rect x="6" y="6" width="12" height="12" rx="1"/><rect x="9" y="9" width="6" height="6"/><path d="M8 3v3m4-3v3m4-3v3M8 18v3m4-3v3m4-3v3M3 8h3m-3 4h3m-3 4h3m12-8h3m-3 4h3m-3 4h3"/>',
+ ecran:'<rect x="4" y="3" width="16" height="18" rx="1"/><path d="m7 17 10-10M7 13v4h4m2-10h4v4"/>',
+ photo:'<path d="M3 7h4l2-3h6l2 3h4v13H3Z"/><circle cx="12" cy="13" r="4"/>',
+ batterie:'<rect x="2" y="6" width="18" height="12" rx="1"/><path d="M20 10h2v4h-2M5 9h12v6H5Z"/>',
+ reseau:'<path d="M4 19v-3h3v3Zm5 0v-7h3v7Zm5 0V8h3v11Zm5 0V4h3v15Z" fill="currentColor" stroke="none"/>',
+ ram:'<rect x="2" y="6" width="20" height="11" rx="1"/><path d="M5 9h3v4H5Zm6 0h3v4h-3Zm6 0h2v4h-2M5 17v3m4-3v3m4-3v3m4-3v3"/>'
+};
+const order=[['processeur','Puce'],['ecran','Écran'],['photo','Photo'],['batterie','Batterie'],['reseau','Réseau'],['ram','RAM']];
+const specLines=order.filter(([k])=>specs[k]).slice(0,5).map(([k,label])=>`<div class="spec-line"><span class="spec-ico" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[k]}</svg></span><span class="spec-text">${esc(labelSpec(k,specs[k]))}</span></div>`).join('');
+const modelHTML=esc(model).replace(/(Ultra|Pro Max|Pro\+?|Plus)$/i,'<span class="model-highlight">$1</span>');
 return `<div class="labelcard">
- <div class="stripe"><span class="logo-phone"></span><span class="logo-name">ENCRE POUR <em>TOUS</em></span><span class="stripe-tag">TÉLÉPHONIE</span></div><div class="accent-line"></div>
- <div class="body"><div class="product-side"><div class="product-brand">${esc(brand)}</div><div class="phone-name ${sizeClass}">${esc(model)}</div><div class="storage">${esc(r.capacity||'Capacité à confirmer')}</div><div class="features">${specLines||'<span class="spec-missing">Fiche à actualiser avant impression</span>'}</div><div class="ref">Réf. ${esc(r.ref)}</div></div>
- <div class="fin"><div class="title">PAYEZ EN PLUSIEURS FOIS</div>${[['×5',r.p5],['×10',r.p10],['×20',r.p20]].map(([n,v])=>`<div class="finrow"><span class="count">${n}</span><span class="amount"><b>${euro(v)}€</b><small>/mois</small></span></div>`).join('')}
- <div class="cash"><b class="${euro(r.cash).length>5?'longcash':''}">${euro(r.cash)}€</b></div></div></div></div>`
+ <div class="stripe"><svg class="logo-phone" viewBox="0 0 22 32" aria-hidden="true"><rect x="2" y="1" width="18" height="30" rx="3" fill="currentColor"/><rect x="4.5" y="5" width="13" height="20" rx=".6" fill="#041c43"/><path d="M9 3h4" stroke="#041c43" stroke-width="1"/><circle cx="11" cy="28" r="1.4" fill="#041c43"/></svg><span class="logo-name">ENCRE POUR <em>TOUS</em></span><span class="stripe-tag">TÉLÉPHONIE</span></div>
+ <svg class="accent-line" viewBox="0 0 880 30" preserveAspectRatio="none" aria-hidden="true"><path d="M0 23Q170 -2 350 14T580 10Q740 -14 880 10V18Q730 -4 580 18T350 22Q170 5 0 30Z" fill="#ffe000"/></svg>
+ <div class="body"><div class="product-side"><div class="product-brand">${esc(brand)}</div><div class="phone-name ${sizeClass}">${modelHTML}</div><div class="storage ${!r.capacity||/précisée|confirmer/i.test(r.capacity)?'unconfirmed':''}">${esc(r.capacity||'Capacité à confirmer')}</div><div class="features">${specLines||'<span class="spec-missing">Fiche à actualiser avant impression</span>'}</div><div class="ref">Réf. ${esc(r.ref)}</div></div>
+ <div class="fin"><div class="title">PAYEZ EN<br>PLUSIEURS FOIS</div>${[['×5',r.p5],['×10',r.p10],['×20',r.p20]].map(([n,v])=>`<div class="finrow"><span class="count">${n}</span><span class="amount ${euro(v).length>3?'longamount':''}"><span class="amount-content"><b>${euro(v)}<span class="currency">€</span></b><small>/mois</small></span></span></div>`).join('')}
+ <div class="cash"><small>PRIX<br>COMPTANT</small><b class="${euro(r.cash).length>3?'longcash':''}">${euro(r.cash)}<span class="currency">€</span></b></div></div></div></div>`
 }
-function draw(){const missing=missingCount();$('refreshAll').textContent=missing?`↻ Compléter ${missing} fiche${missing>1?'s':''} sans caractéristiques`:'↻ Revérifier les caractéristiques';const pages=Math.max(1,Math.ceil(rows.length/10));$('counter').textContent=rows.length+' étiquette'+(rows.length!==1?'s':'');$('countPages').textContent=pages+' page'+(pages!==1?'s':'');$('pages').innerHTML=Array.from({length:pages},(_,p)=>`<div class="sheet">${Array.from({length:10},(_,i)=>rows[10*p+i]?`<div class="slot">${labelHTML(rows[10*p+i])}</div>`:`<div class="slot empty"></div>`).join('')}</div>`).join('');$('list').innerHTML=rows.length?rows.map((r,i)=>`<li><div class="grow"><b>${i+1}. ${esc(r.brand)} ${esc(r.model)}</b><small>${esc(r.ref)} · ${euro(r.cash)} € ${specsOk(r)?"· Fiche technique OK":"· ⚠️ Caractéristiques manquantes"}</small></div><button class="btn tiny gold" data-act="refresh" data-i="${i}">↻ Fiche</button><button class="btn tiny light" data-act="edit" data-i="${i}">Modifier</button><button class="btn tiny light" data-act="dup" data-i="${i}">+1</button><button class="btn tiny light" data-act="del" data-i="${i}">×</button></li>`).join(''):'<li style="color:#72809a">Aucune étiquette ajoutée.</li>';persist()}const SPEC_NAMES={ecran:'Écran',photo:'Photo',batterie:'Batterie',processeur:'Puce',reseau:'Réseau',ram:'RAM'};
+function fitLabelText(){
+ // Adapter les textes réels au cadre physique, y compris anciens imports.
+ document.querySelectorAll('.labelcard').forEach(card=>{
+  const name=card.querySelector('.phone-name');
+  while(name.offsetHeight>38 && parseFloat(getComputedStyle(name).fontSize)>10){name.style.fontSize=(parseFloat(getComputedStyle(name).fontSize)-.25)+'px'}
+  const cash=card.querySelector('.cash'),price=cash.querySelector('b');
+  while(cash.scrollWidth>cash.clientWidth && parseFloat(getComputedStyle(price).fontSize)>9){price.style.fontSize=(parseFloat(getComputedStyle(price).fontSize)-.25)+'px'}
+  card.querySelectorAll('.spec-text').forEach(text=>{
+   const line=text.closest('.spec-line');
+   while((text.scrollHeight>line.clientHeight+.5 || text.scrollWidth>text.clientWidth+.5) && parseFloat(getComputedStyle(text).fontSize)>7){text.style.fontSize=(parseFloat(getComputedStyle(text).fontSize)-.2)+'px'}
+  });
+ });
+}
+
+function draw(){const missing=missingCount();$('refreshAll').textContent=missing?`↻ Compléter ${missing} fiche${missing>1?'s':''} sans caractéristiques`:'↻ Revérifier les caractéristiques';const pages=Math.max(1,Math.ceil(rows.length/10));$('counter').textContent=rows.length+' étiquette'+(rows.length!==1?'s':'');$('countPages').textContent=pages+' page'+(pages!==1?'s':'');$('pages').innerHTML=Array.from({length:pages},(_,p)=>`<div class="sheet">${Array.from({length:10},(_,i)=>rows[10*p+i]?`<div class="slot">${labelHTML(rows[10*p+i])}</div>`:`<div class="slot empty"></div>`).join('')}</div>`).join('');$('list').innerHTML=rows.length?rows.map((r,i)=>`<li><div class="grow"><b>${i+1}. ${esc(r.brand)} ${esc(r.model)}</b><small>${esc(r.ref)} · ${euro(r.cash)} € ${specsOk(r)?"· Fiche technique OK":"· ⚠️ Caractéristiques manquantes"}</small></div><button class="btn tiny gold" data-act="refresh" data-i="${i}">↻ Fiche</button><button class="btn tiny light" data-act="edit" data-i="${i}">Modifier</button><button class="btn tiny light" data-act="dup" data-i="${i}">+1</button><button class="btn tiny light" data-act="del" data-i="${i}">×</button></li>`).join(''):'<li style="color:#72809a">Aucune étiquette ajoutée.</li>';persist();fitLabelText()}const SPEC_NAMES={ecran:'Écran',photo:'Photo',batterie:'Batterie',processeur:'Puce',reseau:'Réseau',ram:'RAM'};
 const safeSources=sources=>(Array.isArray(sources)?sources:[]).flatMap(source=>{
  try{const url=new URL(source.url);return url.protocol==='https:'&&!url.username&&!url.password?[{title:String(source.title||url.hostname),url:url.href,host:url.hostname}]:[]}catch(e){return []}
 }).slice(0,6);
