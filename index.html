@@ -135,7 +135,7 @@ const safeSources=sources=>(Array.isArray(sources)?sources:[]).flatMap(source=>{
  try{const url=new URL(source.url);return url.protocol==='https:'&&!url.username&&!url.password?[{title:String(source.title||url.hostname),url:url.href,host:url.hostname}]:[]}catch(e){return []}
 }).slice(0,6);
 const availableCapacities=p=>[...new Set((Array.isArray(p.available_capacities)?p.available_capacities:[]).filter(v=>typeof v==='string'&&/^\d+\s(?:Go|To)$/.test(v)))];
-const sourceLabel=p=>/^official_manufacturer_/.test(p.search_mode||'')?'Fiche constructeur':p.search_mode==='gemini_grounded'?'IA + sources Google':'Recherche Internet';
+const sourceLabel=p=>/^official_manufacturer_/.test(p.search_mode||'')?'Fiche constructeur':p.search_mode==='gemini_grounded'?'IA + sources Google':p.search_mode==='openai_grounded'?'IA OpenAI + sources web':'Recherche Internet';
 let suggestionsTimer=null,suggestionsController=null,suggestionsGeneration=0;
 function clearSuggestions(){
  suggestionsGeneration++;clearTimeout(suggestionsTimer);suggestionsTimer=null;
@@ -267,7 +267,7 @@ $('diagnostic').onclick=async()=>{
  const b=$('diagnostic');b.disabled=true;$('status').textContent='Diagnostic du serveur…';
  try{
   const res=await fetch('/health',{cache:'no-store'});if(!res.ok)throw Error();const d=await res.json();
-  $('status').textContent=d.ai_configured?`Serveur actif · fiches constructeur disponibles · IA complémentaire configurée (${d.gemini_model||'auto'}). Ce test ne vérifie pas les quotas IA.`:'Serveur actif · les fiches constructeur sont disponibles. L’IA complémentaire n’est pas configurée.';
+  $('status').textContent=d.ai_configured?`Serveur actif · fiches constructeur disponibles · IA complémentaire configurée (${d.openai_configured?'OpenAI '+(d.openai_model||''):'Gemini '+(d.gemini_model||'auto')}). Ce test ne vérifie pas les quotas IA.`:'Serveur actif · les fiches constructeur sont disponibles. L’IA complémentaire n’est pas configurée.';
  }catch(e){$('status').textContent='Le serveur ne répond pas : vérifie le statut Live sur Render.'}
  finally{b.disabled=false}
 };
