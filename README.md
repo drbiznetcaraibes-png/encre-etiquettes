@@ -7,7 +7,7 @@ Recherche un smartphone par son nom ou sa référence constructeur, récupère s
 1. Recherche `Xiaomi 17T`, `iPhone 17 Pro Max`, `Samsung S26 Ultra` ou une référence comme `SM-S938B`. Des suggestions apparaissent après deux caractères ; tu peux aussi saisir un modèle absent des suggestions pour lancer sa recherche en ligne.
 2. Vérifie le modèle et consulte les sources affichées.
 3. Renseigne la **Capacité du téléphone (GB)**, avant ou après la recherche, ou choisis une variante documentée. 1 024 GB correspondent à 1 To. Une saisie manuelle sans preuve constructeur reste distincte des caractéristiques vérifiées.
-4. Saisis le prix TTC et clique sur **Ajouter à la planche**, puis **Imprimer en A4**.
+4. Saisis le prix TTC et clique sur **Ajouter à la planche**, puis **Imprimer en A4**. Clique sur une étiquette pour ouvrir son aperçu agrandi.
 
 Le gabarit reste à 88 × 52 mm, dix étiquettes par feuille A4. Les mensualités sont calculées avec les coefficients existants : ×5 = 0,20748 ; ×10 = 0,10693 ; ×20 = 0,055885, arrondies à l’euro supérieur.
 

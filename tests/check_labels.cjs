@@ -15,6 +15,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
   rows=phones.map((p,i)=>({...p,ref:p.brand+' '+p.model,capacity:p.capacities[0] || 'Non précisée',cash:i===0?450:1299.99,...calcFin(i===0?450:1299.99)}));
   draw();
  },fixture);
+ await page.evaluate(()=>document.fonts.ready);
+ await page.evaluate(()=>fitLabelText());
+ assert.equal(await page.evaluate(()=>document.fonts.check('500 12px Inter')),true);
  const inspect=()=>page.evaluate(()=>[...document.querySelectorAll('.labelcard')].flatMap((card,i)=>{
   const issues=[];
   if(Math.abs(card.offsetWidth-88*96/25.4)>1 || Math.abs(card.offsetHeight-52*96/25.4)>1)issues.push('wrong dimensions');
@@ -46,7 +49,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  assert.deepEqual(await page.locator('#p5,#p10,#p20').evaluateAll(es=>es.map(e=>e.value)),['208','107','56']);
  await page.click('#add');
  assert.equal(await page.locator('.labelcard img').count(),0);
- assert.equal(await page.locator('.logo-phone').first().locator('path').count(),1); // speaker, no decorative rays
+ assert.equal(await page.locator('.labelcard .stripe,.labelcard .logo-phone').count(),0);
+ await page.locator('.slot[role=button]').first().click();
+ assert.equal(await page.locator('#labelPreview').evaluate(d=>d.open),true);
+ assert.equal(await page.locator('#previewLabelContent .labelcard').count(),1);
+ await page.locator('#closeLabelPreview').click();
+ await page.waitForFunction(()=>document.getElementById('previewLabelContent').children.length===0);
+ assert.equal(await page.locator('#previewLabelContent .labelcard').count(),0);
  assert.deepEqual(errors,[]);
  console.log('Labels OK: '+fixture.length+' catalogue models, 88×52 mm, two A4 pages, mobile, saved-label editing, financing');
  }finally{await browser.close()}

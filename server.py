@@ -23,6 +23,7 @@ import httpx
 from bs4 import BeautifulSoup
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 
 from official_phones import lookup_official_phone
 from xiaomi_phones import lookup_xiaomi_phone
@@ -32,7 +33,7 @@ from openai_phones import search_openai_web, OpenAIServiceError
 from storage import store
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.16.2')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.17.0')
 @app.middleware('http')
 async def protect_access(request, call_next):
     from fastapi.responses import JSONResponse
@@ -740,6 +741,8 @@ async def online_lookup(ref, is_model_query=False, refresh=False):
 async def usage():
  return {'monthly_ceiling_eur':4,'reservation_per_call_eur':0.10,
          'usage':await store.request('GET','ai_usage',params={'order':'month.desc','limit':'12'})}
+
+app.mount('/assets', StaticFiles(directory=BASE/'assets'), name='assets')
 
 @app.get('/')
 async def home():return FileResponse(BASE/'index.html')
