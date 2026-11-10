@@ -1,4 +1,4 @@
-# ENCRE POUR TOUS — Générateur d’étiquettes V14
+# ENCRE POUR TOUS — Générateur d’étiquettes
 
 Recherche un smartphone par son nom ou sa référence constructeur, récupère ses caractéristiques et crée une planche A4 d’étiquettes commerciales.
 
@@ -13,12 +13,12 @@ Le gabarit reste à 88 × 52 mm, dix étiquettes par feuille A4. Les mensualité
 
 ## Recherche et fiabilité
 
-- Les fiches constructeur sont consultées **avant Gemini**. Les catalogues livrés couvrent actuellement **103 modèles distincts** Apple, Xiaomi/Redmi/POCO et Samsung avec sources et capacités vérifiées. Ils restent utilisables lorsque les sites constructeur ou Gemini sont indisponibles.
+- La base Supabase et les fiches constructeur sont consultées **avant OpenAI**. Les catalogues livrés couvrent actuellement **103 modèles distincts** Apple, Xiaomi/Redmi/POCO et Samsung avec sources et capacités vérifiées. Ils restent utilisables lorsque les sites constructeur ou OpenAI sont indisponibles.
 - `apple_catalog.json` contient 40 iPhone et variantes, dont XR/XS, mini/Plus/Pro/Pro Max, Air et les SE 2016/2020/2022. Le lecteur Apple reste disponible pour d’autres fiches exactes. Un SE sans année demande de préciser la génération.
 - `xiaomi_catalog.json` contient 45 Xiaomi/Redmi/POCO, dont Xiaomi 17T et 17T Pro. Le lecteur dynamique construit l’URL des fiches France/Global, vérifie leur modèle et lit leurs sections : une nouvelle génération n’exige pas d’ajouter son nom à une liste fermée.
 - `samsung_catalog.json` ajoute 11 modèles récents aux fiches initiales, avec lecture des tableaux constructeur pour d’autres gammes S/A/Z et séparation des colonnes par variante.
 - Des lecteurs directs supplémentaires consultent les fiches HONOR France, OnePlus France et realme Global. Les sources précisent le pays de la fiche.
-- Pour les marques, variantes ou formats de page non pris en charge, Gemini avec sources et les recherches publiques restent disponibles en complément. Leur succès dépend des sources, du réseau et des quotas Google. La couverture de tous les téléphones du monde n’est pas garantie : un modèle exclusivement chinois, une variante ambiguë ou une fiche inaccessible peuvent rester introuvables.
+- Pour les marques, variantes ou formats de page non pris en charge, OpenAI avec recherche web et les recherches publiques restent disponibles en complément. Leur succès dépend des sources, du réseau, des crédits API et du budget de l’application. La couverture de tous les téléphones du monde n’est pas garantie : un modèle exclusivement chinois, une variante ambiguë ou une fiche inaccessible peuvent rester introuvables.
 - Le serveur distingue les variantes Pro, Pro Max, Plus/+, Ultra et 4G/5G. Les résultats comparatifs ou mélangeant plusieurs modèles ne servent pas à extraire des caractéristiques.
 - Une capacité demandée doit être documentée. Une référence familiale comme `SM-S938B` ne permet pas de déduire le stockage de l’exemplaire vendu. Une capacité impossible pour un modèle du catalogue produit un message indiquant les options documentées.
 - L’étiquette exige au moins trois caractéristiques. Le stockage peut rester **Non précisée** tant qu’aucune variante n’a été sélectionnée ; vérifie-le avant impression.
@@ -37,11 +37,20 @@ Pour compléter les catalogues, renseigne le modèle exact, ses alias, les réf�
 uvicorn server:app --host 0.0.0.0 --port $PORT
 ```
 
-Déploie le dernier commit si le déploiement automatique n’est pas activé, puis actualise le navigateur. **Tester le serveur** confirme sa disponibilité ; `/health` indique la version. Ce test ne vérifie pas les quotas Gemini.
+Le déploiement en production reste manuel, après les vérifications de [OPERATIONS.md](OPERATIONS.md). **Tester le serveur** confirme sa disponibilité et la présence de la configuration IA ; `/health` indique la version. Ces contrôles ne vérifient ni la validité de la clé OpenAI ni ses crédits.
 
-`GEMINI_API_KEY` est facultative pour les fiches constructeur. Pour activer l’IA complémentaire, configure la clé uniquement dans les variables d’environnement Render. `GEMINI_MODEL=auto` conserve le choix automatique existant ; un nom explicite reste possible. La facturation et les quotas dépendent du compte Google : [documentation officielle](https://ai.google.dev/gemini-api/docs/pricing).
+Pour connecter OpenAI au service existant :
 
-Le stockage serveur en mémoire disparaît lors d’un redémarrage Render. Les étiquettes sont enregistrées dans le navigateur : utilise **Exporter la liste** pour les sauvegarder. Les limites de requêtes en mémoire ne remplacent pas un contrôle d’accès pour un service public utilisant une clé payante.
+1. Vérifie que Supabase contient le schéma complet de `supabase_schema.sql`, notamment `ai_usage` et la fonction `reserve_ai_call`. La réservation persistante est obligatoire avant tout appel payant.
+2. Dans Render → service **encre-etiquettes** → **Environment**, conserve `APP_ACCESS_TOKEN`, `SUPABASE_URL` et la clé serveur Supabase existants (`SUPABASE_SECRET_KEY` ou `SUPABASE_SERVICE_ROLE_KEY`).
+3. Ajoute `OPENAI_API_KEY` depuis un [projet API OpenAI](https://platform.openai.com/api-keys) disposant de crédits. Garde `OPENAI_MODEL=gpt-5-mini` et `OPENAI_DAILY_MAX=3`. Saisis la clé uniquement dans Render, jamais dans GitHub ou dans un message. L’utilisation de l’API est facturée séparément de l’abonnement ChatGPT.
+4. Applique les variables via un déploiement validé. Une modification enregistrée sans déploiement n’est pas encore utilisée par le serveur.
+5. Une fois connecté avec l’utilisateur `encre`, consulte `/api/status` pour la présence des configurations et `/api/admin/usage` pour le compteur mensuel. Ces deux lectures ne consomment aucun appel OpenAI.
+6. Vérifie ensuite un modèle absent des catalogues et contrôle les sources affichées. Un résultat constructeur ne prouve pas que l’appel OpenAI fonctionne : le mode d’une fiche issue d’OpenAI est `openai_grounded`.
+
+Le modèle autorisé reste `gpt-5-mini`, avec trois tentatives par jour et par processus, et **40 tentatives / 4 EUR de réserve par mois UTC** dans Supabase. Chaque tentative réserve 0,10 EUR, même en erreur. Cette réserve est une provision, pas la facture réelle ; les [tarifs OpenAI](https://developers.openai.com/api/docs/pricing) et les alertes du projet doivent aussi être suivis. Gemini n’est plus appelé par la recherche.
+
+Le cache serveur en mémoire disparaît lors d’un redémarrage Render ; les fiches sauvegardées dans Supabase persistent. Les étiquettes sont enregistrées dans le navigateur : utilise **Exporter la liste** pour les sauvegarder.
 
 ## Vérification locale
 
@@ -49,10 +58,10 @@ Le stockage serveur en mémoire disparaît lors d’un redémarrage Render. Les 
 python -m venv .venv
 .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python -m unittest discover -s tests -v
-.venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000
+APP_ACCESS_TOKEN=local-test .venv/bin/uvicorn server:app --host 127.0.0.1 --port 8000
 ```
 
-Les tests ne nécessitent aucune clé Gemini. Ils couvrent les références et variantes, les capacités, les erreurs et la lecture des sections Apple avec des réponses simulées. L’accès réel aux sites constructeur doit également être vérifié lors d’un déploiement.
+Connecte-toi en local avec l’utilisateur `encre` et le mot de passe `local-test`. Les tests ne nécessitent aucune clé réelle et ne font aucun appel OpenAI payant. Ils couvrent les références et variantes, les capacités, les erreurs, les protections de budget et les lectures constructeur avec des réponses simulées. L’accès réel aux sources et à OpenAI doit également être vérifié lors d’un déploiement.
 
 ## Base centralisée et recherche OpenAI
 
