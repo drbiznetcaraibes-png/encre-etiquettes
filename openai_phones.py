@@ -6,6 +6,7 @@ Les résultats IA ne sont pas des sources officielles et sont revalidés dans se
 from __future__ import annotations
 
 import json
+import ipaddress
 import re
 from urllib.parse import urlparse
 
@@ -58,27 +59,38 @@ def _json_object(text: str):
 
 
 def _safe_source(url, title="Source web"):
-    if not isinstance(url, str) or len(url) > 2048:
+    if not isinstance(url, str) or len(url) > 2048 or re.search(r'[\x00-\x20\x7f]', url):
         return None
-    parsed = urlparse(url)
-    host = (parsed.hostname or "").lower()
+    try:
+        parsed = urlparse(url)
+        host = (parsed.hostname or "").lower().rstrip('.')
+        port = parsed.port
+    except ValueError:
+        return None
     # Only external HTTPS sources. Reject local/internal addresses and userinfo.
-    if parsed.scheme != "https" or not host or parsed.username or parsed.password:
+    if parsed.scheme != "https" or not host or parsed.username or parsed.password or port not in (None, 443):
         return None
-    if host == "localhost" or host.endswith(".local") or "." not in host:
+    if host == "localhost" or host.endswith((".local", ".localhost", ".internal", ".lan", ".home")):
         return None
-    if re.match(r"^(?:127\.|10\.|192\.168\.|169\.254\.|172\.(?:1[6-9]|2\d|3[01])\.)", host):
-        return None
+    try:
+        address = ipaddress.ip_address(host)
+    except ValueError:
+        # Reject single-label hosts and browser-interpreted numeric IP spellings.
+        if "." not in host or re.fullmatch(r'(?:0x[0-9a-f]+|\d+)(?:\.(?:0x[0-9a-f]+|\d+))*', host, re.I):
+            return None
+    else:
+        if not address.is_global or address.is_multicast or address.is_reserved:
+            return None
     return {"title": str(title or host)[:150], "url": url}
 
 
 def parse_openai_response(payload):
     """Extrait uniquement la réponse textuelle et des URL effectivement renvoyées par l'outil."""
-    if not isinstance(payload, dict):
+    if not isinstance(payload, dict) or payload.get("status") != "completed":
         return None
     output = payload.get("output") or []
     if not isinstance(output, list) or not any(
-        isinstance(part, dict) and part.get("type") == "web_search_call"
+        isinstance(part, dict) and part.get("type") == "web_search_call" and part.get("status") == "completed"
         for part in output
     ):
         return None
@@ -95,6 +107,8 @@ def parse_openai_response(payload):
         if not isinstance(part, dict):
             continue
         if part.get("type") == "message":
+            if part.get("status") != "completed":
+                continue
             for content in part.get("content") or []:
                 if not isinstance(content, dict) or content.get("type") != "output_text":
                     continue
@@ -103,8 +117,10 @@ def parse_openai_response(payload):
                 for annotation in content.get("annotations") or []:
                     if isinstance(annotation, dict) and annotation.get("type") == "url_citation":
                         add(annotation.get("url"), annotation.get("title"))
-        elif part.get("type") == "web_search_call":
+        elif part.get("type") == "web_search_call" and part.get("status") == "completed":
             action = part.get("action") or {}
+            if not isinstance(action, dict):
+                continue
             for source in action.get("sources") or []:
                 if isinstance(source, dict):
                     add(source.get("url"), source.get("title"))
