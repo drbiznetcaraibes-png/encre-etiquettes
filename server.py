@@ -31,9 +31,10 @@ from samsung_phones import lookup_samsung_phone
 from manufacturer_pages import lookup_manufacturer_phone
 from openai_phones import search_openai_web, OpenAIServiceError
 from storage import store
+from database_models import get_database_models, invalidate_database_models_cache
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.17.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.18.0')
 @app.middleware('http')
 async def protect_access(request, call_next):
     from fastapi.responses import JSONResponse
@@ -58,7 +59,7 @@ BRAND_PATTERNS = [(r'\b(samsung|galaxy)\b','SAMSUNG'),(r'\b(apple|iphone)\b','AP
 MODEL_PATTERNS = [
  (r'\bGalaxy\s+(?:S\s*\d{1,2}(?:\s*(?:Ultra|Plus|FE|\+))?(?:\s*5G)?|Z\s*(?:Fold|Flip)\s*\d+(?:\s*Ultra)?(?:\s*5G)?|A\s*\d{1,2}(?:\s*(?:4G|5G))?|M\d{1,2}(?:\s*(?:4G|5G))?|Note\s*\d{1,2}(?:\s*Ultra)?)(?![\w+])', 'SAMSUNG'),
  (r'\biPhone\s*(?:SE(?:\s*(?:20(?:16|20|22)|[123]|\([123](?:re|e|ère|ème)?\s*génération\)))?|XS(?:\s*Max)?|XR|X|(?:[12]\d|[5-9])(?:\s*(?:Pro\s*Max|Pro|Plus|mini|e))?|Air)(?![\w+])', 'APPLE'),
- (r'\b(?:Redmi\s*Note\s*\d{1,2}(?:\s*Pro\+?)?(?:\s*(?:4G|5G))?|Redmi\s*\d{1,2}(?:\s*[AC])?(?:\s*(?:4G|5G))?|POCO\s*[XFM]\d{1,2}(?:\s*Pro)?(?:\s*(?:4G|5G))?|Xiaomi\s*\d{1,2}(?:\s*(?:T\s*Pro|Ultra|Pro|T|Lite))?(?:\s*(?:4G|5G))?)(?![\w+])', 'XIAOMI'),
+ (r'\b(?:Redmi\s*A\d{1,2}(?:\s*(?:Pro|Plus))?(?:\s*(?:4G|5G))?|Redmi\s*Note\s*\d{1,2}(?:\s*Pro\+?)?(?:\s*(?:4G|5G))?|Redmi\s*\d{1,2}(?:\s*[AC])?(?:\s*(?:4G|5G))?|POCO\s*[XFM]\d{1,2}(?:\s*Pro)?(?:\s*(?:4G|5G))?|Xiaomi\s*\d{1,2}(?:\s*(?:T\s*Pro|Ultra|Pro|T|Lite))?(?:\s*(?:4G|5G))?)(?![\w+])', 'XIAOMI'),
  (r'\b(?:Pixel\s*\d{1,2}(?:\s*(?:Pro\s*XL|Pro|a|XL|Fold))?)', 'GOOGLE'),
  (r'\b(?:HONOR\s*(?:Magic\s*\d{1,2}(?:\s*(?:Pro|Lite))?|\d{1,3}(?:\s*(?:Pro|Lite))?|X\d{1,2}))', 'HONOR'),
  (r'\b(?:OPPO\s*(?:Reno\s*\d{1,2}(?:\s*(?:Pro|F))?|A\d{2,3}|Find\s*[NX]\d{1,2}(?:\s*Pro)?))', 'OPPO'),
@@ -69,12 +70,35 @@ MODEL_PATTERNS = [
 CAP_RE = re.compile(r'(?<![\w])(?:(16|32|64|128|256|512|1024|2048)\s*(?:Go|GB)|(1|2)\s*(?:To|TB))\b',re.I)
 REF_OK = re.compile(r'^[A-Z0-9][A-Z0-9_./#\-+]{3,59}$')
 MODEL_QUERY_OK = re.compile(r"^[\w\s()./# +\-]{4,60}$", re.UNICODE)
+_DATABASE_MODEL_NAMES = []
+
+async def _database_models():
+ models=await get_database_models(store)
+ _DATABASE_MODEL_NAMES[:]=models
+ return models
+
+_BARE_SAMSUNG_MODEL = re.compile(
+ r'(?:A\d{2}(?:\s*(?:4G|5G))?|S\d{2}(?:\s*(?:Ultra|Plus|FE|Edge|\+))?(?:\s*(?:4G|5G))?|'
+ r'Z\s*(?:Fold|Flip)\s*\d{1,2}(?:\s*(?:Ultra|FE))?(?:\s*(?:4G|5G))?)', re.I)
+
+def _normalize_bare_samsung(text):
+ """Recognize complete shop model names, leaving manufacturer SKUs untouched."""
+ model=re.sub(r'(?<!\w)\d{1,2}\s*(?:Go|GB)\s*(?:de\s+)?RAM\b','',text,flags=re.I)
+ model=CAP_RE.sub('',model).strip()
+ model=re.sub(r'\s+(?:noir|blanc|bleu|rose|vert|violet|gris|argent|gold|black|white|blue|silver)$','',model,flags=re.I).strip()
+ if not _BARE_SAMSUNG_MODEL.fullmatch(model):return text
+ prefix=_BARE_SAMSUNG_MODEL.match(text)
+ if not prefix or re.sub(r'\s','',prefix.group()).upper()!=re.sub(r'\s','',model).upper():return text
+ canonical=re.sub(r'^(Z)\s*(Fold|Flip)\s*(\d+)',r'Z \2\3',model,flags=re.I)
+ canonical=re.sub(r'(?<=\d)(Ultra|Plus|FE|Edge|4G|5G)',r' \1',canonical,flags=re.I)
+ canonical=re.sub(r'(?<=[A-Za-z+])(4G|5G)$',r' \1',canonical,flags=re.I)
+ return 'Galaxy '+canonical+text[prefix.end():]
 
 def _normalize_model_text(value):
  text=unicodedata.normalize('NFKC',str(value or '')).replace('\u00ad','')
  # Brands/subbrands and model words are frequently typed without spaces.
  text=re.sub(r'\bXiaomi\s*(?=Redmi|POCO)', '', text, flags=re.I)
- for word,following in [('iPhone',r'\d|SE|XS|XR|X|Air'),('Redmi',r'Note|\d'),
+ for word,following in [('iPhone',r'[A-Za-z0-9]'),('Redmi',r'Note|A\d|\d'),
                         ('POCO',r'[XFM]\d'),('Xiaomi',r'\d'),('Samsung',r'Galaxy|[SAZM]\d'),
                         ('Galaxy',r'[SAZM]\d|Z\s*(?:Fold|Flip)'),('Nothing',r'Phone'),
                         ('Google',r'Pixel'),('OnePlus',r'\d|Nord'),('OPPO',r'Reno|Find|A\d')]:
@@ -82,7 +106,8 @@ def _normalize_model_text(value):
  # Explicit storage can be attached to a model suffix (ProMax512Go, 17T256GB).
  # Require the unit and end of the option, so generation numbers stay intact.
  text=re.sub(r'(?<=[A-Za-z+])((?:16|32|64|128|256|512|1024|2048)\s*(?:Go|GB)|[12]\s*(?:To|TB))(?=\s|$)',r' \1',text,flags=re.I)
- return re.sub(r'\s+',' ',text).strip()
+ text=re.sub(r'\s+',' ',text).strip()
+ return _normalize_bare_samsung(text)
 
 async def _search_bing(client, ref: str):
  url='https://www.bing.com/search'
@@ -183,7 +208,7 @@ def _query_model(query):
  cleaned=re.sub(r'\s+(?:noir|blanc|bleu|rose|vert|violet|gris|argent|gold|black|white|blue|silver)$','',cleaned,flags=re.I).strip()
  # Every displayed suggestion is itself a valid model query, including names
  # with generation parentheses, written Plus, or newly introduced suffixes.
- for row in _known_phone_models():
+ for row in [*_known_phone_models(),*_DATABASE_MODEL_NAMES]:
   identity=_model_identity(cleaned,row['brand'])
   if any(identity==_model_identity(name,row['brand'])
          for name in [row['model'],*row['_aliases']]):
@@ -195,19 +220,18 @@ def _query_model(query):
    m = re.search(r"\b(?:S\s?\d{2}|A\s?\d{2}|Z\s?(?:Fold|Flip)\s?\d+)(?:\s*(?:Ultra|Plus|FE|\+))?(?:\s*(?:4G|5G))?(?![\w+])",cleaned,re.I)
    if m: model='Galaxy '+m.group(0);brand='SAMSUNG'
  if not model:
-  # Allow new models without changing regex on every new release. Explicit brand
-  # plus an alphanumeric generation is mandatory; avoid overly vague strings.
+  # Names outside the native grammar may still be real new phones. Explicit
+  # brands permit web/AI discovery; those providers must prove the exact name.
   b=_detect_brand(cleaned)
-  if b=='APPLE':return None
   stripped=CAP_RE.sub('',cleaned)
   stripped=re.sub(r'^(?:samsung|apple|xiaomi)\s+', '',stripped,flags=re.I).strip()
-  if b and re.search(r'\d',stripped) and len(stripped)>=4:
+  meaningful=re.sub(r'^(?:Galaxy|iPhone|Google|Pixel|HONOR|OPPO|Motorola|realme|OnePlus|Nokia|HMD|vivo|TECNO|Infinix|Nothing|Phone|Redmi|POCO)\s*','',stripped,flags=re.I).strip()
+  if b and len(meaningful)>=2 and len(stripped)>=4:
    if re.match(r'^(?:SM-|MZB|[A-Z]\d{4,}[A-Z0-9/.-]*$)',stripped,re.I):return None
    model=('Galaxy '+re.sub(r'^Galaxy\s+', '',stripped,flags=re.I)) if b=='SAMSUNG' else stripped
    brand=b
  if not model: return None
  if _model_identity(cleaned,brand)!=_model_identity(model,brand):
-  if brand=='APPLE':return None
   # Preserve a new variant's full name. Its manufacturer provider must verify
   # that full identity; never silently search for a shorter base model.
   return cleaned,brand
@@ -295,7 +319,7 @@ async def _search_official_samsung(client, ref: str):
  except Exception:return []
 
 OPENAI_KEY = os.environ.get('OPENAI_API_KEY', '').strip()
-OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5-mini').strip() or 'gpt-5-mini'
+OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5.4-mini').strip() or 'gpt-5.4-mini'
 OPENAI_DAILY_MAX = max(0, min(100, int(os.environ.get('OPENAI_DAILY_MAX', '3'))))
 OPENAI_CALL_LOG = []
 GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '').strip()
@@ -473,7 +497,7 @@ async def openai_lookup(query, is_model_query=False):
     """Fallback OpenAI with strict identity and storage checks."""
     if not OPENAI_KEY or OPENAI_DAILY_MAX == 0:
         return None
-    if OPENAI_MODEL != 'gpt-5-mini':
+    if OPENAI_MODEL not in ('gpt-5.4-mini', 'gpt-5-mini'):
         raise RuntimeError('Modèle IA non autorisé par le budget configuré.')
     now = time.time()
     OPENAI_CALL_LOG[:] = [t for t in OPENAI_CALL_LOG if now-t < 86400]
@@ -694,6 +718,7 @@ async def _online_lookup(ref, is_model_query=False):
  return result
 
 def database_key(ref):
+ ref=_normalize_model_text(ref)
  query=_query_model(ref)
  capacity=_parse_capacity(ref) or 'Non précisée'
  if query:
@@ -719,6 +744,7 @@ async def online_lookup(ref, is_model_query=False, refresh=False):
     'sources':result['sources'],'search_mode':result.get('search_mode',''),
     'verification_status':'vérifié','verified_at':now.isoformat(),
     'updated_at':now.isoformat(),'next_check_at':(now+timedelta(days=7)).isoformat() if result.get('search_mode')=='openai_grounded' else None,'result':result})
+   invalidate_database_models_cache(store)
   except RuntimeError:
    result={**result,'database_warning':'Fiche vérifiée mais non enregistrée : base indisponible.'}
  if store.configured and result.get('status') in ('not_found','insufficient_specs') and _query_model(ref):
@@ -773,11 +799,22 @@ def _known_phone_models():
 
 @app.get('/api/phones/models')
 async def phone_models(query:str=Query(default='',max_length=60),limit:int=Query(default=8,ge=1,le=20)):
- needle=_normalize_ref(CAP_RE.sub('',_normalize_model_text(query)))
+ database_models=await _database_models()
+ parsed=_query_model(query)
+ needle=_normalize_ref(parsed[0] if parsed else CAP_RE.sub('',_normalize_model_text(query)))
+ models={(row['brand'],_model_identity(row['model'],row['brand'])):dict(row) for row in _known_phone_models()}
+ for row in database_models:
+  key=(row['brand'],_model_identity(row['model'],row['brand']))
+  previous=models.get(key)
+  if previous:
+   row={**row,'_aliases':previous['_aliases'],
+        'available_capacities':row['available_capacities'] or previous['available_capacities']}
+  models[key]=row
  def names(row):
   return [_normalize_ref(row['brand']+' '+row['model']),_normalize_ref(row['model']),
           *(_normalize_ref(alias) for alias in row['_aliases'])]
- matches=[row for row in _known_phone_models() if not needle or any(needle in name for name in names(row))]
+ matches=[row for row in models.values() if (not parsed or row['brand']==parsed[1])
+          and (not needle or any(needle in name for name in names(row)))]
  def sort_key(row):
   generation=re.search(r'\d+',row['model'])
   recent=int(generation.group()) if generation and 'SE' not in row['model'].upper() else 0
@@ -787,15 +824,15 @@ async def phone_models(query:str=Query(default='',max_length=60),limit:int=Query
                    for row in matches[:limit]],'total':len(matches),'limit':limit}
 
 @app.get('/api/phones/lookup')
-async def lookup(request:Request, reference:str=Query(min_length=4,max_length=60)):
+async def lookup(request:Request, reference:str=Query(min_length=3,max_length=60)):
  ref=_normalize_model_text(reference).upper()
  _check_rate_limit(request)
  if not MODEL_QUERY_OK.fullmatch(ref): raise HTTPException(400,'Recherche invalide : entre un modèle ou une référence constructeur.')
  if _normalize_ref(CAP_RE.sub('',ref)) in ('IPHONESE','APPLEIPHONESE'):
   raise HTTPException(400,{'message':'Précise la génération : iPhone SE 2016, iPhone SE 2020 ou iPhone SE 2022.'})
+ if not _query_model(ref):
+  await _database_models()
  is_model_query=bool(_query_model(ref))
- if not is_model_query and re.match(r'^(?:APPLE\s*)?IPHONE',_normalize_model_text(ref),re.I):
-  raise HTTPException(400,{'message':'Nom d’iPhone non reconnu. Choisis le modèle exact dans les suggestions, par exemple iPhone 17 Pro Max ou iPhone SE 2022.'})
  if not is_model_query and not REF_OK.fullmatch(CAP_RE.sub('',ref).strip()): raise HTTPException(400,'Nom de modèle non reconnu. Exemple : Samsung Galaxy A56 256 Go, iPhone 16 ou SM-S938B.')
  try:
   result=await asyncio.wait_for(online_lookup(ref,is_model_query=is_model_query),timeout=52)

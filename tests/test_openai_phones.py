@@ -141,6 +141,41 @@ class OpenAIFallbackTests(unittest.IsolatedAsyncioTestCase):
             for provider in providers.values():provider.assert_awaited_once()
             ai.assert_awaited_once_with('GOOGLE PIXEL 9',is_model_query=True)
 
+    async def test_unknown_redmi_automatically_uses_ai_and_saves_verified_result(self):
+        parsed, _ = response(model='REDMI A7 Pro', brand='XIAOMI')
+        sources = [{'title': 'Xiaomi — caractéristiques', 'url': 'https://www.mi.com/global/product/redmi-a7-pro/specs/'}]
+        providers = {name: AsyncMock(return_value=None) for name in (
+            'lookup_official_phone', 'lookup_xiaomi_phone', 'lookup_samsung_phone', 'lookup_manufacturer_phone')}
+        with patch.multiple(server, **providers), patch.object(server, 'OPENAI_KEY', 'test-only'), \
+                patch.object(server.store, 'get', new=AsyncMock(return_value=None)), \
+                patch.object(server.store, 'save', new_callable=AsyncMock) as save, \
+                patch.object(server, 'search_openai_web', new=AsyncMock(return_value=(parsed, sources))) as search:
+            found = await server.online_lookup('Xiaomi Redmi A7 Pro 128 Go', is_model_query=True)
+        self.assertEqual(found['search_mode'], 'openai_grounded')
+        self.assertEqual(found['model'], 'REDMI A7 Pro')
+        self.assertEqual(found['capacity'], '128 Go')
+        search.assert_awaited_once()
+        self.assertEqual(save.await_args.args[0]['verification_status'], 'vérifié')
+        self.assertEqual(save.await_args.args[0]['sources'], sources)
+        for provider in providers.values():
+            provider.assert_awaited_once()
+
+    async def test_new_marketing_names_can_reach_ai_without_a_local_grammar_update(self):
+        for query, model, brand in [('iPhone Fold', 'iPhone Fold', 'APPLE'),
+                                    ('Samsung Galaxy Z TriFold', 'Galaxy Z TriFold', 'SAMSUNG')]:
+            with self.subTest(query=query), patch.object(server, 'OPENAI_KEY', 'test-only'), \
+                    patch.object(server, 'search_openai_web', new=AsyncMock(return_value=response(model=model, brand=brand))):
+                server.OPENAI_CALL_LOG.clear()
+                self.assertIsNotNone(server._query_model(query))
+                self.assertEqual((await server.openai_lookup(query, True))['model'], model)
+
+    async def test_unapproved_model_is_blocked_before_reservation(self):
+        with patch.object(server, 'OPENAI_KEY', 'test-only'), patch.object(server, 'OPENAI_MODEL', 'gpt-6-astra'), \
+                patch.object(server.store, 'reserve', new_callable=AsyncMock) as reserve:
+            with self.assertRaisesRegex(RuntimeError, 'Modèle IA non autorisé'):
+                await server.openai_lookup('Redmi A7 Pro', True)
+            reserve.assert_not_awaited()
+
 
 class OpenAIDiagnosticsTests(unittest.IsolatedAsyncioTestCase):
     async def test_responses_request_keeps_existing_model_and_cost_limits(self):
@@ -149,12 +184,13 @@ class OpenAIDiagnosticsTests(unittest.IsolatedAsyncioTestCase):
         self.assertIsNotNone(result)
         self.assertEqual(post.call_args.args[0], 'https://api.openai.com/v1/responses')
         body = post.call_args.kwargs['json']
-        self.assertEqual(body['model'], 'gpt-5-mini')
+        self.assertEqual(body['model'], 'gpt-5.4-mini')
         self.assertEqual(body['tools'], [{'type': 'web_search', 'search_context_size': 'low'}])
         self.assertEqual(body['include'], ['web_search_call.action.sources'])
         self.assertEqual(body['tool_choice'], 'required')
         self.assertEqual(body['max_tool_calls'], 1)
         self.assertEqual(body['max_output_tokens'], 2200)
+        self.assertEqual(body['reasoning'], {'effort': 'low'})
         self.assertIs(body['store'], False)
 
     async def test_incomplete_response_never_yields_a_partial_phone(self):
@@ -172,6 +208,12 @@ class OpenAIDiagnosticsTests(unittest.IsolatedAsyncioTestCase):
                     await search_openai_web('Google Pixel 9','test-only')
                 self.assertIn(expected,str(error.exception))
                 self.assertNotIn('never_print',str(error.exception))
+
+    async def test_quota_type_is_recognized_when_provider_code_is_absent(self):
+        with patch.object(httpx.AsyncClient, 'post', new=AsyncMock(return_value=httpx.Response(
+                429, json={'error': {'type': 'insufficient_quota', 'message': 'never_print_this_key'}}))):
+            with self.assertRaisesRegex(OpenAIServiceError, 'Crédits API'):
+                await search_openai_web('Redmi A7 Pro', 'test-only')
 
     async def test_only_allowlisted_request_parameter_is_exposed(self):
         for param,visible in [('max_tool_calls',True),('never_print_this_key',False)]:

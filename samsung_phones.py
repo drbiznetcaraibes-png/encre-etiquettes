@@ -13,6 +13,7 @@ import re
 import time
 import unicodedata
 from urllib.parse import urljoin, urlparse
+import xml.etree.ElementTree as ET
 
 import httpx
 from bs4 import BeautifulSoup
@@ -53,7 +54,7 @@ def _query(value):
     text = re.sub(r'\b(?:DE\s+)?RAM\b', '', text, flags=re.I)
     text = re.sub(r'^(?:SAMSUNG\s*)?(?:GALAXY\s*)?', '', text, flags=re.I)
     identity = _identity(text)
-    if not re.fullmatch(r'(?:S\d{2}(?:\+|ULTRA|FE|EDGE)?(?:5G)?|A\d{2}(?:5G)?|ZFOLD\d{1,2}(?:ULTRA)?(?:5G)?|ZFLIP\d{1,2}(?:FE)?(?:5G)?)', identity):
+    if not re.fullmatch(r'(?:S\d{2}(?:\+|ULTRA|FE|EDGE)?(?:4G|5G)?|A\d{2}(?:4G|5G)?|ZFOLD\d{1,2}(?:ULTRA)?(?:4G|5G)?|ZFLIP\d{1,2}(?:FE)?(?:4G|5G)?)', identity):
         return None, None
     return identity, capacities[0] if capacities else None
 
@@ -75,8 +76,32 @@ def _result(item, requested, search_mode='official_manufacturer_catalog'):
 
 
 def _allowed(url):
-    parsed = urlparse(str(url))
-    return parsed.scheme == 'https' and parsed.hostname in ('samsungmobilepress.com', 'www.samsungmobilepress.com', 'api.samsungmobilepress.com')
+    try:
+        parsed = urlparse(str(url))
+        return (parsed.scheme == 'https' and parsed.hostname in (
+            'samsungmobilepress.com', 'www.samsungmobilepress.com', 'api.samsungmobilepress.com')
+            and parsed.port in (None, 443) and parsed.username is None and parsed.password is None)
+    except ValueError:
+        return False
+
+
+async def _get_document(client, url):
+    """Validate each redirect before making its request, including shared clients."""
+    for _ in range(4):
+        if not _allowed(url):
+            raise ValueError('Samsung press source rejected')
+        response = await client.get(url, timeout=httpx.Timeout(4, connect=2), follow_redirects=False)
+        if response.is_redirect:
+            location = response.headers.get('location')
+            if not location:
+                raise ValueError('Samsung press redirect without location')
+            url = urljoin(url, location)
+            continue
+        response.raise_for_status()
+        if not _allowed(response.url) or len(response.content) > 4_000_000:
+            raise ValueError('Invalid Samsung press response')
+        return response
+    raise ValueError('Too many Samsung press redirects')
 
 
 def _grid(table):
@@ -106,7 +131,7 @@ def _table_sections(table, identity):
     headers = []
     for cell in table.find('tr').find_all(['td', 'th'], recursive=False):
         title = _plain(cell.get_text(' ', strip=True))
-        if re.fullmatch(r'Galaxy\s+(?:S\d{2}(?:\+|\s+(?:Ultra|FE|Edge))?|A\d{2}(?:\s+5G)?|Z\s*(?:Fold|Flip)\s*\d{1,2}(?:\s+(?:Ultra|FE))?)', title, re.I):
+        if re.fullmatch(r'Galaxy\s+(?:S\d{2}(?:\+|\s+(?:Ultra|FE|Edge))?|A\d{2}(?:\s+(?:4G|5G))?|Z\s*(?:Fold|Flip)\s*\d{1,2}(?:\s+(?:Ultra|FE))?)', title, re.I):
             headers.append(title)
     identities = [_identity(re.sub(r'^Galaxy\s+', '', title, flags=re.I)) for title in headers]
     if identity not in identities:
@@ -190,6 +215,8 @@ def parse_samsung_sheet(document, expected_model, source_url):
         network = sections.get('network and connectivity', sections.get('network & connectivity', sections.get('network', sections.get('connectivity', ''))))
         if re.search(r'\b5G\b', network) or model.endswith('5G'):
             specs['reseau'] = '5G'
+        elif re.search(r'\b(?:4G|LTE)\b', network):
+            specs['reseau'] = '4G'
         if len(specs) < 3 or not capacities:
             continue
         capacities.sort(key=lambda value: int(value.split()[0]) * (1024 if value.endswith('To') else 1))
@@ -201,29 +228,46 @@ def parse_samsung_sheet(document, expected_model, source_url):
 async def _discover(client, identity, explicit_5g=False):
     family = 'galaxy-z' if identity.startswith('Z') else 'galaxy-a' if identity.startswith('A') else 'galaxy-s'
     cache = _INDEX_CACHE.get(family)
-    if cache and time.monotonic() - cache[0] < 21600:
+    if cache and time.monotonic() - cache[0] < (21600 if cache[1] else 60):
         links = cache[1]
     else:
         index_url = 'https://www.samsungmobilepress.com/products/' + family
-        response = await client.get(index_url, timeout=httpx.Timeout(4, connect=2))
-        response.raise_for_status()
-        if not _allowed(response.url):
-            return None
-        soup = BeautifulSoup(response.text, 'html.parser')
         links = []
-        for anchor in soup.find_all('a', href=True):
-            url = urljoin(index_url, anchor['href'])
-            if _allowed(url) and '/articles/' in urlparse(url).path:
-                links.append((_identity(anchor.get_text(' ', strip=True) + ' ' + urlparse(url).path), url))
+        try:
+            response = await _get_document(client, index_url)
+            soup = BeautifulSoup(response.text, 'html.parser')
+            for anchor in soup.find_all('a', href=True):
+                url = urljoin(index_url, anchor['href'])
+                if _allowed(url) and '/articles/' in urlparse(url).path:
+                    links.append((_identity(anchor.get_text(' ', strip=True) + ' ' + urlparse(url).path), url))
+        except (httpx.HTTPError, ValueError, TypeError):
+            pass
         links = list(dict.fromkeys(links))
         _INDEX_CACHE[family] = time.monotonic(), links
     base = re.sub(r'(?:ULTRA|FE|EDGE|\+|5G)$', '', identity)
     candidates = list(dict.fromkeys(url for text, url in links if base in text))[:3]
+    if not candidates:
+        # The category page only shows a few recent announcements. The sitemap
+        # retains older published models that are no longer in the storefront.
+        cached = _INDEX_CACHE.get('sitemap')
+        if cached and time.monotonic() - cached[0] < (21600 if cached[1] else 60):
+            links = cached[1]
+        else:
+            links = []
+            try:
+                response = await _get_document(client, 'https://www.samsungmobilepress.com/sitemap.xml')
+                root = ET.fromstring(response.content)
+                for node in root.iter():
+                    if node.tag.rsplit('}', 1)[-1] == 'loc':
+                        url = (node.text or '').strip()
+                        if _allowed(url) and '/articles/' in urlparse(url).path:
+                            links.append((_identity(urlparse(url).path), url))
+            except (httpx.HTTPError, ValueError, TypeError, ET.ParseError):
+                pass
+            _INDEX_CACHE['sitemap'] = time.monotonic(), links
+        candidates = list(dict.fromkeys(url for text, url in links if base in text))[:3]
     async def read(url):
-        response = await client.get(url, timeout=httpx.Timeout(4, connect=2))
-        response.raise_for_status()
-        if not _allowed(response.url):
-            return None
+        response = await _get_document(client, url)
         item = parse_samsung_sheet(response.text, identity, str(response.url))
         if not item and explicit_5g:
             item = parse_samsung_sheet(response.text, identity + '5G', str(response.url))
@@ -241,18 +285,30 @@ async def lookup_samsung_phone(client, query):
     identity, requested = _query(query)
     if not identity:
         return None
-    explicit_5g = identity.endswith('5G')
-    model_identity = identity[:-2] if explicit_5g else identity
+    requested_radio = identity[-2:] if identity.endswith(('4G', '5G')) else None
+    explicit_5g = requested_radio == '5G'
+    model_identity = identity[:-2] if requested_radio else identity
     for item in CATALOG['phones']:
         aliases = {_identity(alias) for alias in item['aliases']}
-        matches = identity in aliases or (explicit_5g and model_identity in aliases)
-        if matches and (not explicit_5g or item['specs'].get('reseau') == '5G'):
+        matches = identity in aliases or (requested_radio and model_identity in aliases)
+        if matches and (not requested_radio or item['specs'].get('reseau', '').startswith(requested_radio)):
             return _result(item, requested)
     cache = _CACHE.get(identity)
     if cache and time.monotonic() - cache[0] < 21600:
         return _result(cache[1], requested, 'official_manufacturer_page')
+    async def discover():
+        # The product catalogue includes entry-level phones without a press
+        # specification table. Its live model names also cover future releases.
+        from samsung_products import lookup_product_phone
+        item = await lookup_product_phone(client, query)
+        if item:
+            return item
+        item = await _discover(client, model_identity, explicit_5g=explicit_5g)
+        if requested_radio and item and not item['specs'].get('reseau', '').startswith(requested_radio):
+            return None
+        return item
     try:
-        item = await asyncio.wait_for(_discover(client, model_identity, explicit_5g=explicit_5g), timeout=8)
+        item = await asyncio.wait_for(discover(), timeout=8)
     except (httpx.HTTPError, asyncio.TimeoutError, ValueError, TypeError):
         return None
     if item:

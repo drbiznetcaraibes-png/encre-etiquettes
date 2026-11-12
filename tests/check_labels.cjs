@@ -56,6 +56,27 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  await page.locator('#closeLabelPreview').click();
  await page.waitForFunction(()=>document.getElementById('previewLabelContent').children.length===0);
  assert.equal(await page.locator('#previewLabelContent .labelcard').count(),0);
+ // Keep all three grids; only eligible amounts may appear, including old imports.
+ const cases=[
+  [119.99,['','','']],[120,['','','']],[120.01,['25','','']],
+  [187.03,['39','','']],[187.04,['39','21','']],
+  [357.87,['75','39','']],[357.88,['75','39','21']],[1000,['208','107','56']]
+ ];
+ for(const [cash,expectedAmounts] of cases){
+  await page.fill('#cash',String(cash));
+  assert.deepEqual(await page.locator('#p5,#p10,#p20').evaluateAll(es=>es.map(e=>e.value)),expectedAmounts,'form at '+cash);
+  await page.evaluate(cash=>{rows=[{...rows[0],cash,p5:'999',p10:'999',p20:'999'}];draw()},cash);
+  assert.equal(await page.locator('.finrow').count(),3);
+  assert.deepEqual(await page.locator('.finrow .count').allTextContents(),['×5','×10','×20']);
+  assert.deepEqual(await page.locator('.finrow .amount').evaluateAll(es=>es.map(e=>e.querySelector('b')?.firstChild?.textContent||'')),expectedAmounts,'label at '+cash);
+  assert.equal(await page.locator('.finrow .amount').evaluateAll(es=>es.some(e=>e.textContent.includes('—'))),false);
+ }
+ await page.evaluate(()=>{rows=[{...rows[0],cash:120,p5:'25',p10:'13',p20:'7'}];persist()});
+ await page.reload();
+ assert.deepEqual(await page.locator('.finrow .amount').allTextContents(),['','','']);
+ await page.emulateMedia({media:'print'});
+ assert.equal(await page.locator('.finrow').count(),3);
+ assert.deepEqual(await page.locator('.finrow .amount').allTextContents(),['','','']);
  assert.deepEqual(errors,[]);
  console.log('Labels OK: '+fixture.length+' catalogue models, 88×52 mm, two A4 pages, mobile, saved-label editing, financing');
  }finally{await browser.close()}

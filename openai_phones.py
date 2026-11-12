@@ -25,10 +25,11 @@ def _http_error(response):
     except (ValueError, AttributeError):
         error = {}
     code = error.get('code')
-    if response.status_code == 429 and code == 'insufficient_quota':
+    quota_codes = {'insufficient_quota', 'billing_hard_limit_reached', 'billing_not_active'}
+    if response.status_code in (402, 429) and (code in quota_codes or error.get('type') in quota_codes):
         return OpenAIServiceError('Crédits API OpenAI insuffisants : vérifie la facturation du projet OpenAI.')
     if response.status_code == 429:
-        return OpenAIServiceError('Limite de requêtes OpenAI atteinte. Réessaie plus tard.')
+        return OpenAIServiceError('Limite de requêtes OpenAI atteinte : vérifie les limites du projet OpenAI, puis réessaie plus tard.')
     if response.status_code in (401, 403):
         return OpenAIServiceError('Clé API OpenAI refusée : vérifie OPENAI_API_KEY sur Render.')
     if code == 'model_not_found':
@@ -131,7 +132,7 @@ def parse_openai_response(payload):
     return parsed, urls
 
 
-async def search_openai_web(query: str, api_key: str, model: str = "gpt-5-mini"):
+async def search_openai_web(query: str, api_key: str, model: str = "gpt-5.4-mini"):
     """One grounded Responses API request (web_search) for an unknown model."""
     if not api_key:
         return None
@@ -160,6 +161,7 @@ retourne {{"verified":false}}.
         "include": ["web_search_call.action.sources"],
         "max_output_tokens": 2200,
         "max_tool_calls": 1,
+        "reasoning": {"effort": "low"},
         "store": False,
     }
     try:

@@ -13,6 +13,33 @@ def item(title, snippet='Écran 6,1 pouces OLED, photo 48 MP, batterie 5000 mAh,
 
 
 class ModelEvidenceTests(unittest.TestCase):
+    def test_complete_bare_samsung_models_normalize_without_changing_skus(self):
+        cases = [('A17', 'Galaxy A17'), ('A18', 'Galaxy A18'), ('A26', 'Galaxy A26'),
+                 ('A37', 'Galaxy A37'), ('A17 128Go', 'Galaxy A17 128Go'),
+                 ('A175G', 'Galaxy A17 5G'), ('A174G 128Go', 'Galaxy A17 4G 128Go'),
+                 ('S26Ultra', 'Galaxy S26 Ultra'), ('ZFold7', 'Galaxy Z Fold7')]
+        for query, normalized in cases:
+            with self.subTest(query=query):
+                self.assertEqual(server._normalize_model_text(query), normalized)
+                self.assertEqual(server._query_model(query)[1], 'SAMSUNG')
+        for reference in ['SM-A175F/DS', 'SM-A176BZKAEUB', 'A175F', 'MZB12345', '1234567890123']:
+            with self.subTest(reference=reference):
+                self.assertEqual(server._normalize_model_text(reference), reference)
+                self.assertIsNone(server._query_model(reference))
+
+    def test_bare_samsung_radio_and_capacity_keep_distinct_identities(self):
+        four_g = server._query_model('A174G 128Go')[0]
+        five_g = server._query_model('A175G 128Go')[0]
+        self.assertTrue(server._same_model(four_g, 'Galaxy A17 (4G)', 'SAMSUNG'))
+        self.assertTrue(server._same_model(five_g, 'Galaxy A17 5G', 'SAMSUNG'))
+        self.assertFalse(server._same_model(four_g, five_g, 'SAMSUNG'))
+        self.assertEqual(server._parse_capacity(server._normalize_model_text('A17 4G 4 Go RAM 128Go')), '128 Go')
+        for name in ['A17', 'A18', 'A26', 'A37', 'S26Ultra', 'ZFold7']:
+            with self.subTest(name=name):
+                normalized = server._normalize_model_text(name)
+                self.assertEqual(server.database_key(name + ' 128Go'), server.database_key('Samsung ' + normalized + ' 128Go'))
+        self.assertEqual(server.database_key('S26Ultra512Go'), server.database_key('Samsung Galaxy S26 Ultra 512 Go'))
+
     def test_variants_remain_distinct(self):
         self.assertFalse(server._same_model('Redmi Note 14 Pro', 'Redmi Note 14 Pro+', 'XIAOMI'))
         self.assertFalse(server._same_model('Redmi Note 14 Pro 4G', 'Redmi Note 14 Pro 5G', 'XIAOMI'))
@@ -37,7 +64,9 @@ class ModelEvidenceTests(unittest.TestCase):
                 self.assertIsNotNone(server._query_model(query))
         self.assertTrue(server._same_model('iPhone SE 2022', 'iPhone SE (3e génération)', 'APPLE'))
         self.assertFalse(server._same_model('iPhone SE 2020', 'iPhone SE (3e génération)', 'APPLE'))
-        self.assertIsNone(server._query_model('iPhone 16 Pro Max Deluxe 256 Go'))
+        expected = server._query_model('iPhone 16 Pro Max Deluxe 256 Go')
+        self.assertIsNotNone(expected)
+        self.assertFalse(server._same_model(expected[0], 'iPhone 16 Pro Max', 'APPLE'))
 
     def test_comparisons_and_other_phones_are_not_evidence(self):
         for title in ['iPhone 16 vs iPhone 16 Pro Max', 'iPhone 16 et iPhone 15', 'iPhone 16 Pro Max']:
@@ -69,6 +98,42 @@ class LookupAPITests(unittest.IsolatedAsyncioTestCase):
 
     async def asyncTearDown(self):
         await self.client.aclose()
+
+    async def test_bare_and_compact_samsung_names_reach_lookup_as_models(self):
+        result = {'status': 'verified_online', 'brand': 'SAMSUNG', 'model': 'Galaxy A17',
+                  'capacity': 'Non précisée', 'specs': {}, 'sources': []}
+        with patch.object(server, 'online_lookup', new=AsyncMock(return_value=result)) as lookup:
+            for query in ['A17', 'A18', 'A26', 'A37', 'A17 128Go', 'A175G',
+                          'Galaxy A17 4G', 'Galaxy A17 5G', 'S26Ultra', 'ZFold7',
+                          'SamsungA26', 'SamsungA37', 'Samsung A17']:
+                with self.subTest(query=query):
+                    response = await self.client.get('/api/phones/lookup', params={'reference': query})
+                    self.assertEqual(response.status_code, 200, response.text)
+                    normalized = server._normalize_model_text(query).upper()
+                    lookup.assert_awaited_with(normalized, is_model_query=True)
+                    self.assertEqual(response.json()['reference'], normalized)
+
+    async def test_manufacturer_reference_keeps_sku_classification(self):
+        result = {'status': 'verified_online', 'brand': 'SAMSUNG', 'model': 'Galaxy A17',
+                  'capacity': '128 Go', 'specs': {}, 'sources': []}
+        with patch.object(server, 'online_lookup', new=AsyncMock(return_value=result)) as lookup:
+            for reference in ['SM-A175F/DS', 'SM-A176BZKAEUB', 'A175F']:
+                with self.subTest(reference=reference):
+                    response = await self.client.get('/api/phones/lookup', params={'reference': reference})
+                    self.assertEqual(response.status_code, 200, response.text)
+                    lookup.assert_awaited_with(reference, is_model_query=False)
+                    self.assertEqual(response.json()['reference'], reference)
+
+    async def test_bare_samsung_suggestions_use_the_same_canonical_query(self):
+        models = [{'brand': 'SAMSUNG', 'model': 'Galaxy A26 5G', 'capacities': ['128 Go'], '_aliases': []},
+                  {'brand': 'SAMSUNG', 'model': 'Galaxy A37 5G', 'capacities': ['256 Go'], '_aliases': []}]
+        with patch.object(server, '_known_phone_models', return_value=models), patch.object(server, 'online_lookup', new_callable=AsyncMock) as lookup:
+            for query, model in [('A26', 'Galaxy A26 5G'), ('A37', 'Galaxy A37 5G')]:
+                with self.subTest(query=query):
+                    response = await self.client.get('/api/phones/models', params={'query': query})
+                    self.assertEqual(response.status_code, 200, response.text)
+                    self.assertIn(model, [row['model'] for row in response.json()['models']])
+            lookup.assert_not_awaited()
 
     async def test_official_lookups_do_not_use_gemini(self):
         with patch.object(server, 'GEMINI_KEY', 'configured-but-no-quota'), patch.object(server, 'gemini_lookup', new_callable=AsyncMock) as ai:
@@ -121,10 +186,13 @@ class LookupAPITests(unittest.IsolatedAsyncioTestCase):
             lookup.assert_not_awaited()
             self.assertEqual(server.GLOBAL_REQUEST_LOG,[])
 
-    async def test_ambiguous_se_and_invalid_iphone_name_are_explained(self):
-        for query in ['iPhone SE','iPhone16Ultra']:
-            response=await self.client.get('/api/phones/lookup',params={'reference':query})
-            self.assertEqual(response.status_code,400)
+    async def test_ambiguous_se_is_explained_and_unknown_name_can_be_searched(self):
+        response=await self.client.get('/api/phones/lookup',params={'reference':'iPhone SE'})
+        self.assertEqual(response.status_code,400)
+        with patch.object(server, 'online_lookup', new=AsyncMock(return_value={'status':'not_found','search_engines':{}})) as lookup:
+            response=await self.client.get('/api/phones/lookup',params={'reference':'iPhone16Ultra'})
+            self.assertEqual(response.status_code,404)
+            self.assertTrue(lookup.await_args.kwargs['is_model_query'])
 
     async def test_impossible_capacity_is_explained(self):
         response = await self.client.get('/api/phones/lookup', params={'reference': 'iPhone 16 1 To'})

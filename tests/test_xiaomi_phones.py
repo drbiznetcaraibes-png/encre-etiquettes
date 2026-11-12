@@ -26,6 +26,37 @@ class XiaomiLookupTests(unittest.IsolatedAsyncioTestCase):
         self.requests.append(str(request.url))
         return httpx.Response(200, text=SHEET)
 
+    async def test_redmi_a_series_is_discovered_without_a_catalogue_entry(self):
+        def transport(request):
+            self.requests.append(str(request.url))
+            document = (SHEET.replace('Xiaomi 17T', 'REDMI A7 Pro')
+                        .replace('MediaTek Dimensity 8500-Ultra', 'UNISOC T7250 processor')
+                        .replace('12 Go + 256 Go / 12 Go + 512 Go', '4 Go + 64 Go / 4 Go + 128 Go')
+                        .replace('5G SA / 4G LTE', '4G LTE'))
+            return httpx.Response(200, text=document)
+        async with httpx.AsyncClient(transport=httpx.MockTransport(transport)) as client:
+            with patch.object(xiaomi_phones, 'CATALOG', {'phones': []}):
+                result = await xiaomi_phones.lookup_xiaomi_phone(client, 'Xiaomi Redmi A7 Pro 128 Go')
+                self.assertIsNone(await xiaomi_phones.lookup_xiaomi_phone(client, 'Redmi A7 Pro 5G'))
+        self.assertEqual(result['model'], 'REDMI A7 Pro')
+        self.assertEqual(result['capacity'], '128 Go')
+        self.assertEqual(result['available_capacities'], ['64 Go', '128 Go'])
+        self.assertEqual(result['specs']['processeur'], 'UNISOC T7250')
+        self.assertEqual(result['specs']['reseau'], '4G')
+        self.assertTrue(any('/redmi-a7-pro/specs/' in url for url in self.requests))
+        self.assertEqual(xiaomi_phones._slug('REDMIA8PRO'), 'redmi-a8-pro')
+
+    async def test_redmi_redirect_does_not_leave_manufacturer(self):
+        calls = []
+        def transport(request):
+            calls.append(request.url.host)
+            return httpx.Response(302, headers={'location': 'https://example.com/specs'})
+        async with httpx.AsyncClient(transport=httpx.MockTransport(transport), follow_redirects=True) as client:
+            result = await xiaomi_phones.lookup_xiaomi_phone(client, 'Redmi A7 Pro')
+        self.assertIsNone(result)
+        self.assertTrue(calls)
+        self.assertTrue(all(host == 'www.mi.com' for host in calls))
+
     async def test_xiaomi_17t_works_without_ai_or_network(self):
         async with httpx.AsyncClient(transport=httpx.MockTransport(self.transport)) as client:
             result = await xiaomi_phones.lookup_xiaomi_phone(client, 'xiaomi 17t 256go')
