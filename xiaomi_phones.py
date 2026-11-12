@@ -59,6 +59,10 @@ def _parse_query(query):
 
 
 def _slug(identity):
+    match = re.fullmatch(r'REDMIA(\d{1,2})(PRO|PLUS)?(4G|5G)?', identity)
+    if match:
+        generation, version, network = match.groups()
+        return '-'.join(x.lower() for x in ('redmi', 'a' + generation, version, network) if x)
     match = re.fullmatch(r'XIAOMI(\d{1,2})(T?)(PROMAX|PRO|ULTRA|LITE)?(4G|5G)?', identity)
     if match:
         generation, t, version, network = match.groups()
@@ -125,6 +129,10 @@ def parse_xiaomi_sheet(document, expected_identity, source_url):
     processor = re.search(r'\b((?:(?:MediaTek|Qualcomm)[®™]?\s+)?(?:Dimensity|Helio|Snapdragon)[®™]?\s*[A-Za-z0-9]+(?:[ -]+(?:Gen\s*\d+[s+]?|Elite|Ultra|for Galaxy|[A-Z]\d{2,3}))+\+?|(?:(?:MediaTek|Qualcomm)[®™]?\s+)?(?:Dimensity|Helio|Snapdragon)[®™]?\s*[A-Za-z0-9]+\+?)', processor_text, re.I)
     if processor:
         specs['processeur'] = processor.group(1).replace('®', '').replace('™', '').strip()[:60]
+    else:
+        unisoc = re.search(r'\bUNISOC\s+[A-Z]\d{3,5}\b', processor_text, re.I)
+        if unisoc:
+            specs['processeur'] = unisoc.group(0)
     screen = sections['screen']
     diagonal = re.search(r'(?<!\d)([5-8][,.]\d{1,2})\s*(?:pouces|inches|inch|[\"″”]|\'\'|′′)', screen, re.I)
     panel = 'AMOLED' if re.search(r'AMOLED', screen, re.I) else 'OLED' if re.search(r'OLED', screen, re.I) else 'LCD' if re.search(r'LCD', screen, re.I) else ''
@@ -184,11 +192,24 @@ def _result(item, requested, mode):
 
 async def _fetch_sheet(client, url, identity):
     try:
-        response = await client.get(url, timeout=httpx.Timeout(4, connect=2))
-        response.raise_for_status()
-        if response.url.scheme != 'https' or response.url.host not in ('www.mi.com', 'mi.com') or len(response.content) > 2000000:
-            return None
-        return parse_xiaomi_sheet(response.text, identity, str(response.url))
+        from urllib.parse import urljoin, urlparse
+        for _ in range(4):
+            parsed = urlparse(url)
+            if (parsed.scheme != 'https' or parsed.hostname not in ('www.mi.com', 'mi.com')
+                    or parsed.username or parsed.password or parsed.port not in (None, 443)):
+                return None
+            response = await client.get(url, timeout=httpx.Timeout(4, connect=2), follow_redirects=False)
+            if response.is_redirect:
+                location = response.headers.get('location')
+                if not location:
+                    return None
+                url = urljoin(url, location)
+                continue
+            response.raise_for_status()
+            if response.url.scheme != 'https' or response.url.host not in ('www.mi.com', 'mi.com') or len(response.content) > 2000000:
+                return None
+            return parse_xiaomi_sheet(response.text, identity, str(response.url))
+        return None
     except (httpx.HTTPError, ValueError):
         return None
 
@@ -213,7 +234,8 @@ async def lookup_xiaomi_phone(client, query):
         slugs.append(re.sub(r'(\d)c$', r'\1-c', slug))
     if slug.endswith('-5g'):
         slugs.append(slug.removesuffix('-5g'))
-    urls = [f'https://www.mi.com/{locale}/product/{candidate}/specs/' for locale in ('fr', 'global') for candidate in slugs]
+    locales = ('fr', 'global', 'in') if identity.startswith('REDMIA') and identity.endswith('5G') else ('fr', 'global')
+    urls = [f'https://www.mi.com/{locale}/product/{candidate}/specs/' for locale in locales for candidate in slugs]
     try:
         results = await asyncio.wait_for(asyncio.gather(*(_fetch_sheet(client, url, identity) for url in urls)), timeout=6.5)
     except asyncio.TimeoutError:

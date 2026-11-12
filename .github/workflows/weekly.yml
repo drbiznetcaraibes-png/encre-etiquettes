@@ -1,23 +1,112 @@
-name: Vérification ciblée des smartphones
+name: Collecte et vérification des smartphones
 on:
   schedule:
     - cron: '0 10 * * 1'
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Simulation sans écriture dans Supabase
+        type: boolean
+        required: true
+        default: true
+      backup:
+        description: Exporter les faits constructeur dans une sauvegarde
+        type: boolean
+        required: true
+        default: false
 jobs:
   verify:
-    if: vars.ENABLE_WEEKLY_CHECK == 'true'
+    # A manual preview can run before activation; every database write stays gated.
+    if: vars.ENABLE_WEEKLY_CHECK == 'true' || (github.event_name == 'workflow_dispatch' && inputs.dry_run)
     runs-on: ubuntu-latest
-    concurrency: phone-weekly-check
+    concurrency:
+      group: phone-weekly-check
+      cancel-in-progress: false
     timeout-minutes: 15
     permissions:
       contents: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Préparer le mode et la sauvegarde mensuelle
+        id: plan
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_BACKUP: ${{ inputs.backup }}
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          import os
+
+          scheduled = os.environ['EVENT_NAME'] == 'schedule'
+          apply = scheduled or os.environ.get('INPUT_DRY_RUN') == 'false'
+          today = datetime.now(timezone.utc)
+          backup = (scheduled and today.day <= 7) or os.environ.get('INPUT_BACKUP') == 'true'
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f"apply={str(apply).lower()}\n")
+              output.write(f"backup={str(backup).lower()}\n")
+              output.write(f"date={today:%Y-%m-%d}\n")
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
+              summary.write('Mode : ' + ('application Supabase' if apply else 'simulation sans écriture Supabase') + '\n\n')
+              summary.write('Sources : Apple, Xiaomi et Samsung. Aucun appel IA.\n\n')
+              summary.write('Sauvegarde des faits demandée : ' + ('oui' if backup else 'non') + '.\n')
+          PY
       - run: pip install -r requirements.txt
-      - run: python maintenance.py weekly --apply
+      - name: Découvrir et actualiser les fiches constructeur
+        id: catalogue
+        continue-on-error: true
+        timeout-minutes: 6
+        env:
+          APPLY_CATALOGUE: ${{ steps.plan.outputs.apply }}
+          BACKUP_CATALOGUE: ${{ steps.plan.outputs.backup }}
+          BACKUP_DATE: ${{ steps.plan.outputs.date }}
+          SUPABASE_URL: ${{ steps.plan.outputs.apply == 'true' && secrets.SUPABASE_URL || '' }}
+          SUPABASE_SECRET_KEY: ${{ steps.plan.outputs.apply == 'true' && secrets.SUPABASE_SECRET_KEY || '' }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ steps.plan.outputs.apply == 'true' && secrets.SUPABASE_SERVICE_ROLE_KEY || '' }}
+        run: |
+          python - <<'PY'
+          import os
+          import subprocess
+          import sys
+
+          args = [sys.executable, 'catalogue_update.py', '--report', 'work-report/catalogue-update.json']
+          if os.environ.get('APPLY_CATALOGUE') == 'true':
+              args.append('--apply')
+          if os.environ.get('BACKUP_CATALOGUE') == 'true':
+              args.extend(['--backup', 'work-backup/phone-catalogue-' + os.environ['BACKUP_DATE'] + '.json'])
+          raise SystemExit(subprocess.run(args, check=False).returncode)
+          PY
+      - name: Conserver le bilan de la collecte
+        if: ${{ always() && !cancelled() && steps.catalogue.outcome != 'skipped' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: bilan-collecte-${{ github.run_id }}-${{ github.run_attempt }}
+          path: work-report/catalogue-update.json
+          if-no-files-found: warn
+          retention-days: 90
+      - name: Conserver la sauvegarde des faits constructeur
+        if: ${{ always() && !cancelled() && steps.plan.outputs.backup == 'true' && steps.catalogue.outcome != 'skipped' }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: catalogue-constructeur-${{ steps.plan.outputs.date }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: work-backup/phone-catalogue-${{ steps.plan.outputs.date }}.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Revérifier les demandes ciblées déjà enregistrées
+        id: targeted
+        if: ${{ !cancelled() && steps.plan.outputs.apply == 'true' }}
+        continue-on-error: true
+        timeout-minutes: 6
+        run: python maintenance.py weekly --apply
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SECRET_KEY: ${{ secrets.SUPABASE_SECRET_KEY }}
           SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+      - name: Signaler une collecte ou vérification incomplète
+        if: ${{ !cancelled() && (steps.catalogue.outcome == 'failure' || steps.targeted.outcome == 'failure') }}
+        run: exit 1
