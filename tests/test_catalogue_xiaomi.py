@@ -18,6 +18,12 @@ PRODUCT = 'https://www.mi.com/fr/product/xiaomi-19t/specs/'
 
 
 class XiaomiCollectionTests(unittest.IsolatedAsyncioTestCase):
+    def test_sitemap_filters_accessories_and_accepts_official_poco(self):
+        self.assertIsNone(xiaomi._product_url('https://www.mi.com/global/product/xiaomi-18w-power-bank-30000mah/'))
+        self.assertIsNone(xiaomi._product_url('https://www.mi.com/global/product/xiaomi-14-ultra-photography-kit/'))
+        self.assertEqual(xiaomi._product_url('https://www.po.co/global/product/poco-x8-pro-max/'),
+                         'https://www.po.co/global/product/poco-x8-pro-max/specs/')
+
     async def collect(self, handler, existing=None, **limits):
         with patch.object(xiaomi, 'INDEX_URLS', (INDEX,)):
             async with httpx.AsyncClient(transport=httpx.MockTransport(handler)) as client:

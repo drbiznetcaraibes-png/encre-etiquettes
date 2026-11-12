@@ -10,7 +10,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE || 'playwright');
  const page=await context.newPage(); const errors=[];
  page.on('pageerror',e=>errors.push(e.message));
  await page.goto('http://127.0.0.1:'+(process.env.TEST_PORT || '8002'));
- const fixture=[...new Map(['phone','apple','xiaomi','samsung'].flatMap(name=>JSON.parse(fs.readFileSync(name+'_catalog.json','utf8')).phones).map(p=>[p.brand+p.model,p])).values()];
+ const fixture=[...new Map(['phone','apple','xiaomi','samsung','google'].flatMap(name=>JSON.parse(fs.readFileSync(name+'_catalog.json','utf8')).phones).map(p=>[p.brand+p.model,p])).values()];
  await page.evaluate(phones=>{
   rows=phones.map((p,i)=>({...p,ref:p.brand+' '+p.model,capacity:p.capacities[0] || 'Non précisée',cash:i===0?450:1299.99,...calcFin(i===0?450:1299.99)}));
   draw();

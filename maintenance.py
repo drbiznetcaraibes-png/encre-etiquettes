@@ -10,7 +10,7 @@ import server
 
 def catalogue_rows():
     rows = {}
-    for filename in ('phone_catalog.json', 'apple_catalog.json', 'xiaomi_catalog.json', 'samsung_catalog.json'):
+    for filename in ('phone_catalog.json', 'apple_catalog.json', 'xiaomi_catalog.json', 'samsung_catalog.json', 'google_catalog.json'):
         data = json.loads((Path(__file__).parent / filename).read_text())
         for phone in data['phones']:
             capacities = phone.get('capacities', [])

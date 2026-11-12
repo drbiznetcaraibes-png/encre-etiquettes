@@ -19,6 +19,13 @@ def phone(model='Galaxy A19', network='4G LTE'):
 
 
 class RecentModelTests(unittest.IsolatedAsyncioTestCase):
+    def test_exact_database_variant_wins_over_an_older_short_alias(self):
+        local = [{'brand': 'SAMSUNG', 'model': 'Galaxy A17 5G', '_aliases': ['A17'], 'available_capacities': []}]
+        database = [{'brand': 'SAMSUNG', 'model': 'Galaxy A17', '_aliases': [], 'available_capacities': ['128 Go']}]
+        with patch.object(server, '_known_phone_models', return_value=local), patch.object(server, '_DATABASE_MODEL_NAMES', database):
+            self.assertEqual(server._query_model('Samsung A17'), ('Galaxy A17', 'SAMSUNG'))
+            self.assertEqual(server._query_model('Samsung A17 5G'), ('Galaxy A17 5G', 'SAMSUNG'))
+
     def setUp(self):
         server.CACHE.clear()
         server.REQUEST_LOG.clear()

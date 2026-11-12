@@ -49,7 +49,19 @@ def german_specs(code, network='GSM (2G), FDD-LTE (4G), 5G Sub6 FDD'):
 
 
 class SamsungProductsTests(unittest.IsolatedAsyncioTestCase):
+    def test_regional_memory_labels_do_not_create_fake_models_or_storage(self):
+        first = family('Galaxy M56 5G (6 GB Memory)', 'SM-M566BZKBINS', storage='128 GB', site='in')
+        second = family('Galaxy M56 5G (8 GB Memory)', 'SM-M566BZKCINS', storage='256 GB', site='in')
+        rows = products._families({'productList': [first, second]}, 'in')
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['name'], 'Galaxy M56 5G')
+        self.assertEqual({m['capacity'] for m in rows[0]['models']}, {'128 Go', '256 Go'})
+        self.assertIsNotNone(products._query('Galaxy M17e 5G'))
+
     def setUp(self):
+        self.regions = patch.object(products, 'COLLECTION_SITES', products.SITES)
+        self.regions.start()
+        self.addCleanup(self.regions.stop)
         products._INDEX_CACHE.clear()
         products._SPEC_CACHE.clear()
         self.requests = []

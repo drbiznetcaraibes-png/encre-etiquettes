@@ -28,13 +28,14 @@ from fastapi.staticfiles import StaticFiles
 from official_phones import lookup_official_phone
 from xiaomi_phones import lookup_xiaomi_phone
 from samsung_phones import lookup_samsung_phone
+from google_phones import lookup_google_phone
 from manufacturer_pages import lookup_manufacturer_phone
 from openai_phones import search_openai_web, OpenAIServiceError
 from storage import store
 from database_models import get_database_models, invalidate_database_models_cache
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.18.0')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.18.1')
 @app.middleware('http')
 async def protect_access(request, call_next):
     from fastapi.responses import JSONResponse
@@ -208,7 +209,12 @@ def _query_model(query):
  cleaned=re.sub(r'\s+(?:noir|blanc|bleu|rose|vert|violet|gris|argent|gold|black|white|blue|silver)$','',cleaned,flags=re.I).strip()
  # Every displayed suggestion is itself a valid model query, including names
  # with generation parentheses, written Plus, or newly introduced suffixes.
- for row in [*_known_phone_models(),*_DATABASE_MODEL_NAMES]:
+ known=[*_known_phone_models(),*_DATABASE_MODEL_NAMES]
+ # An exact newly imported model wins over an older family alias (A07 4G/5G).
+ for row in known:
+  if _model_identity(cleaned,row['brand'])==_model_identity(row['model'],row['brand']):
+   return row['model'],row['brand']
+ for row in known:
   identity=_model_identity(cleaned,row['brand'])
   if any(identity==_model_identity(name,row['brand'])
          for name in [row['model'],*row['_aliases']]):
@@ -320,8 +326,6 @@ async def _search_official_samsung(client, ref: str):
 
 OPENAI_KEY = os.environ.get('OPENAI_API_KEY', '').strip()
 OPENAI_MODEL = os.environ.get('OPENAI_MODEL', 'gpt-5.4-mini').strip() or 'gpt-5.4-mini'
-OPENAI_DAILY_MAX = max(0, min(100, int(os.environ.get('OPENAI_DAILY_MAX', '3'))))
-OPENAI_CALL_LOG = []
 GEMINI_KEY = os.environ.get('GEMINI_API_KEY', '').strip()
 # Explicit model override is supported; 'auto' tries current models compatible with a free API key.
 # 2.5 Flash-Lite can be unavailable for newer API projects, so prefer current Flash-Lite.
@@ -495,17 +499,12 @@ Les valeurs du schéma sont UNIQUEMENT des exemples : ne les copie pas sans vér
 
 async def openai_lookup(query, is_model_query=False):
     """Fallback OpenAI with strict identity and storage checks."""
-    if not OPENAI_KEY or OPENAI_DAILY_MAX == 0:
+    if not OPENAI_KEY:
         return None
     if OPENAI_MODEL not in ('gpt-5.4-mini', 'gpt-5-mini'):
         raise RuntimeError('Modèle IA non autorisé par le budget configuré.')
-    now = time.time()
-    OPENAI_CALL_LOG[:] = [t for t in OPENAI_CALL_LOG if now-t < 86400]
-    if len(OPENAI_CALL_LOG) >= OPENAI_DAILY_MAX:
-        raise RuntimeError("Plafond quotidien des recherches OpenAI atteint.")
     if not store.configured or not await store.reserve():
         raise RuntimeError("Budget IA indisponible ou plafond mensuel atteint.")
-    OPENAI_CALL_LOG.append(now)
     evidence = await search_openai_web(query, OPENAI_KEY, OPENAI_MODEL)
     if not evidence:
         return None
@@ -648,7 +647,7 @@ async def _online_lookup(ref, is_model_query=False):
   try:
    async def manufacturer_lookup():
     # Each provider returns immediately for other brands, keeping one shared budget.
-    for provider in (lookup_official_phone,lookup_xiaomi_phone,lookup_samsung_phone,lookup_manufacturer_phone):
+    for provider in (lookup_official_phone,lookup_xiaomi_phone,lookup_samsung_phone,lookup_google_phone,lookup_manufacturer_phone):
      result=await provider(client,ref)
      if not result:continue
      if result.get('status')=='verified_online':
@@ -785,7 +784,7 @@ async def private_status():
 def _known_phone_models():
  """Suggestions use the shipped manufacturer facts and never consume an AI call."""
  models={}
- for filename in ('phone_catalog.json','apple_catalog.json','xiaomi_catalog.json','samsung_catalog.json'):
+ for filename in ('phone_catalog.json','apple_catalog.json','xiaomi_catalog.json','samsung_catalog.json','google_catalog.json'):
   path=BASE/filename
   if not path.is_file():continue
   data=json.loads(path.read_text(encoding='utf-8'))
@@ -830,8 +829,7 @@ async def lookup(request:Request, reference:str=Query(min_length=3,max_length=60
  if not MODEL_QUERY_OK.fullmatch(ref): raise HTTPException(400,'Recherche invalide : entre un modèle ou une référence constructeur.')
  if _normalize_ref(CAP_RE.sub('',ref)) in ('IPHONESE','APPLEIPHONESE'):
   raise HTTPException(400,{'message':'Précise la génération : iPhone SE 2016, iPhone SE 2020 ou iPhone SE 2022.'})
- if not _query_model(ref):
-  await _database_models()
+ await _database_models()
  is_model_query=bool(_query_model(ref))
  if not is_model_query and not REF_OK.fullmatch(CAP_RE.sub('',ref).strip()): raise HTTPException(400,'Nom de modèle non reconnu. Exemple : Samsung Galaxy A56 256 Go, iPhone 16 ou SM-S938B.')
  try:

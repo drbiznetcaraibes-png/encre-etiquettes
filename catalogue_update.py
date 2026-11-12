@@ -21,12 +21,12 @@ import httpx
 from storage import Store
 
 BASE = Path(__file__).resolve().parent
-CATALOGUE_FILES = ('phone_catalog.json', 'apple_catalog.json', 'xiaomi_catalog.json', 'samsung_catalog.json')
-BRANDS = ('APPLE', 'XIAOMI', 'SAMSUNG')
+CATALOGUE_FILES = ('phone_catalog.json', 'apple_catalog.json', 'xiaomi_catalog.json', 'samsung_catalog.json', 'google_catalog.json')
+BRANDS = ('APPLE', 'XIAOMI', 'SAMSUNG', 'GOOGLE')
 SPEC_LABELS = {'ecran': 'Écran', 'photo': 'Photo', 'batterie': 'Batterie',
                'processeur': 'Puce', 'reseau': 'Réseau', 'ram': 'RAM'}
-OFFICIAL_DOMAINS = {'APPLE': ('apple.com',), 'XIAOMI': ('mi.com',),
-                    'SAMSUNG': ('samsung.com', 'samsungmobilepress.com')}
+OFFICIAL_DOMAINS = {'APPLE': ('apple.com',), 'XIAOMI': ('mi.com', 'po.co'),
+                    'SAMSUNG': ('samsung.com', 'samsungmobilepress.com'), 'GOOGLE': ('google.com', 'blog.google')}
 BATCH_SIZE = 50
 MAX_DATABASE_ROWS = 5000
 DATABASE_PAGE_SIZE = 500
@@ -87,7 +87,7 @@ def _source(source, brand):
         return None
     # Manufacturer facts do not require arbitrary query strings or bearer URLs.
     query = [(key, value) for key, value in parse_qsl(parsed.query)
-             if (key, value) in (('tab', 'specs'), ('locale', 'fr_FR'), ('lang', 'FR'))]
+             if (key, value) in (('tab', 'specs'), ('locale', 'fr_FR'), ('lang', 'FR'), ('hl', 'en'))]
     url = urlunparse(('https', host, parsed.path or '/', '', urlencode(query), ''))
     return {'title': _text(source.get('title'), 220) or host, 'url': url}
 
@@ -111,7 +111,7 @@ def validate_phone(value, expected_brand=None, *, require_capacities=True):
     if brand not in BRANDS or (expected_brand and brand != expected_brand) or not model:
         return None
     starts = {'APPLE': r'^(?:Apple\s+)?iPhone(?:\b|(?=\d))', 'XIAOMI': r'^(?:Xiaomi|Redmi|POCO)\b',
-              'SAMSUNG': r'^(?:Samsung\s+)?Galaxy\b'}
+              'SAMSUNG': r'^(?:Samsung\s+)?Galaxy\b', 'GOOGLE': r'^(?:Google\s+)?Pixel\b'}
     if not re.match(starts[brand], model, re.I) or not model_identity(brand, model):
         return None
     raw_specs = value.get('specs')
@@ -145,6 +145,8 @@ def validate_phone(value, expected_brand=None, *, require_capacities=True):
         phone['aliases'].insert(0, model)
     if (verified := _date(value.get('verified_at'))):
         phone['verified_at'] = verified
+    if isinstance(value.get('release_year'), int) and 2000 <= value['release_year'] <= datetime.now(timezone.utc).year:
+        phone['release_year'] = value['release_year']
     return phone
 
 
@@ -219,6 +221,8 @@ def rows_for_phone(phone):
                   'feature': ' · '.join(f'{SPEC_LABELS[k]} : {v}' for k, v in list(phone['specs'].items())[:4]),
                   'status': 'verified_online', 'input_type': 'model_name',
                   'search_mode': 'official_manufacturer_catalogue', 'lastVerified': verified}
+        if 'release_year' in phone:
+            result['release_year'] = phone['release_year']
         rows.append({'model_key': key, 'brand': phone['brand'], 'model': phone['model'], 'capacity': capacity,
                      'specs': phone['specs'], 'sources': phone['sources'], 'result': result,
                      'search_mode': 'official_manufacturer_catalogue', 'verification_status': 'vérifié',
@@ -244,7 +248,8 @@ def _phone_from_row(row):
 
 def default_collectors():
     from catalogue_sources import apple, xiaomi, samsung
-    return {'APPLE': apple.collect, 'XIAOMI': xiaomi.collect, 'SAMSUNG': samsung.collect}
+    from google_phones import collect as collect_google
+    return {'APPLE': apple.collect, 'XIAOMI': xiaomi.collect, 'SAMSUNG': samsung.collect, 'GOOGLE': collect_google}
 
 
 def _confirmed(row, response):
