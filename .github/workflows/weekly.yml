@@ -53,7 +53,7 @@ jobs:
               output.write(f"date={today:%Y-%m-%d}\n")
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as summary:
               summary.write('Mode : ' + ('application Supabase' if apply else 'simulation sans écriture Supabase') + '\n\n')
-              summary.write('Sources : Apple, Xiaomi et Samsung. Aucun appel IA.\n\n')
+              summary.write('Sources : Apple, Xiaomi, Samsung et Google. Aucun appel IA.\n\n')
               summary.write('Sauvegarde des faits demandée : ' + ('oui' if backup else 'non') + '.\n')
           PY
       - run: pip install -r requirements.txt

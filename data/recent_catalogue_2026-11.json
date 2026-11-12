@@ -1,0 +1,3708 @@
+{
+  "window": {
+    "from": "2024-11-12",
+    "to": "2026-11-12"
+  },
+  "verified_at": "2026-11-12T18:46:55.524380+00:00",
+  "phones": [
+    {
+      "brand": "APPLE",
+      "model": "iPhone 16e",
+      "specs": {
+        "ecran": "6,1′′ OLED",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 26 h de vidéo",
+        "processeur": "Apple A18",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "iPhone 16e - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/122208"
+        }
+      ],
+      "aliases": [
+        "iPhone 16e",
+        "iPhone 16e 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 30 h de vidéo",
+        "processeur": "Apple A19",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "iPhone 17 - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125089"
+        }
+      ],
+      "aliases": [
+        "iPhone 17",
+        "iPhone 17 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17 Pro",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 31 h de vidéo",
+        "processeur": "Apple A19 Pro",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "iPhone 17 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125090"
+        }
+      ],
+      "aliases": [
+        "iPhone 17 Pro",
+        "iPhone 17 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17 Pro Max",
+      "specs": {
+        "ecran": "6,9′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 37 h de vidéo",
+        "processeur": "Apple A19 Pro",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To",
+        "2 To"
+      ],
+      "sources": [
+        {
+          "title": "iPhone 17 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125091"
+        }
+      ],
+      "aliases": [
+        "iPhone 17 Pro Max",
+        "iPhone 17 Pro Max 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 17e",
+      "specs": {
+        "ecran": "6,1′′ OLED",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 26 h de vidéo",
+        "processeur": "Apple A19",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "iPhone 17e - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/126470"
+        }
+      ],
+      "aliases": [
+        "iPhone 17e",
+        "iPhone 17e 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 18 Pro",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 34 h de vidéo",
+        "processeur": "Apple A20 Pro",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To",
+        "2 To"
+      ],
+      "sources": [
+        {
+          "title": "iPhone 18 Pro - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/148590"
+        }
+      ],
+      "aliases": [
+        "iPhone 18 Pro",
+        "iPhone 18 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone 18 Pro Max",
+      "specs": {
+        "ecran": "6,9′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 43 h de vidéo",
+        "processeur": "Apple A20 Pro",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To",
+        "2 To"
+      ],
+      "sources": [
+        {
+          "title": "iPhone 18 Pro Max - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/148591"
+        }
+      ],
+      "aliases": [
+        "iPhone 18 Pro Max",
+        "iPhone 18 Pro Max 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone Air",
+      "specs": {
+        "ecran": "6,5′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 27 h de vidéo",
+        "processeur": "Apple A19 Pro",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "iPhone Air - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/125092"
+        }
+      ],
+      "aliases": [
+        "iPhone Air",
+        "iPhone Air 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "APPLE",
+      "model": "iPhone Duo",
+      "specs": {
+        "ecran": "7,6′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "Jusqu’à 44 h de vidéo",
+        "processeur": "Apple A20 Pro",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To",
+        "2 To"
+      ],
+      "sources": [
+        {
+          "title": "iPhone Duo - Caractéristiques techniques",
+          "url": "https://support.apple.com/fr-fr/148588"
+        }
+      ],
+      "aliases": [
+        "iPhone Duo",
+        "iPhone Duo 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:06.428528+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "4 970 mAh",
+        "processeur": "Google Tensor G5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 10 : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 10"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10 Pro",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "4 870 mAh",
+        "processeur": "Google Tensor G5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 10 Pro : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 10 Pro"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10 Pro Fold",
+      "specs": {
+        "ecran": "8′′ OLED interne / 6,4′′ externe 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 015 mAh",
+        "processeur": "Google Tensor G5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 10 Pro Fold : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 10 Pro Fold"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10 Pro XL",
+      "specs": {
+        "ecran": "6,8′′ OLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 200 mAh",
+        "processeur": "Google Tensor G5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 10 Pro XL : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 10 Pro XL"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10a",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 100 mAh",
+        "processeur": "Google Tensor G4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 10a : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 10a"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "4 985 mAh",
+        "processeur": "Google Tensor G6",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 11 : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 11"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11 Pro",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "4 850 mAh",
+        "processeur": "Google Tensor G6",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 11 Pro : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 11 Pro"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11 Pro Fold",
+      "specs": {
+        "ecran": "8′′ OLED interne / 6,5′′ externe 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "4 806 mAh",
+        "processeur": "Google Tensor G6",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 11 Pro Fold : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 11 Pro Fold"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11 Pro XL",
+      "specs": {
+        "ecran": "6,8′′ OLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 115 mAh",
+        "processeur": "Google Tensor G6",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 11 Pro XL : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 11 Pro XL"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2026
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 9a",
+      "specs": {
+        "ecran": "6,3′′ OLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 100 mAh",
+        "processeur": "Google Tensor G4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Google — Pixel 9a : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ],
+      "aliases": [
+        "Pixel 9a"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:03.449959+00:00",
+      "release_year": 2025
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A06 5G",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A06 5G 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-a/galaxy-a06-5g-light-green-64gb-sm-a066blgdins/"
+        },
+        {
+          "title": "Samsung — Galaxy A06 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-a/galaxy-a06-5g-black-128gb-sm-a066bzkgins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A06 5G",
+        "A06 5G"
+      ],
+      "manufacturer_references": [
+        "SM-A066B/DS",
+        "SM-A066BLGDINS",
+        "SM-A066BLGGINS",
+        "SM-A066BLGHINS",
+        "SM-A066BZADINS",
+        "SM-A066BZAGINS",
+        "SM-A066BZAHINS",
+        "SM-A066BZKDINS",
+        "SM-A066BZKGINS",
+        "SM-A066BZKHINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A07",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A07 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075fzkdins/"
+        },
+        {
+          "title": "Samsung — Galaxy A07 : caractéristiques",
+          "url": "https://www.samsung.com/latin_en/smartphones/galaxy-a/galaxy-a07-black-64gb-sm-a075mzkdgto/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A07",
+        "A07",
+        "Galaxy A07 4G",
+        "A07 4G",
+        "Galaxy A07 (4G)"
+      ],
+      "manufacturer_references": [
+        "SM-A075F/DS",
+        "SM-A075FLVDINS",
+        "SM-A075FZGDINS",
+        "SM-A075FZKDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A07 5G",
+      "specs": {
+        "ecran": "6,7′′",
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "processeur": "Dimensity 6300 (6nm)",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A07 5G : caractéristiques constructeur",
+          "url": "https://www.samsungmobilepress.com/articles/samsung-launches-galaxy-a07-5g-ai-reliable-performance"
+        }
+      ],
+      "aliases": [
+        "Galaxy A07 5G",
+        "A07 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A07s",
+      "specs": {
+        "ecran": "6,7′′ PLS LCD",
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "64 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A07s 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a07s-light-violet-64gb-sm-a077flvdxid/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A07s",
+        "A07s",
+        "Galaxy A07s 4G",
+        "A07s 4G"
+      ],
+      "manufacturer_references": [
+        "SM-A077F/DS",
+        "SM-A077FLVDXID",
+        "SM-A077FZKDXID"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A08",
+      "specs": {
+        "ecran": "6,7′′ PLS LCD",
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "64 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A08 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a08-dark-blue-64gb-sm-a085fdbdxid/"
+        },
+        {
+          "title": "Samsung — Galaxy A08 4G 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-a/galaxy-a08-dark-blue-64gb-sm-a085fdbdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A08",
+        "A08",
+        "Galaxy A08 4G",
+        "A08 4G"
+      ],
+      "manufacturer_references": [
+        "SM-A085F/DS",
+        "SM-A085FDBDXID",
+        "SM-A085FDBGXID",
+        "SM-A085FZGDXID",
+        "SM-A085FZGGXID",
+        "SM-A085FZSDXID",
+        "SM-A085FZSGXID",
+        "SM-A085FDBDINS",
+        "SM-A085FZGDINS",
+        "SM-A085FZSDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A17",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED",
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A17 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/galaxy-a/galaxy-a17-black-128gb-sm-a175fzkbeub/"
+        },
+        {
+          "title": "Samsung — Galaxy A17 4G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/id/smartphones/galaxy-a/galaxy-a17-light-blue-128gb-sm-a175flbnxid/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A17",
+        "A17",
+        "Galaxy A17 4G",
+        "A17 4G"
+      ],
+      "manufacturer_references": [
+        "SM-A175F/DSB",
+        "SM-A175FLBBEUB",
+        "SM-A175FZABEUB",
+        "SM-A175FZKBEUB",
+        "SM-A175F/DS",
+        "SM-A175FLBDXID",
+        "SM-A175FLBNXID",
+        "SM-A175FLBOXID",
+        "SM-A175FZADXID",
+        "SM-A175FZANXID",
+        "SM-A175FZAOXID",
+        "SM-A175FZKDXID",
+        "SM-A175FZKNXID",
+        "SM-A175FZKOXID"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A17 5G",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED 90 Hz",
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A17 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-a/galaxy-a17-5g-blue-128gb-sm-a176bzbaeub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A17 5G",
+        "A17 5G"
+      ],
+      "manufacturer_references": [
+        "SM-A176B/DS",
+        "SM-A176BZAAEUB",
+        "SM-A176BZBAEUB",
+        "SM-A176BZKAEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A18",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED",
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A18 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-a/galaxy-a18-black-128gb-galaxy-a18-sm-a185fzkdeub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A18",
+        "A18",
+        "Galaxy A18 4G",
+        "A18 4G"
+      ],
+      "manufacturer_references": [
+        "SM-A185F/DS",
+        "SM-A185FLBDEUB",
+        "SM-A185FZKDEUB",
+        "SM-A185FZSDEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A26 5G",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED 120 Hz",
+        "photo": "50 + 8 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A26 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-a/galaxy-a26-5g-mint-128gb-sm-a266blgbeub/"
+        },
+        {
+          "title": "Samsung — Galaxy A26 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-a/galaxy-a26-5g-black-256gb-sm-a266bzkceub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A26 5G",
+        "A26 5G",
+        "Galaxy A26",
+        "A26"
+      ],
+      "manufacturer_references": [
+        "SM-A266B/DS",
+        "SM-A266BLGBEUB",
+        "SM-A266BLGCEUB",
+        "SM-A266BZKBEUB",
+        "SM-A266BZKCEUB",
+        "SM-A266BZWBEUB",
+        "SM-A266BZWCEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A27 5G",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED 120 Hz",
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A27 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-a/galaxy-a27-5g-light-pink-128gb-sm-a276blibeub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A27 5G",
+        "A27 5G",
+        "A27",
+        "Galaxy A27"
+      ],
+      "manufacturer_references": [
+        "SM-A276B/DS",
+        "SM-A276BLIBEUB",
+        "SM-A276BZBBEUB",
+        "SM-A276BZKBEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A36 5G",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED 120 Hz",
+        "photo": "50 + 8 + 5 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A36 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-a/galaxy-a36-5g-awesome-lavender-128gb-sm-a366blvbeub/"
+        },
+        {
+          "title": "Samsung — Galaxy A36 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-a/galaxy-a36-5g-awesome-black-256gb-sm-a366bzkgeub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A36 5G",
+        "Galaxy A36",
+        "A36 5G",
+        "A36"
+      ],
+      "manufacturer_references": [
+        "SM-A366B/DS",
+        "SM-A366BLGBEUB",
+        "SM-A366BLGGEUB",
+        "SM-A366BLVBEUB",
+        "SM-A366BLVGEUB",
+        "SM-A366BZABEUB",
+        "SM-A366BZAGEUB",
+        "SM-A366BZKBEUB",
+        "SM-A366BZKGEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A37 5G",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED 120 Hz",
+        "photo": "50 + 8 + 5 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A37 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-a/galaxy-a37-5g-awesome-lavender-256gb-sm-a376blvgeub/"
+        },
+        {
+          "title": "Samsung — Galaxy A37 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-a/galaxy-a37-5g-awesome-charcoal-128gb-sm-a376bzabeub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A37 5G",
+        "A37 5G",
+        "A37",
+        "Galaxy A37"
+      ],
+      "manufacturer_references": [
+        "SM-A376B/DS",
+        "SM-A376BDGBEUB",
+        "SM-A376BDGGEUB",
+        "SM-A376BLVBEUB",
+        "SM-A376BLVGEUB",
+        "SM-A376BZABEUB",
+        "SM-A376BZAGEUB",
+        "SM-A376BZWBEUB",
+        "SM-A376BZWGEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A56 5G",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED 120 Hz",
+        "photo": "50 + 12 + 5 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A56 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/galaxy-a/galaxy-a56-5g-awesome-lightgrey-256gb-sm-a566bzaceub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A56 5G",
+        "Galaxy A56",
+        "A56 5G",
+        "A56"
+      ],
+      "manufacturer_references": [
+        "SM-A566B/DS",
+        "SM-A566BLICEUB",
+        "SM-A566BZACEUB",
+        "SM-A566BZGCEUB",
+        "SM-A566BZKCEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy A57 5G",
+      "specs": {
+        "ecran": "6,7′′ Super AMOLED Plus 120 Hz",
+        "photo": "50 + 12 + 5 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy A57 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-a/galaxy-a57-5g-awesome-navy-256gb-sm-a576bdbdeub/"
+        },
+        {
+          "title": "Samsung — Galaxy A57 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-a/galaxy-a57-5g-awesome-navy-128gb-sm-a576bdbbeub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy A57 5G",
+        "A57 5G",
+        "A57",
+        "Galaxy A57"
+      ],
+      "manufacturer_references": [
+        "SM-A576B/DS",
+        "SM-A576BDBBEUB",
+        "SM-A576BDBDEUB",
+        "SM-A576BLBBEUB",
+        "SM-A576BLBDEUB",
+        "SM-A576BZABEUB",
+        "SM-A576BZADEUB",
+        "SM-A576BZVBEUB",
+        "SM-A576BZVDEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F06 5G",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F06 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f06-blue-128gb-sm-e066bzbgins/"
+        },
+        {
+          "title": "Samsung — Galaxy F06 5G 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f06-lit-violet-64gb-sm-e066bzvdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F06 5G",
+        "F06 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E066B/DS",
+        "SM-E066BZBDINS",
+        "SM-E066BZBGINS",
+        "SM-E066BZBHINS",
+        "SM-E066BZVDINS",
+        "SM-E066BZVGINS",
+        "SM-E066BZVHINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F07",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "64 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F07 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f07-green-64gb-sm-e075fzgdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F07",
+        "F07",
+        "Galaxy F07 4G",
+        "F07 4G"
+      ],
+      "manufacturer_references": [
+        "SM-E075F/DS",
+        "SM-E075FZGDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F08 4G",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "64 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F08 4G 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f08-dark-blue-64gb-sm-e085fdbdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F08 4G",
+        "F08 4G"
+      ],
+      "manufacturer_references": [
+        "SM-E085F/DS",
+        "SM-E085FDBDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F16 5G",
+      "specs": {
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F16 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f16-5g-blue-128gb-sm-e166pzbdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F16 5G",
+        "F16 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E166P/DS",
+        "SM-E166PZBDINS",
+        "SM-E166PZBGINS",
+        "SM-E166PZBHINS",
+        "SM-E166PZGDINS",
+        "SM-E166PZGGINS",
+        "SM-E166PZGHINS",
+        "SM-E166PZKDINS",
+        "SM-E166PZKGINS",
+        "SM-E166PZKHINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F17 5G",
+      "specs": {
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F17 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f17-5g-violet-pop-128gb-sm-e176blvdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F17 5G",
+        "F17 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E176B/DS",
+        "SM-E176BLVAINS",
+        "SM-E176BLVBINS",
+        "SM-E176BLVDINS",
+        "SM-E176BZKAINS",
+        "SM-E176BZKBINS",
+        "SM-E176BZKDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F36 5G",
+      "specs": {
+        "photo": "50 + 8 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F36 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f36-5g-coral-red-128gb-sm-e366bzrbins/"
+        },
+        {
+          "title": "Samsung — Galaxy F36 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f36-5g-onyx-black-256gb-sm-e366bzkgins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F36 5G",
+        "F36 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E366B/DS",
+        "SM-E366BZKBINS",
+        "SM-E366BZKDINS",
+        "SM-E366BZKGINS",
+        "SM-E366BZRBINS",
+        "SM-E366BZRDINS",
+        "SM-E366BZRGINS",
+        "SM-E366BZVBINS",
+        "SM-E366BZVDINS",
+        "SM-E366BZVGINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F56 5G",
+      "specs": {
+        "photo": "50 + 8 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F56 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f56-5g-green-128gb-sm-e566bzgains/"
+        },
+        {
+          "title": "Samsung — Galaxy F56 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f56-5g-green-256gb-sm-e566bzgbins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F56 5G",
+        "F56 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E566B/DS",
+        "SM-E566BZGAINS",
+        "SM-E566BZGBINS",
+        "SM-E566BZVAINS",
+        "SM-E566BZVBINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F70 5G",
+      "specs": {
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F70 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f70-5g-vivid-violet-128gb-sm-e176elvains/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F70 5G",
+        "F70 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E176E/DS",
+        "SM-E176ELVAINS",
+        "SM-E176ELVBINS",
+        "SM-E176EZKAINS",
+        "SM-E176EZKBINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F70 Pro 5G",
+      "specs": {
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F70 Pro 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f70-pro-5g-alpha-black-128gb-sm-e476bzkbins/"
+        },
+        {
+          "title": "Samsung — Galaxy F70 Pro 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f70-pro-5g-alpha-black-256gb-sm-e476bzkgins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F70 Pro 5G",
+        "F70 Pro 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E476B/DS",
+        "SM-E476BZGBINS",
+        "SM-E476BZGDINS",
+        "SM-E476BZGGINS",
+        "SM-E476BZKBINS",
+        "SM-E476BZKDINS",
+        "SM-E476BZKGINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy F70e 5G",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy F70e 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-f/galaxy-f70e-5g-limelight-green-128gb-sm-e076blgains/"
+        }
+      ],
+      "aliases": [
+        "Galaxy F70e 5G",
+        "F70e 5G"
+      ],
+      "manufacturer_references": [
+        "SM-E076B/DS",
+        "SM-E076BDBAINS",
+        "SM-E076BDBBINS",
+        "SM-E076BLGAINS",
+        "SM-E076BLGBINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M06 5G",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M06 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m06-5g-black-128gb-sm-m066bzkgins/"
+        },
+        {
+          "title": "Samsung — Galaxy M06 5G 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m06-5g-blazing-black-64gb-sm-m066bzkdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M06 5G",
+        "M06 5G"
+      ],
+      "manufacturer_references": [
+        "SM-M066B/DS",
+        "SM-M066BLGDINS",
+        "SM-M066BLGGINS",
+        "SM-M066BLGHINS",
+        "SM-M066BZKDINS",
+        "SM-M066BZKGINS",
+        "SM-M066BZKHINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M07",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "64 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M07 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m07-black-64gb-sm-m075fzkdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M07",
+        "M07",
+        "Galaxy M07 4G",
+        "M07 4G"
+      ],
+      "manufacturer_references": [
+        "SM-M075F/DS",
+        "SM-M075FZKDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M08 4G",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "reseau": "4G LTE"
+      },
+      "capacities": [
+        "64 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M08 4G 64 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m08-silver-64gb-sm-m085fzsdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M08 4G",
+        "M08 4G"
+      ],
+      "manufacturer_references": [
+        "SM-M085F/DS",
+        "SM-M085FZSDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M16 5G",
+      "specs": {
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M16 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m16-5g-black-128gb-sm-m166pzkdins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M16 5G",
+        "M16 5G"
+      ],
+      "manufacturer_references": [
+        "SM-M166P/DS",
+        "SM-M166PLGDINS",
+        "SM-M166PLGGINS",
+        "SM-M166PLGHINS",
+        "SM-M166PLIDINS",
+        "SM-M166PLIGINS",
+        "SM-M166PLIHINS",
+        "SM-M166PZKDINS",
+        "SM-M166PZKGINS",
+        "SM-M166PZKHINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M17 5G",
+      "specs": {
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M17 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m17-5g-moonlight-silver-128gb-sm-m176bzsains/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M17 5G",
+        "M17 5G"
+      ],
+      "manufacturer_references": [
+        "SM-M176B/DS",
+        "SM-M176BZKAINS",
+        "SM-M176BZKBINS",
+        "SM-M176BZKDINS",
+        "SM-M176BZSAINS",
+        "SM-M176BZSBINS",
+        "SM-M176BZSDINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M17e 5G",
+      "specs": {
+        "photo": "50 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M17e 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m17e-5g-blitz-blue-128gb-sm-m076blbains/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M17e 5G",
+        "M17e 5G"
+      ],
+      "manufacturer_references": [
+        "SM-M076B/DS",
+        "SM-M076BLBAINS",
+        "SM-M076BLBBINS",
+        "SM-M076BLVAINS",
+        "SM-M076BLVBINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M36 5G",
+      "specs": {
+        "photo": "50 + 8 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M36 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m36-5g-serene-green-128gb-sm-m366blgbins/"
+        },
+        {
+          "title": "Samsung — Galaxy M36 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m36-5g-velvet-black-256gb-sm-m366bzkgins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M36 5G",
+        "M36 5G"
+      ],
+      "manufacturer_references": [
+        "SM-M366B/DS",
+        "SM-M366BLGBINS",
+        "SM-M366BLGDINS",
+        "SM-M366BLGGINS",
+        "SM-M366BZKBINS",
+        "SM-M366BZKDINS",
+        "SM-M366BZKGINS",
+        "SM-M366BZOBINS",
+        "SM-M366BZODINS",
+        "SM-M366BZOGINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M47 5G",
+      "specs": {
+        "photo": "50 + 5 + 2 Mpx (arrière)",
+        "batterie": "6 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M47 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m47-5g-blaze-blue-128gb-sm-m476blbbins/"
+        },
+        {
+          "title": "Samsung — Galaxy M47 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m47-5g-blaze-blue-256gb-sm-m476blbgins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M47 5G",
+        "M47 5G"
+      ],
+      "manufacturer_references": [
+        "SM-M476B/DS",
+        "SM-M476BLBBINS",
+        "SM-M476BLBDINS",
+        "SM-M476BLBGINS",
+        "SM-M476BZRBINS",
+        "SM-M476BZRDINS",
+        "SM-M476BZRGINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy M56 5G",
+      "specs": {
+        "photo": "50 + 8 + 2 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy M56 5G 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m-light-green-128gb-sm-m566blgains/"
+        },
+        {
+          "title": "Samsung — Galaxy M56 5G 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/in/smartphones/galaxy-m/galaxy-m-black-256gb-sm-m566bzkbins/"
+        }
+      ],
+      "aliases": [
+        "Galaxy M56 5G",
+        "M56 5G"
+      ],
+      "manufacturer_references": [
+        "SM-M566B/DS",
+        "SM-M566BLGAINS",
+        "SM-M566BLGBINS",
+        "SM-M566BZKAINS",
+        "SM-M566BZKBINS"
+      ],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25",
+      "specs": {
+        "ecran": "6,2′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 10 + 12 Mpx (arrière)",
+        "batterie": "4 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25 512 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-s25/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S25",
+        "S25",
+        "Galaxy S25 5G",
+        "S25 5G"
+      ],
+      "manufacturer_references": [
+        "SM-S931B/DS",
+        "SM-S931BDBDEUB",
+        "SM-S931BDBGEUB",
+        "SM-S931BDBHEUB",
+        "SM-S931BLBDEUB",
+        "SM-S931BLBGEUB",
+        "SM-S931BLBHEUB",
+        "SM-S931BLGDEUB",
+        "SM-S931BLGGEUB",
+        "SM-S931BLGHEUB",
+        "SM-S931BZKDEUB",
+        "SM-S931BZKGEUB",
+        "SM-S931BZKHEUB",
+        "SM-S931BZSDEUB",
+        "SM-S931BZSGEUB",
+        "SM-S931BZSHEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25 Edge",
+      "specs": {
+        "ecran": "6,7′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "200 + 12 Mpx (arrière)",
+        "batterie": "3 900 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25 Edge 512 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-s25-edge/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S25 Edge",
+        "S25 Edge"
+      ],
+      "manufacturer_references": [
+        "SM-S937B/DS",
+        "SM-S937BLBDEUB",
+        "SM-S937BLBGEUB",
+        "SM-S937BZKDEUB",
+        "SM-S937BZKGEUB",
+        "SM-S937BZSDEUB",
+        "SM-S937BZSGEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25 FE",
+      "specs": {
+        "ecran": "6,7′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 + 8 Mpx (arrière)",
+        "batterie": "4 900 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25 FE 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/galaxy-s/galaxy-s25-fe-navy-128gb-sm-s731bdbdeub/"
+        },
+        {
+          "title": "Samsung — Galaxy S25 FE 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/galaxy-s/galaxy-s25-fe-navy-256gb-sm-s731bdbgeub/"
+        },
+        {
+          "title": "Samsung — Galaxy S25 FE 512 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/galaxy-s/galaxy-s25-fe-navy-512gb-sm-s731bdbieub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S25 FE",
+        "S25 FE"
+      ],
+      "manufacturer_references": [
+        "SM-S731B/DS",
+        "SM-S731BDBDEUB",
+        "SM-S731BDBGEUB",
+        "SM-S731BDBIEUB",
+        "SM-S731BLBDEUB",
+        "SM-S731BLBGEUB",
+        "SM-S731BLBIEUB",
+        "SM-S731BZKDEUB",
+        "SM-S731BZKGEUB",
+        "SM-S731BZKIEUB",
+        "SM-S731BZWDEUB",
+        "SM-S731BZWGEUB",
+        "SM-S731BZWIEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25 Ultra",
+      "specs": {
+        "ecran": "6,9′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "200 + 50 + 50 + 10 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25 Ultra 1 To : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-s25-ultra/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S25 Ultra",
+        "S25 Ultra",
+        "Galaxy S25 Ultra 5G",
+        "S25 Ultra 5G"
+      ],
+      "manufacturer_references": [
+        "SM-S938B",
+        "SM-S938B/DS",
+        "SM-S938BAKDEUB",
+        "SM-S938BAKGEUB",
+        "SM-S938BAKHEUB",
+        "SM-S938BZBDEUB",
+        "SM-S938BZBGEUB",
+        "SM-S938BZBHEUB",
+        "SM-S938BZKDEUB",
+        "SM-S938BZKGEUB",
+        "SM-S938BZKHEUB",
+        "SM-S938BZSDEUB",
+        "SM-S938BZSGEUB",
+        "SM-S938BZSHEUB",
+        "SM-S938BZTDEUB",
+        "SM-S938BZTGEUB",
+        "SM-S938BZTHEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S25+",
+      "specs": {
+        "ecran": "6,7′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 10 + 12 Mpx (arrière)",
+        "batterie": "4 900 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S25+ 512 Go : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-s25/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S25+",
+        "Galaxy S25 Plus",
+        "S25+",
+        "S25 Plus",
+        "Galaxy S25+ 5G",
+        "Galaxy S25 Plus 5G",
+        "S25+ 5G",
+        "S25 Plus 5G"
+      ],
+      "manufacturer_references": [
+        "SM-S936B/DS",
+        "SM-S936BDBDEUB",
+        "SM-S936BDBGEUB",
+        "SM-S936BLBDEUB",
+        "SM-S936BLBGEUB",
+        "SM-S936BLGDEUB",
+        "SM-S936BLGGEUB",
+        "SM-S936BZKDEUB",
+        "SM-S936BZKGEUB",
+        "SM-S936BZSDEUB",
+        "SM-S936BZSGEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26",
+      "specs": {
+        "ecran": "6,3′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 10 + 12 Mpx (arrière)",
+        "batterie": "4 300 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/galaxy-s26/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S26",
+        "S26"
+      ],
+      "manufacturer_references": [
+        "SM-S942B/DS",
+        "SM-S942BLBGEUB",
+        "SM-S942BLBHEUB",
+        "SM-S942BZKGEUB",
+        "SM-S942BZKHEUB",
+        "SM-S942BZVGEUB",
+        "SM-S942BZVHEUB",
+        "SM-S942BZWGEUB",
+        "SM-S942BZWHEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26 FE",
+      "specs": {
+        "ecran": "6,7′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 + 8 Mpx (arrière)",
+        "batterie": "4 900 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26 FE 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-s/galaxy-s26-fe-pistachio-128gb-sm-s741blgdeub/"
+        },
+        {
+          "title": "Samsung — Galaxy S26 FE 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-s/galaxy-s26-fe-graphite-256gb-sm-s741bzkgeub/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S26 FE",
+        "S26 FE"
+      ],
+      "manufacturer_references": [
+        "SM-S741B/DS",
+        "SM-S741BLGDEUB",
+        "SM-S741BLGGEUB",
+        "SM-S741BZKDEUB",
+        "SM-S741BZKGEUB",
+        "SM-S741BZVDEUB",
+        "SM-S741BZVGEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26 Ultra",
+      "specs": {
+        "ecran": "6,9′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "200 + 50 + 50 + 10 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26 Ultra 1 To : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-s26-ultra/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S26 Ultra",
+        "S26 Ultra"
+      ],
+      "manufacturer_references": [
+        "SM-S948B/DS",
+        "SM-S948BLBDEUB",
+        "SM-S948BLBGEUB",
+        "SM-S948BLBHEUB",
+        "SM-S948BZKDEUB",
+        "SM-S948BZKGEUB",
+        "SM-S948BZKHEUB",
+        "SM-S948BZVDEUB",
+        "SM-S948BZVGEUB",
+        "SM-S948BZVHEUB",
+        "SM-S948BZWDEUB",
+        "SM-S948BZWGEUB",
+        "SM-S948BZWHEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy S26+",
+      "specs": {
+        "ecran": "6,7′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 10 + 12 Mpx (arrière)",
+        "batterie": "4 900 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy S26+ 512 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-s26/"
+        }
+      ],
+      "aliases": [
+        "Galaxy S26+",
+        "S26+"
+      ],
+      "manufacturer_references": [
+        "SM-S947B/DS",
+        "SM-S947BLBDEUB",
+        "SM-S947BLBGEUB",
+        "SM-S947BZKDEUB",
+        "SM-S947BZKGEUB",
+        "SM-S947BZVDEUB",
+        "SM-S947BZVGEUB",
+        "SM-S947BZWDEUB",
+        "SM-S947BZWGEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy XCover7 Pro",
+      "specs": {
+        "ecran": "6,6′′ PLS LCD 120 Hz",
+        "photo": "50 + 8 Mpx (arrière)",
+        "batterie": "4 350 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy XCover7 Pro 128 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/others/galaxy-xcover7-pro-black-128gb-sm-g766bzkdeeb/"
+        }
+      ],
+      "aliases": [
+        "Galaxy XCover7 Pro",
+        "XCover7 Pro"
+      ],
+      "manufacturer_references": [
+        "SM-G766B",
+        "SM-G766BZKDEEB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Flip7",
+      "specs": {
+        "ecran": "6,9′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 Mpx (arrière)",
+        "batterie": "4 300 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Flip7 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-z-flip7/"
+        }
+      ],
+      "aliases": [
+        "Galaxy Z Flip7",
+        "Z Flip7"
+      ],
+      "manufacturer_references": [
+        "SM-F766B",
+        "SM-F766BDBGEUB",
+        "SM-F766BDBHEUB",
+        "SM-F766BZKGEUB",
+        "SM-F766BZKHEUB",
+        "SM-F766BZRGEUB",
+        "SM-F766BZRHEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Flip7 FE",
+      "specs": {
+        "ecran": "6,7′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 Mpx (arrière)",
+        "batterie": "4 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Flip7 FE 256 Go : caractéristiques",
+          "url": "https://www.samsung.com/uk/smartphones/galaxy-z-flip7-fe/"
+        }
+      ],
+      "aliases": [
+        "Galaxy Z Flip7 FE",
+        "Z Flip7 FE"
+      ],
+      "manufacturer_references": [
+        "SM-F761B",
+        "SM-F761BZKGEUB",
+        "SM-F761BZKHEUB",
+        "SM-F761BZWGEUB",
+        "SM-F761BZWHEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Flip8",
+      "specs": {
+        "ecran": "6,9′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 12 Mpx (arrière)",
+        "batterie": "4 300 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Flip8 512 Go : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-z-flip8/"
+        }
+      ],
+      "aliases": [
+        "Galaxy Z Flip8",
+        "Z Flip8"
+      ],
+      "manufacturer_references": [
+        "SM-F776B",
+        "SM-F776BLIGEUB",
+        "SM-F776BLIHEUB",
+        "SM-F776BZKGEUB",
+        "SM-F776BZKHEUB",
+        "SM-F776BZWGEUB",
+        "SM-F776BZWHEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Fold7",
+      "specs": {
+        "ecran": "8′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "200 + 12 + 10 Mpx (arrière)",
+        "batterie": "4 400 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Fold7 1 To : caractéristiques",
+          "url": "https://www.samsung.com/de/smartphones/galaxy-z-fold7/"
+        }
+      ],
+      "aliases": [
+        "Galaxy Z Fold7",
+        "Z Fold7"
+      ],
+      "manufacturer_references": [
+        "SM-F966B/DS",
+        "SM-F966BDBBEUB",
+        "SM-F966BDBCEUB",
+        "SM-F966BDBNEUB",
+        "SM-F966BZKBEUB",
+        "SM-F966BZKCEUB",
+        "SM-F966BZKNEUB",
+        "SM-F966BZSBEUB",
+        "SM-F966BZSCEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Fold8",
+      "specs": {
+        "ecran": "7,6′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "50 + 50 Mpx (arrière)",
+        "batterie": "4 800 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Fold8 1 To : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-z-fold8/"
+        }
+      ],
+      "aliases": [
+        "Galaxy Z Fold8",
+        "Z Fold8"
+      ],
+      "manufacturer_references": [
+        "SM-F971B",
+        "SM-F971BLVBEUB",
+        "SM-F971BLVCEUB",
+        "SM-F971BLVNEUB",
+        "SM-F971BZKBEUB",
+        "SM-F971BZKCEUB",
+        "SM-F971BZKNEUB",
+        "SM-F971BZWBEUB",
+        "SM-F971BZWCEUB",
+        "SM-F971BZWNEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z Fold8 Ultra",
+      "specs": {
+        "ecran": "8,0′′ Dynamic AMOLED 2X 120 Hz",
+        "photo": "200 + 50 + 10 Mpx (arrière)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z Fold8 Ultra 1 To : caractéristiques",
+          "url": "https://www.samsung.com/fr/smartphones/galaxy-z-fold8-ultra/"
+        }
+      ],
+      "aliases": [
+        "Galaxy Z Fold8 Ultra",
+        "Z Fold8 Ultra"
+      ],
+      "manufacturer_references": [
+        "SM-F976B",
+        "SM-F976BZKBEUB",
+        "SM-F976BZKCEUB",
+        "SM-F976BZKNEUB",
+        "SM-F976BZVBEUB",
+        "SM-F976BZVCEUB",
+        "SM-F976BZVNEUB",
+        "SM-F976BZWBEUB",
+        "SM-F976BZWCEUB",
+        "SM-F976BZWNEUB"
+      ],
+      "verified_at": "2026-11-12T18:39:17.951602+00:00"
+    },
+    {
+      "brand": "SAMSUNG",
+      "model": "Galaxy Z TriFold",
+      "specs": {
+        "ecran": "10,0′′ Dynamic AMOLED 2X 120 Hz",
+        "batterie": "5 600 mAh",
+        "processeur": "Snapdragon 8 Elite for Galaxy"
+      },
+      "capacities": [
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Samsung — Galaxy Z TriFold : lancement et spécifications",
+          "url": "https://news.samsung.com/global/introducing-galaxy-z-trifold-the-shape-of-whats-next-in-mobile-innovation"
+        }
+      ],
+      "aliases": [
+        "Galaxy Z TriFold",
+        "Z TriFold"
+      ],
+      "manufacturer_references": [],
+      "release_year": 2025,
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO C71",
+      "specs": {
+        "ecran": "6,88′′ 120 Hz",
+        "photo": "32 Mpx (principal)",
+        "batterie": "5 200 mAh",
+        "processeur": "UNISOC T7250",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO C71 : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-c71/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO C71",
+        "POCO C71 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO C81 Pro",
+      "specs": {
+        "ecran": "6,9′′ LCD 120 Hz",
+        "photo": "13 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "UNISOC T7250",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO C81 Pro : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-c81-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO C81 Pro",
+        "POCO C81 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO C85",
+      "specs": {
+        "ecran": "6,9′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "MediaTek Helio G81-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO C85 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-c85/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO C85",
+        "POCO C85 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO C95 Pro",
+      "specs": {
+        "ecran": "6,9′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 500 mAh",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO C95 Pro : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-c95-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO C95 Pro",
+        "POCO C95 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F7",
+      "specs": {
+        "ecran": "6,83′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "processeur": "Snapdragon 8s Gen 4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F7 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f7/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO F7",
+        "POCO F7 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F7 Pro",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "Snapdragon 8 Gen 3",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F7 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f7-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO F7 Pro",
+        "POCO F7 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F7 Ultra",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 300 mAh",
+        "processeur": "Snapdragon 8 Elite",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F7 Ultra : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-f7-ultra/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO F7 Ultra",
+        "POCO F7 Ultra 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F8 Pro",
+      "specs": {
+        "ecran": "6,59′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 210 mAh",
+        "processeur": "Snapdragon 8 Elite",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F8 Pro : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-f8-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO F8 Pro",
+        "POCO F8 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F8 Ultra",
+      "specs": {
+        "ecran": "6,9′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F8 Ultra : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-f8-ultra/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO F8 Ultra",
+        "POCO F8 Ultra 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F9 Pro",
+      "specs": {
+        "ecran": "6,59′′ AMOLED",
+        "photo": "200 Mpx (principal)",
+        "batterie": "6 330 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F9 Pro : caractéristiques",
+          "url": "https://www.po.co/global/product/poco-f9-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO F9 Pro",
+        "POCO F9 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO F9 Ultra",
+      "specs": {
+        "ecran": "6,9′′ AMOLED",
+        "photo": "200 Mpx (principal)",
+        "batterie": "8 050 mAh",
+        "processeur": "Snapdragon 8 Elite Gen 5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO F9 Ultra : caractéristiques",
+          "url": "https://www.po.co/global/product/poco-f9-ultra/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO F9 Ultra",
+        "POCO F9 Ultra 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO M7",
+      "specs": {
+        "ecran": "6,9′′ 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 000 mAh",
+        "processeur": "Snapdragon 685",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO M7 : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-m7/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO M7",
+        "POCO M7 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO M7 Pro 5G",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "processeur": "Dimensity 7025-Ultra",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO M7 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-m7-pro-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO M7 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO M8 5G",
+      "specs": {
+        "ecran": "6,77′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 520 mAh",
+        "processeur": "Snapdragon 6 Gen 3",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO M8 5G : caractéristiques",
+          "url": "https://www.po.co/global/product/poco-m8-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO M8 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO M8 Pro 5G",
+      "specs": {
+        "ecran": "6,83′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "processeur": "Snapdragon 7s Gen 4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO M8 Pro 5G : caractéristiques",
+          "url": "https://www.po.co/global/product/poco-m8-pro-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO M8 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO M8s 5G",
+      "specs": {
+        "ecran": "6,9′′ 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 000 mAh",
+        "processeur": "Snapdragon 6s Gen 3",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO M8s 5G : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-m8s-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO M8s 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X7 5G",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "processeur": "Dimensity 7300-Ultra",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X7 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x7/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO X7 5G",
+        "POCO X7"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X7 Pro 5G",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "Dimensity 8400-Ultra",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X7 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x7-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO X7 Pro 5G",
+        "POCO X7 Pro"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X8",
+      "specs": {
+        "ecran": "6,83′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "8 340 mAh",
+        "processeur": "Snapdragon 6s Gen 4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X8 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x8/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO X8",
+        "POCO X8 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X8 Pro",
+      "specs": {
+        "ecran": "6,59′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "processeur": "Dimensity 8500-Ultra"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X8 Pro : caractéristiques",
+          "url": "https://www.po.co/global/product/poco-x8-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO X8 Pro"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X8 Pro Max",
+      "specs": {
+        "ecran": "6,83′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "8 500 mAh",
+        "processeur": "MediaTek Dimensity 9500s"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X8 Pro Max : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x8-pro-max/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO X8 Pro Max"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X8s",
+      "specs": {
+        "ecran": "6,35′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 330 mAh"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X8s : caractéristiques",
+          "url": "https://www.mi.com/fr/product/poco-x8s/specs/"
+        }
+      ],
+      "aliases": [
+        "POCO X8s"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI 13x",
+      "specs": {
+        "ecran": "6,79′′ 90 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 030 mAh",
+        "processeur": "MediaTek Helio G91-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI 13x : caractéristiques",
+          "url": "https://www.mi.com/global/product/redmi-13x/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI 13x",
+        "REDMI 13x 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI 15C",
+      "specs": {
+        "ecran": "6,9′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "MediaTek Helio G81-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI 15C : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-15c/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI 15C",
+        "REDMI 15C 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI 15C 5G",
+      "specs": {
+        "ecran": "6,9′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "MediaTek Dimensity 6300",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI 15C 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-15c-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI 15C 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI 17",
+      "specs": {
+        "ecran": "6,9′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 500 mAh",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI 17 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-17/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI 17",
+        "REDMI 17 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI 17 5G",
+      "specs": {
+        "ecran": "6,9′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 500 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI 17 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-17-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI 17 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI 17C 5G",
+      "specs": {
+        "ecran": "6,9′′ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "MediaTek Dimensity 6300",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI 17C 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-17c-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI 17C 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI A7",
+      "specs": {
+        "ecran": "6,88′′ LCD 120 Hz",
+        "photo": "13 Mpx (principal)",
+        "batterie": "5 200 mAh",
+        "processeur": "UNISOC T7250",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "64 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI A7 : caractéristiques",
+          "url": "https://www.mi.com/global/product/redmi-a7/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI A7",
+        "REDMI A7 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:46:55.524380+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI A7 Pro",
+      "specs": {
+        "ecran": "6,9′′ LCD 120 Hz",
+        "photo": "13 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "UNISOC T7250",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI A7 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-a7-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI A7 Pro",
+        "REDMI A7 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15",
+      "specs": {
+        "ecran": "6,77′′ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "6 000 mAh",
+        "processeur": "MediaTek Helio G100-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 15",
+        "REDMI Note 15 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 5G",
+      "specs": {
+        "ecran": "6,77′′ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 520 mAh",
+        "processeur": "Snapdragon 6 Gen 3",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 15 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 Pro",
+      "specs": {
+        "ecran": "6,77′′ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "processeur": "MediaTek Helio G200-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 15 Pro",
+        "REDMI Note 15 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 Pro 5G",
+      "specs": {
+        "ecran": "6,83′′ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "6 580 mAh",
+        "processeur": "MediaTek Dimensity 7400-Ultra",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-pro-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 15 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 15 Pro+ 5G",
+      "specs": {
+        "ecran": "6,83′′ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "6 500 mAh",
+        "processeur": "Snapdragon 7s Gen 4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 15 Pro+ 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-15-pro-plus-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 15 Pro+ 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 17",
+      "specs": {
+        "ecran": "6,99′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 700 mAh",
+        "processeur": "Snapdragon 6s",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 17 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-17/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 17",
+        "REDMI Note 17 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 17 5G",
+      "specs": {
+        "ecran": "6,99′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 700 mAh",
+        "processeur": "Snapdragon 4 Gen 4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 17 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-17-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 17 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 17 Pro 5G",
+      "specs": {
+        "ecran": "6,83′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "8 340 mAh",
+        "processeur": "Snapdragon 6s Gen 4",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 17 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-17-pro-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 17 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "REDMI Note 17 Pro Max 5G",
+      "specs": {
+        "ecran": "6,83′′ AMOLED 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "9 210 mAh",
+        "processeur": "Snapdragon 6 Gen 5",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — REDMI Note 17 Pro Max 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-17-pro-max-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "REDMI Note 17 Pro Max 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi 15",
+      "specs": {
+        "ecran": "6,9′′ 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 000 mAh",
+        "processeur": "Snapdragon 685",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi 15 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-15/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi 15",
+        "Redmi 15 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi 15 5G",
+      "specs": {
+        "ecran": "6,9′′ 144 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "7 000 mAh",
+        "processeur": "Snapdragon 6s Gen 3",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi 15 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-15-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi 15 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi A5",
+      "specs": {
+        "ecran": "6,88′′ 120 Hz",
+        "photo": "32 Mpx (principal)",
+        "batterie": "5 200 mAh",
+        "processeur": "UNISOC T7250",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi A5 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-a5/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi A5",
+        "Redmi A5 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 500 mAh",
+        "processeur": "Helio G99-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi Note 14",
+        "Redmi Note 14 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 5G",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "processeur": "Dimensity 7025-Ultra",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi Note 14 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 Pro",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 500 mAh",
+        "processeur": "Helio G100-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 Pro : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-pro/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi Note 14 Pro",
+        "Redmi Note 14 Pro 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 Pro 5G",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "processeur": "MediaTek Dimensity 7300-Ultra",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-pro-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi Note 14 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14 Pro+ 5G",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 110 mAh",
+        "processeur": "Snapdragon 7s Gen 3",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14 Pro+ 5G : caractéristiques",
+          "url": "https://www.mi.com/fr/product/redmi-note-14-pro-plus-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi Note 14 Pro+ 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi Note 14S",
+      "specs": {
+        "ecran": "6,67′′ AMOLED 120 Hz",
+        "photo": "200 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "processeur": "MediaTek Helio G99-Ultra",
+        "reseau": "4G"
+      },
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi — Redmi Note 14S : caractéristiques",
+          "url": "https://www.mi.com/global/product/redmi-note-14s/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi Note 14S",
+        "Redmi Note 14S 4G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:39:47.427548+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi A4 5G",
+      "specs": {
+        "ecran": "6,88′′",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 160 mAh",
+        "processeur": "Snapdragon 4s Gen 2",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi India — Redmi A4 5G : caractéristiques",
+          "url": "https://www.mi.com/in/product/redmi-a4-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi A4 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:55:33.104346+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi A7 Pro 5G",
+      "specs": {
+        "ecran": "6,9′′ HD+ 120 Hz",
+        "photo": "32 Mpx (principal)",
+        "batterie": "6 300 mAh",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi India — Redmi A7 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/in/product/redmi-a7-pro-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi A7 Pro 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:55:33.104346+00:00"
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "Redmi 14C 5G",
+      "specs": {
+        "ecran": "6,88′′ HD+ 120 Hz",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 160 mAh",
+        "processeur": "Snapdragon 4 Gen 2",
+        "reseau": "5G"
+      },
+      "capacities": [
+        "64 Go",
+        "128 Go"
+      ],
+      "sources": [
+        {
+          "title": "Xiaomi India — Redmi 14C 5G : caractéristiques",
+          "url": "https://www.mi.com/in/product/redmi-14c-5g/specs/"
+        }
+      ],
+      "aliases": [
+        "Redmi 14C 5G"
+      ],
+      "manufacturer_references": [],
+      "verified_at": "2026-11-12T18:55:33.104346+00:00"
+    }
+  ],
+  "pending": [
+    {
+      "brand": "XIAOMI",
+      "slug": "poco-c75-5g",
+      "source": "https://www.mi.com/global/product/poco-c75-5g/specs/"
+    },
+    {
+      "brand": "XIAOMI",
+      "slug": "poco-c81",
+      "source": "https://www.mi.com/global/product/poco-c81/specs/"
+    },
+    {
+      "brand": "XIAOMI",
+      "slug": "poco-c85-5g",
+      "source": "https://www.mi.com/global/product/poco-c85-5g/specs/"
+    },
+    {
+      "brand": "XIAOMI",
+      "slug": "poco-m7-plus-5g",
+      "source": "https://www.mi.com/global/product/poco-m7-plus-5g/specs/"
+    }
+  ],
+  "note": "Fiches constructeur vérifiées pour la sélection récente internationale et régionale ; les candidats sans fiche technique reconnue ne sont pas importés. Les anciens modèles déjà présents dans Supabase ne sont pas supprimés."
+}

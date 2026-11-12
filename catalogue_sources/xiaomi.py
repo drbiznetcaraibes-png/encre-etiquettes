@@ -17,6 +17,11 @@ from bs4 import BeautifulSoup
 from xiaomi_phones import _capacity, _identity, _plain, _section, parse_xiaomi_sheet
 
 INDEX_URLS = (
+    'https://www.mi.com/global/sitemap',
+    'https://www.mi.com/fr/sitemap',
+    'https://www.po.co/global/',
+    'https://www.po.co/global/sitemap/',
+    'https://www.mi.com/fr/product-list/poco/',
     'https://www.mi.com/fr/phone/',
     'https://www.mi.com/fr/',
     'https://www.mi.com/global/',
@@ -30,11 +35,11 @@ MAX_PAGES = 150
 CONCURRENCY = 4
 TOTAL_TIMEOUT = 180
 MAX_BYTES = 2_000_000
-_HOSTS = {'www.mi.com', 'mi.com'}
+_HOSTS = {'www.mi.com', 'mi.com', 'www.po.co', 'po.co'}
 _PHONE_SLUG = re.compile(
-    r'(?:xiaomi-(?:\d{1,2}[a-z]?|mix-(?:fold|flip)(?:-?\d{1,2})?)(?:-[a-z0-9]+)*'
-    r'|redmi-(?:note-)?(?:\d{1,2}[a-z]?|a\d{1,2}[a-z]?)(?:-[a-z0-9]+)*'
-    r'|poco-[xfmc]\d{1,2}[a-z]?(?:-[a-z0-9]+)*)'
+    r'(?:xiaomi-(?:\d{1,2}[tsi]?|mix-(?:fold|flip)(?:-?\d{1,2})?)(?:-(?:pro|max|ultra|lite|plus|4g|5g))*'
+    r'|redmi-(?:note-)?(?:\d{1,2}[acrst]?|a\d{1,2}[a-z]?)(?:-(?:pro|max|plus|s|c|4g|5g))*'
+    r'|poco-[xfmc]\d{1,2}[s]?(?:-(?:pro|max|ultra|gt|plus|4g|5g))*)'
 )
 _PRODUCT_PATH = re.compile(r'/(fr|global)/product/([a-z0-9-]+)/(?:specs/?)?$')
 
@@ -47,7 +52,8 @@ def _safe_url(url):
                 or parsed.username or parsed.password or parsed.port not in (None, 443)
                 or not re.match(r'^/(?:fr|global)(?:/|$)', parsed.path)):
             return None
-        return urlunsplit(('https', 'www.mi.com', parsed.path, '', ''))
+        host = 'www.po.co' if parsed.hostname in ('www.po.co', 'po.co') else 'www.mi.com'
+        return urlunsplit(('https', host, parsed.path, '', ''))
     except (ValueError, TypeError):
         return None
 
@@ -60,7 +66,7 @@ def _product_url(url):
     match = _PRODUCT_PATH.fullmatch(path if path.endswith('/') else path + '/')
     if not match or not _PHONE_SLUG.fullmatch(match.group(2)):
         return None
-    return f'https://www.mi.com/{match.group(1)}/product/{match.group(2)}/specs/'
+    return f'https://{urlsplit(url).hostname}/{match.group(1)}/product/{match.group(2)}/specs/'
 
 
 def _slug_identity(url):

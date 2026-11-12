@@ -1,0 +1,273 @@
+{
+  "verified_at": "2026-11-12T18:32:47.270712+00:00",
+  "note": "Fiches techniques Google officielles, modèles 2025–2026, RAM et stockage séparés.",
+  "phones": [
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11 Pro Fold",
+      "aliases": [
+        "Pixel 11 Pro Fold"
+      ],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "8″ OLED interne / 6,5″ externe 120 Hz",
+        "processeur": "Google Tensor G6",
+        "photo": "48 Mpx (principal)",
+        "batterie": "4 806 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2026,
+      "sources": [
+        {
+          "title": "Google — Pixel 11 Pro Fold : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11 Pro XL",
+      "aliases": [
+        "Pixel 11 Pro XL"
+      ],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,8″ OLED 120 Hz",
+        "processeur": "Google Tensor G6",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 115 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2026,
+      "sources": [
+        {
+          "title": "Google — Pixel 11 Pro XL : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11 Pro",
+      "aliases": [
+        "Pixel 11 Pro"
+      ],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "processeur": "Google Tensor G6",
+        "photo": "50 Mpx (principal)",
+        "batterie": "4 850 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2026,
+      "sources": [
+        {
+          "title": "Google — Pixel 11 Pro : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 11",
+      "aliases": [
+        "Pixel 11"
+      ],
+      "capacities": [
+        "256 Go",
+        "512 Go"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "processeur": "Google Tensor G6",
+        "photo": "48 Mpx (principal)",
+        "batterie": "4 985 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2026,
+      "sources": [
+        {
+          "title": "Google — Pixel 11 : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10a",
+      "aliases": [
+        "Pixel 10a"
+      ],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "processeur": "Google Tensor G4",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 100 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2026,
+      "sources": [
+        {
+          "title": "Google — Pixel 10a : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10 Pro Fold",
+      "aliases": [
+        "Pixel 10 Pro Fold"
+      ],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "8″ OLED interne / 6,4″ externe 120 Hz",
+        "processeur": "Google Tensor G5",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 015 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2025,
+      "sources": [
+        {
+          "title": "Google — Pixel 10 Pro Fold : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10 Pro XL",
+      "aliases": [
+        "Pixel 10 Pro XL"
+      ],
+      "capacities": [
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,8″ OLED 120 Hz",
+        "processeur": "Google Tensor G5",
+        "photo": "50 Mpx (principal)",
+        "batterie": "5 200 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2025,
+      "sources": [
+        {
+          "title": "Google — Pixel 10 Pro XL : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10 Pro",
+      "aliases": [
+        "Pixel 10 Pro"
+      ],
+      "capacities": [
+        "128 Go",
+        "256 Go",
+        "512 Go",
+        "1 To"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "processeur": "Google Tensor G5",
+        "photo": "50 Mpx (principal)",
+        "batterie": "4 870 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2025,
+      "sources": [
+        {
+          "title": "Google — Pixel 10 Pro : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 10",
+      "aliases": [
+        "Pixel 10"
+      ],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "processeur": "Google Tensor G5",
+        "photo": "48 Mpx (principal)",
+        "batterie": "4 970 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2025,
+      "sources": [
+        {
+          "title": "Google — Pixel 10 : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    },
+    {
+      "brand": "GOOGLE",
+      "model": "Pixel 9a",
+      "aliases": [
+        "Pixel 9a"
+      ],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "manufacturer_references": [],
+      "specs": {
+        "ecran": "6,3″ OLED 120 Hz",
+        "processeur": "Google Tensor G4",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 100 mAh",
+        "reseau": "5G"
+      },
+      "release_year": 2025,
+      "sources": [
+        {
+          "title": "Google — Pixel 9a : caractéristiques",
+          "url": "https://support.google.com/pixelphone/answer/7158570?hl=en"
+        }
+      ]
+    }
+  ]
+}

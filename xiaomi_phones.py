@@ -73,9 +73,10 @@ def _slug(identity):
         note, generation, version, network = match.groups()
         version = (version or '').replace('+', '-plus')
         return '-'.join(x.lower() for x in ('redmi', note, generation + (version if version in ('S', 'C', 'A', 'T') else ''), version if version not in ('S', 'C', 'A', 'T') else '', network) if x)
-    match = re.fullmatch(r'POCO([XFM])(\d{1,2})(PRO|ULTRA|GT)?(4G|5G)?', identity)
+    match = re.fullmatch(r'POCO([XFMC])(\d{1,2}S?)(PROMAX|PRO|ULTRA|GT)?(4G|5G)?', identity)
     if match:
         family, generation, version, network = match.groups()
+        version = 'pro-max' if version == 'PROMAX' else version
         return '-'.join(x.lower() for x in ('poco', family + generation, version, network) if x)
     return None
 
@@ -195,7 +196,7 @@ async def _fetch_sheet(client, url, identity):
         from urllib.parse import urljoin, urlparse
         for _ in range(4):
             parsed = urlparse(url)
-            if (parsed.scheme != 'https' or parsed.hostname not in ('www.mi.com', 'mi.com')
+            if (parsed.scheme != 'https' or parsed.hostname not in ('www.mi.com', 'mi.com', 'www.po.co', 'po.co')
                     or parsed.username or parsed.password or parsed.port not in (None, 443)):
                 return None
             response = await client.get(url, timeout=httpx.Timeout(4, connect=2), follow_redirects=False)
@@ -206,7 +207,7 @@ async def _fetch_sheet(client, url, identity):
                 url = urljoin(url, location)
                 continue
             response.raise_for_status()
-            if response.url.scheme != 'https' or response.url.host not in ('www.mi.com', 'mi.com') or len(response.content) > 2000000:
+            if response.url.scheme != 'https' or response.url.host not in ('www.mi.com', 'mi.com', 'www.po.co', 'po.co') or len(response.content) > 2000000:
                 return None
             return parse_xiaomi_sheet(response.text, identity, str(response.url))
         return None

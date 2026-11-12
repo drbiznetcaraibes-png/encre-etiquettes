@@ -97,7 +97,6 @@ class OpenAIFallbackTests(unittest.IsolatedAsyncioTestCase):
         self.addCleanup(self.key.stop)
         self.addCleanup(self.reserve.stop)
         server.CACHE.clear()
-        server.OPENAI_CALL_LOG.clear()
 
     async def test_model_and_capacity_checked(self):
         with patch.object(server,"OPENAI_KEY","test"), patch.object(server,"search_openai_web",new=AsyncMock(return_value=response())):
@@ -116,10 +115,21 @@ class OpenAIFallbackTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(result["capacity"],"Non précisée")
             self.assertFalse(result["capacity_confirmed"])
 
-    async def test_daily_guard(self):
-        with patch.object(server,"OPENAI_KEY","test"), patch.object(server,"OPENAI_DAILY_MAX",0), patch.object(server,"search_openai_web",new_callable=AsyncMock) as search:
+    async def test_missing_key_never_calls_the_provider(self):
+        with patch.object(server,"OPENAI_KEY",""), patch.object(server,"search_openai_web",new_callable=AsyncMock) as search:
             self.assertIsNone(await server.openai_lookup("Google Pixel 9",True))
             search.assert_not_awaited()
+
+    async def test_fourth_search_is_allowed_and_monthly_budget_still_blocks(self):
+        with patch.object(server, 'OPENAI_KEY', 'test-only'), \
+                patch.object(server.store, 'reserve', new=AsyncMock(side_effect=[True, True, True, True, False])) as reserve, \
+                patch.object(server, 'search_openai_web', new=AsyncMock(return_value=response())) as search:
+            for _ in range(4):
+                self.assertIsNotNone(await server.openai_lookup('Google Pixel 9 128 Go', True))
+            with self.assertRaisesRegex(RuntimeError, 'plafond mensuel'):
+                await server.openai_lookup('Google Pixel 9 128 Go', True)
+        self.assertEqual(reserve.await_count, 5)
+        self.assertEqual(search.await_count, 4)
 
     async def test_manufacturer_result_avoids_paid_fallback(self):
         parsed,sources=response()
@@ -165,7 +175,6 @@ class OpenAIFallbackTests(unittest.IsolatedAsyncioTestCase):
                                     ('Samsung Galaxy Z TriFold', 'Galaxy Z TriFold', 'SAMSUNG')]:
             with self.subTest(query=query), patch.object(server, 'OPENAI_KEY', 'test-only'), \
                     patch.object(server, 'search_openai_web', new=AsyncMock(return_value=response(model=model, brand=brand))):
-                server.OPENAI_CALL_LOG.clear()
                 self.assertIsNotNone(server._query_model(query))
                 self.assertEqual((await server.openai_lookup(query, True))['model'], model)
 

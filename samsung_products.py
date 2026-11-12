@@ -17,6 +17,7 @@ import httpx
 
 API = 'https://searchapi.samsung.com/v6/front/b2c/product/'
 SITES = ('fr', 'uk', 'de')
+COLLECTION_SITES = (*SITES, 'in')
 _INDEX_CACHE = {}
 _INDEX_PENDING = {}
 _SPEC_CACHE = {}
@@ -77,7 +78,7 @@ def _query(query):
     text = re.sub(r'\b(?:DE\s+)?RAM\b', '', text, flags=re.I)
     identity = _key(text)
     sku = bool(re.fullmatch(r'SM[A-Z0-9]{4,18}(?:DSB?)?', identity))
-    if not sku and not re.fullmatch(r'(?:[SAMF]\d{1,3}(?:\+|ULTRA|FE|EDGE)?|Z(?:FOLD|FLIP)\d{1,2}(?:ULTRA|FE)?|XCOVER\d{1,2}(?:PRO)?)(?:[45]G)?', identity):
+    if not sku and not re.fullmatch(r'(?:[SAMF]\d{1,3}[ES]?(?:\+|PRO|ULTRA|FE|EDGE)?|Z(?:FOLD|FLIP)\d{1,2}(?:ULTRA|FE)?|XCOVER\d{1,2}(?:PRO)?)(?:[45]G)?', identity):
         return None
     network = '5G' if identity.endswith('5G') else '4G' if identity.endswith('4G') else None
     return identity[:-2] if network else identity, network, requested[0] if requested else None, sku
@@ -104,16 +105,23 @@ async def _json(client, url, params=None):
     raise ValueError('Too many Samsung redirects')
 
 
+def _product_name(value):
+    name = _plain(value)
+    name = re.sub(r'\s*\(?\d+\s*GB\s*(?:Memory|RAM)\)?\s*$', '', name, flags=re.I)
+    name = re.sub(r'\s*\((?:Special Colou?r)\)\s*$', '', name, flags=re.I)
+    return re.sub(r'\bLTE\b', '4G', name, flags=re.I).strip()
+
+
 def _families(data, site):
-    rows = []
+    rows = {}
     for family in data.get('productList', []):
-        name = _plain(family.get('fmyMarketingName') or family.get('fmyEngName'))
+        name = _product_name(family.get('fmyMarketingName') or family.get('fmyEngName'))
         if not name.lower().startswith('galaxy ') or not _query(name):
             continue
         models = []
         for model in family.get('modelList', []):
             sku = _plain(model.get('modelCode')).upper()
-            display = _plain(model.get('displayName'))
+            display = _product_name(model.get('displayName'))
             url = urljoin('https://www.samsung.com', model.get('pdpUrl') or '')
             if not re.fullmatch(r'SM-[A-Z0-9]{5,18}', sku) or _key(display) != _key(name) or not _allowed(url):
                 continue
@@ -125,8 +133,11 @@ def _families(data, site):
             models.append({'sku': sku, 'family_ref': _plain(model.get('modelName')).upper(),
                            'name': display, 'url': url, 'capacity': capacity})
         if models:
-            rows.append({'site': site, 'name': name, 'english_name': _plain(family.get('fmyEngName')), 'models': models})
-    return rows
+            group = rows.setdefault(_key(name), {'site': site, 'name': name,
+                                    'english_name': _plain(family.get('fmyEngName')), 'models': []})
+            known = {entry['sku'] for entry in group['models']}
+            group['models'].extend(model for model in models if model['sku'] not in known)
+    return list(rows.values())
 
 
 async def _load_listing(client, site):
@@ -350,9 +361,9 @@ async def collect_product_phones(client, existing: list[dict]):
     found = {}
     semaphore = asyncio.Semaphore(4)
     async def collect():
-        groups = await asyncio.gather(*(_listing(client, site) for site in SITES))
+        groups = await asyncio.gather(*(_listing(client, site) for site in COLLECTION_SITES))
         result['discovery_ok'] = all(group is not None for group in groups)
-        for site, group in zip(SITES, groups):
+        for site, group in zip(COLLECTION_SITES, groups):
             if group is None:
                 result['errors'].append('Samsung finder unavailable: ' + site)
         families = [family for group in groups if group for family in group]
