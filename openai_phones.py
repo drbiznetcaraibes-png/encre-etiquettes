@@ -140,6 +140,12 @@ async def search_openai_web(query: str, api_key: str, model: str = "gpt-5.4-mini
 Recherche réellement sur le Web la référence ou le modèle EXACT : {query!r}.
 Priorité aux pages constructeur officielles (Apple, Samsung, Xiaomi, etc.).
 N'utilise jamais une fiche d'une variante voisine, ni un comparatif confondant deux modèles.
+Interprète les espaces, majuscules, accents et équivalences Pro+ / Pro Plus.
+Xiaomi, Redmi et POCO peuvent désigner la marque et sa sous-marque : renvoie brand=XIAOMI et le modèle complet Redmi ou POCO.
+Un suffixe 5G omis peut être rétabli si les sources confirment une seule variante de ce nom.
+Exemples de noms abrégés : POCO X5 peut désigner POCO X5 5G ; ne le remplace jamais par X5 Pro.
+network_variant_unambiguous=true UNIQUEMENT si les sources permettent cette résolution sans variante 4G concurrente.
+Si plusieurs variantes restent possibles, retourne verified=false. Ne choisis pas arbitrairement.
 Vérifie soigneusement 4G/5G, Plus/Pro/Ultra/Pro Max, année et génération.
 Une référence constructeur familiale ne prouve jamais le stockage de l'exemplaire.
 Ne confirme une capacité demandée que si les sources prouvent que le modèle existe en cette capacité.
@@ -147,7 +153,7 @@ Si la capacité n'est pas documentée, écris exactement "Non précisée".
 Une donnée non confirmée doit être une chaîne vide. N'invente rien.
 Retourne exclusivement un objet JSON valide, sans markdown et sans explication :
 {{"verified":true,"brand":"SAMSUNG","model":"Galaxy A56 5G","capacity":"Non précisée",
-"manufacturer_reference":"","specs":{{"ecran":"6,7 pouces AMOLED 120 Hz","photo":"50 Mpx",
+"network_variant_unambiguous":false,"manufacturer_reference":"","specs":{{"ecran":"6,7 pouces AMOLED 120 Hz","photo":"50 Mpx",
 "batterie":"5000 mAh","processeur":"Exynos 1580","reseau":"5G","ram":"8 Go"}}}}
 Ce JSON est un EXEMPLE de format : n'en recopie aucune valeur sans preuve.
 Si tu ne peux confirmer au moins 3 caractéristiques spécifiques du modèle exact,

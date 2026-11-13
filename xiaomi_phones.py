@@ -163,6 +163,11 @@ def parse_xiaomi_sheet(document, expected_identity, source_url):
     # microSD limits and RAM values, which are not internal storage variants.
     memory = re.split(r'(?:\*|stockage extensible|expandable|extension|microSD)', sections['storage'], maxsplit=1, flags=re.I)[0]
     memory = re.sub(r'\+\s*\d+\s*(?:Go|GB)\s+d[’\']espace supplémentaire', '', memory, flags=re.I)
+    # Compact manufacturer options share the unit: 6+128/8+256GB.
+    for number in re.findall(r'(?:^|[/|,\s])(?:4|6|8|12|16|24)\s*\+\s*(\d{2,4})(?=\s*[/|]|\s*(?:GB|GO)\b)', memory, re.I):
+        value=_capacity(number,'GB')
+        if value not in capacities:
+            capacities.append(value)
     for match in _STORAGE.finditer(memory):
         size = int(match.group(1))
         if (match.group(2).upper() in ('GO', 'GB') and size < 32):

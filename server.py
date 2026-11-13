@@ -35,7 +35,7 @@ from storage import store
 from database_models import get_database_models, invalidate_database_models_cache
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.18.1')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.18.2')
 @app.middleware('http')
 async def protect_access(request, call_next):
     from fastapi.responses import JSONResponse
@@ -160,16 +160,34 @@ def _model_identity(text, brand):
         text=re.sub(r'^'+re.escape(b)+r'\s+', '', text, flags=re.I)
     return _normalize_ref(text)
 
-def _same_model(expected, received, brand):
+def _canonical_brand(brand):
+    brand=str(brand or '').strip().upper()
+    return {'POCO':'XIAOMI','REDMI':'XIAOMI','XIAOMI REDMI':'XIAOMI','XIAOMI POCO':'XIAOMI'}.get(brand,brand)
+
+
+def _network_alias(expected, received, brand, *, ai_unambiguous=False):
+    """An omitted radio suffix is acceptable only without a competing known model."""
+    a=_model_identity(expected,brand)
+    b=_model_identity(received,brand)
+    if re.search(r'(?:4G|5G)$',a) or b != a+'5G':
+        return False
+    known=[*_known_phone_models(),*_DATABASE_MODEL_NAMES]
+    identities={_model_identity(row['model'],brand) for row in known if row['brand']==brand}
+    if a in identities or a+'4G' in identities:
+        return False
+    return b in identities or ai_unambiguous is True
+
+
+def _same_model(expected, received, brand, *, ai_unambiguous=False):
     a=_model_identity(expected,brand)
     b=_model_identity(received,brand)
     if not a or not b:
         return False
     if a == b:
         return True
-    # Galaxy A56 is sold as A56 5G; accept a shorter customer name only
-    # for this exact generation, not for ambiguous A07/A16 variants.
-    return brand.upper() == 'SAMSUNG' and a == 'A56' and b == 'A565G'
+    if brand.upper() == 'SAMSUNG' and a == 'A56' and b == 'A565G':
+        return True
+    return _network_alias(expected,received,brand,ai_unambiguous=ai_unambiguous)
 
 
 def _detect_brand(text):
@@ -219,6 +237,11 @@ def _query_model(query):
   if any(identity==_model_identity(name,row['brand'])
          for name in [row['model'],*row['_aliases']]):
    return row['model'],row['brand']
+ # Resolve a unique documented 5G name before DB lookup and native providers.
+ candidates={(row['model'],row['brand']) for row in known
+             if _network_alias(cleaned,row['model'],row['brand'])}
+ if len(candidates)==1:
+  return next(iter(candidates))
  model, brand = _extract_model(cleaned)
  if not model:
   b = _detect_brand(cleaned)
@@ -511,15 +534,19 @@ async def openai_lookup(query, is_model_query=False):
     parsed, sources = evidence
     if parsed.get('verified') is not True or not sources:
         return None
-    brand = str(parsed.get('brand') or '').strip().upper()[:35]
+    raw_brand = str(parsed.get('brand') or '').strip().upper()[:35]
+    brand = _canonical_brand(raw_brand)
     model = str(parsed.get('model') or '').strip()[:105]
+    if raw_brand in ('POCO','REDMI') and not re.match(r'^(?:Xiaomi\s+)?'+raw_brand+r'\b',model,re.I):
+        model=raw_brand+' '+model
     capacity = str(parsed.get('capacity') or 'Non précisée').strip()[:32]
     specs = _clean_specs(parsed.get('specs'))
     if not brand or not model or len(specs) < 3:
         return None
     if is_model_query:
         expected = _query_model(query)
-        if not expected or expected[1] != brand or not _same_model(expected[0], model, brand):
+        if not expected or expected[1] != brand or not _same_model(expected[0], model, brand, ai_unambiguous=parsed.get('network_variant_unambiguous') is True and specs.get('reseau')=='5G'):
+            logging.getLogger('uvicorn.error').warning('Recherche IA : nom ou variante non confirmé ; préciser le modèle et le réseau.')
             return None
     else:
         sku = str(parsed.get('manufacturer_reference') or '').strip()
@@ -643,12 +670,14 @@ async def _online_lookup(ref, is_model_query=False):
   ttl=21600 if saved.get('status')=='verified_online' else 60
   if now-saved_at<ttl:return saved
  # Manufacturer facts and exact variant options work without an AI key/quota.
+ resolved=_query_model(ref) if is_model_query else None
+ manufacturer_ref=(resolved[0]+(' '+_parse_capacity(ref) if _parse_capacity(ref) else '')) if resolved else ref
  async with httpx.AsyncClient(timeout=httpx.Timeout(6,connect=3),follow_redirects=True,headers=HEADERS) as client:
   try:
    async def manufacturer_lookup():
     # Each provider returns immediately for other brands, keeping one shared budget.
     for provider in (lookup_official_phone,lookup_xiaomi_phone,lookup_samsung_phone,lookup_google_phone,lookup_manufacturer_phone):
-     result=await provider(client,ref)
+     result=await provider(client,manufacturer_ref)
      if not result:continue
      if result.get('status')=='verified_online':
       result['specs']=_clean_specs(result.get('specs'))
@@ -669,6 +698,7 @@ async def _online_lookup(ref, is_model_query=False):
    if openai_result:
     CACHE[key]=(now,openai_result)
     return openai_result
+   openai_problem='L’IA n’a pas confirmé une fiche pour ce modèle exact. Précise la variante (4G/5G, Pro/Plus). '
   except asyncio.TimeoutError:
    openai_problem='Délai OpenAI dépassé.'
   except OpenAIServiceError as exc:
@@ -738,11 +768,15 @@ async def online_lookup(ref, is_model_query=False, refresh=False):
   now=datetime.now(timezone.utc)
   from datetime import timedelta
   try:
-   await store.save({'model_key':key,'brand':result['brand'],'model':result['model'],
+   saved_row={'model_key':key,'brand':result['brand'],'model':result['model'],
     'capacity':_parse_capacity(ref) or 'Non précisée','specs':result['specs'],
     'sources':result['sources'],'search_mode':result.get('search_mode',''),
     'verification_status':'vérifié','verified_at':now.isoformat(),
-    'updated_at':now.isoformat(),'next_check_at':(now+timedelta(days=7)).isoformat() if result.get('search_mode')=='openai_grounded' else None,'result':result})
+    'updated_at':now.isoformat(),'next_check_at':(now+timedelta(days=7)).isoformat() if result.get('search_mode')=='openai_grounded' else None,'result':result}
+   await store.save(saved_row)
+   canonical_key=result['brand']+'|'+_model_identity(result['model'],result['brand'])+'|'+saved_row['capacity']
+   if canonical_key!=key:
+    await store.save({**saved_row,'model_key':canonical_key})
    invalidate_database_models_cache(store)
   except RuntimeError:
    result={**result,'database_warning':'Fiche vérifiée mais non enregistrée : base indisponible.'}
