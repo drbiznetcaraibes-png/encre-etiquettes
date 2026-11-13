@@ -139,6 +139,9 @@ async def search_openai_web(query: str, api_key: str, model: str = "gpt-5.4-mini
     prompt = f"""Tu prépares une fiche technique commerciale française pour un smartphone.
 Recherche réellement sur le Web la référence ou le modèle EXACT : {query!r}.
 Priorité aux pages constructeur officielles (Apple, Samsung, Xiaomi, etc.).
+La marque peut être absente des catalogues habituels : vérifie aussi les petites marques.
+L’existence d’un nom dans la requête n’est pas une preuve. Confirme marque, modèle et caractéristiques dans les sources.
+Renvoie la marque commerciale vérifiée et le modèle exact, avec ou sans répétition de la marque.
 N'utilise jamais une fiche d'une variante voisine, ni un comparatif confondant deux modèles.
 Interprète les espaces, majuscules, accents et équivalences Pro+ / Pro Plus.
 Xiaomi, Redmi et POCO peuvent désigner la marque et sa sous-marque : renvoie brand=XIAOMI et le modèle complet Redmi ou POCO.

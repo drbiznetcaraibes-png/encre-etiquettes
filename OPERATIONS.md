@@ -95,3 +95,8 @@ Le serveur distingue désormais les crédits API insuffisants, les limites de d�
 ## Résolution des noms (1.18.2)
 
 La recherche rapproche les espaces, Pro+ / Pro Plus et les marques Xiaomi/Redmi/POCO. Un nom abrégé sans réseau utilise le nom 5G documenté quand aucune variante concurrente n’est connue. Pour un modèle absent du catalogue, l’IA doit confirmer dans ses sources que la résolution sans suffixe réseau est non ambiguë ; une variante 4G connue bloque cette inférence. La génération et les suffixes Pro, Plus, Ultra, FE restent distincts. Les fiches sont conservées sous le nom demandé et le nom constructeur pour réutiliser une recherche sans nouvel appel payant. Les réponses IA non confirmées affichent désormais un diagnostic, en plus des erreurs de crédit et de débit. POCO X5 et X5 Pro ont été vérifiés sur les pages constructeur, avec 128/256 Go.
+
+
+## Marques absentes des catalogues (1.18.3)
+
+Une saisie « marque + modèle alphanumérique », par exemple BINOM SX1, peut maintenant atteindre la recherche IA même si la marque n’est pas prédéfinie. Il s’agit d’un candidat : seule une réponse sourcée confirmant le modèle exact et au moins trois caractéristiques peut devenir une fiche vérifiée. Les références compactes conservent leur parcours SKU. BINOM SX1 (32 Go, 3 Go RAM, 4G, caméra arrière 13 Mpx) a été vérifié sur binom-mobile.com ; les autres caractéristiques non confirmées sur cette page ne sont pas inventées.

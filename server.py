@@ -35,7 +35,7 @@ from storage import store
 from database_models import get_database_models, invalidate_database_models_cache
 
 BASE = Path(__file__).resolve().parent
-app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.18.2')
+app = FastAPI(title='ENCRE POUR TOUS – recherche téléphones', version='1.18.3')
 @app.middleware('http')
 async def protect_access(request, call_next):
     from fastapi.responses import JSONResponse
@@ -259,6 +259,13 @@ def _query_model(query):
    if re.match(r'^(?:SM-|MZB|[A-Z]\d{4,}[A-Z0-9/.-]*$)',stripped,re.I):return None
    model=('Galaxy '+re.sub(r'^Galaxy\s+', '',stripped,flags=re.I)) if b=='SAMSUNG' else stripped
    brand=b
+ if not model:
+  # A new brand must reach grounded search; this is a candidate, not verification.
+  # Keep compact manufacturer SKUs on the separate reference path.
+  candidate=re.fullmatch(r"([^\W\d_][^\W\d_\s-]{1,24})\s+([\w .+()-]{2,40})",cleaned,re.UNICODE)
+  if candidate and re.search(r'\d',candidate[2]) and re.search(r'[^\W\d_]',candidate[2],re.UNICODE):
+   model=cleaned
+   brand=candidate[1].upper()
  if not model: return None
  if _model_identity(cleaned,brand)!=_model_identity(model,brand):
   # Preserve a new variant's full name. Its manufacturer provider must verify
