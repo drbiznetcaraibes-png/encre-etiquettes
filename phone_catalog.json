@@ -230,6 +230,31 @@
           "url": "https://news.samsung.com/global/samsung-launches-galaxy-a07-5g-bringing-intelligence-and-reliable-performance-to-more-galaxy-a-series-devices"
         }
       ]
+    },
+    {
+      "brand": "BINOM",
+      "model": "BINOM SX1",
+      "aliases": [
+        "BINOM SX1",
+        "BINOM MOBILE SX1"
+      ],
+      "manufacturer_references": [
+        "AR01051"
+      ],
+      "capacities": [
+        "32 Go"
+      ],
+      "specs": {
+        "photo": "13 Mpx (arrière)",
+        "reseau": "4G",
+        "ram": "3 Go"
+      },
+      "sources": [
+        {
+          "title": "BINOM — Smartphone SX1 : caractéristiques constructeur",
+          "url": "https://binom-mobile.com/products/smartphone-binom-sx1"
+        }
+      ]
     }
   ]
 }
