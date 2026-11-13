@@ -1154,6 +1154,58 @@
           "url": "https://www.mi.com/fr/product/redmi-14-c/specs/"
         }
       ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X5 5G",
+      "aliases": [
+        "POCO X5 5G",
+        "POCO X5"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 695",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "48 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X5 5G : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-x5-5g/specs/"
+        }
+      ]
+    },
+    {
+      "brand": "XIAOMI",
+      "model": "POCO X5 Pro 5G",
+      "aliases": [
+        "POCO X5 Pro 5G",
+        "POCO X5 Pro"
+      ],
+      "manufacturer_references": [],
+      "capacities": [
+        "128 Go",
+        "256 Go"
+      ],
+      "specs": {
+        "processeur": "Snapdragon 778G",
+        "ecran": "6,67″ AMOLED 120 Hz",
+        "photo": "108 Mpx (principal)",
+        "batterie": "5 000 mAh",
+        "reseau": "5G"
+      },
+      "sources": [
+        {
+          "title": "Xiaomi — POCO X5 Pro 5G : caractéristiques",
+          "url": "https://www.mi.com/global/product/poco-x5-pro-5g/specs/"
+        }
+      ]
     }
   ]
 }

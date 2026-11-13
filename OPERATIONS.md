@@ -90,3 +90,8 @@ Les nouvelles clés serveur Supabase (`sb_secret_…`) sont prises en charge dan
 ## Diagnostic OpenAI
 
 Le serveur distingue désormais les crédits API insuffisants, les limites de débit, la clé refusée, un modèle indisponible et les paramètres incompatibles. Les messages sont construits localement : le corps d'erreur OpenAI et les clés ne sont jamais renvoyés au navigateur ni consignés dans ces logs. Une réponse incomplète n'est pas enregistrée comme fiche vérifiée. Les tentatives infructueuses restent réservées dans le quota mensuel par prudence.
+
+
+## Résolution des noms (1.18.2)
+
+La recherche rapproche les espaces, Pro+ / Pro Plus et les marques Xiaomi/Redmi/POCO. Un nom abrégé sans réseau utilise le nom 5G documenté quand aucune variante concurrente n’est connue. Pour un modèle absent du catalogue, l’IA doit confirmer dans ses sources que la résolution sans suffixe réseau est non ambiguë ; une variante 4G connue bloque cette inférence. La génération et les suffixes Pro, Plus, Ultra, FE restent distincts. Les fiches sont conservées sous le nom demandé et le nom constructeur pour réutiliser une recherche sans nouvel appel payant. Les réponses IA non confirmées affichent désormais un diagnostic, en plus des erreurs de crédit et de débit. POCO X5 et X5 Pro ont été vérifiés sur les pages constructeur, avec 128/256 Go.
