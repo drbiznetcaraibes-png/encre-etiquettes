@@ -9,7 +9,7 @@
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
 :root{--navy:#071d3b;--gold:#cf9200;--pale:#fff5dd;--ink:#0e2848;--grey:#687b91}
-*{box-sizing:border-box}
+*{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0;font:14px Inter,Arial,sans-serif;color:var(--ink);background:#edf1f7}
 .app-header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--navy);color:#fff;padding:18px 24px}
 .logo{font-weight:600;font-size:20px;letter-spacing:.1px}.logo span{color:#eeb539}
@@ -65,7 +65,7 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
 .spec-label{display:block;font-size:3.5mm;font-weight:700;line-height:1.15}
 .spec-value{display:block;font-size:3.1mm;line-height:1.22;color:#53687b;margin-top:.7mm;overflow-wrap:anywhere}
 .poster.console .spec-value{font-size:2.8mm}
-.poster .bottom{height:34.2mm;display:grid;grid-template-columns:40% 60%;gap:3mm;flex:none;align-items:stretch;padding-bottom:1.2mm}
+.poster .bottom{height:34.2mm;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:3mm;flex:none;align-items:stretch;padding-bottom:1.2mm}
 .price-box{background:var(--navy);color:#fff;border-radius:3.6mm;padding:2.5mm 3mm;display:flex;flex-direction:column;justify-content:center;border-right:2.2mm solid var(--gold)}
 .price-box .price-title{font-size:4.1mm;font-weight:600}.price-box .price{font-size:14.5mm;font-weight:700;letter-spacing:-.4mm;line-height:1.02;white-space:nowrap}
 .financing{display:flex;flex-direction:column;justify-content:center;gap:2mm;min-width:0}
@@ -251,8 +251,10 @@ $('cash').addEventListener('input',renderFinance);
 $('add').addEventListener('click',()=>{
  try{
    const r=collect();
-   if(editIndex>=0)rows[editIndex]=r;else rows.push(r);
-   if(rows.length>100)throw Error('La planche est limitée à 100 références.');
+   const newRows=rows.slice();
+   if(editIndex>=0)newRows[editIndex]=r;else newRows.push(r);
+   if(newRows.length>100||newRows.reduce((sum,p)=>sum+p.qty,0)>200)throw Error('Maximum : 100 références ou 200 affiches.');
+   rows=newRows;
    save();draw();reset();$('status').textContent='Affiche enregistrée dans la planche.';
  }catch(e){$('status').textContent=e.message}
 });
