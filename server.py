@@ -813,6 +813,10 @@ app.mount('/assets', StaticFiles(directory=BASE/'assets'), name='assets')
 @app.get('/')
 async def home():return FileResponse(BASE/'index.html')
 
+@app.get('/affiches')
+async def affiches():
+    return FileResponse(BASE/'affiches.html')
+
 @app.get('/health')
 async def health():return {'ok':True,'service':'encre-phones','version':app.version}
 
