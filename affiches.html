@@ -18,7 +18,6 @@ main{display:grid;grid-template-columns:minmax(330px,420px) minmax(0,1fr);gap:20
 .panel{background:white;border-radius:14px;padding:19px;box-shadow:0 6px 22px #14345117}
 h1,h2{margin:0 0 8px}h1{font-size:20px}h2{font-size:17px}
 .sub{font-size:12px;color:#66778f;line-height:1.5;margin:0 0 14px}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .field{margin:0 0 12px}.field label{display:block;margin-bottom:5px;font-size:12px;font-weight:700}
 input,select{width:100%;min-width:0;padding:10px;border:1px solid #c5d1df;border-radius:8px;font:inherit;background:white;color:var(--ink)}
 input:focus,select:focus{outline:2px solid #eed18b;border-color:#b58c2a}
@@ -33,46 +32,102 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
 .info{border-radius:8px;background:#fff8e9;padding:10px;color:#78602b;font-size:12px;line-height:1.45;margin-top:10px}
 .preview-container{overflow:auto;padding-bottom:14px}
 .preview{display:grid;justify-content:center;gap:24px}
-.sheet{width:210mm;height:297mm;display:grid;grid-template-rows:132mm 132mm;gap:13mm;padding:10mm;background:#fff;box-shadow:0 8px 22px #1c345c25;position:relative}
-.cut-slot{position:relative;width:190mm;height:132mm}
+.sheet{
+ width:210mm;height:297mm;display:grid;grid-template-rows:136mm 136mm;gap:9mm;
+ padding:8mm;background:#fff;box-shadow:0 8px 22px #1c345c25;position:relative
+}
+.cut-slot{position:relative;width:194mm;height:136mm}
 .cut-slot.empty{background:#fff}
 .cut-slot .mark{position:absolute;width:2mm;height:2mm;border-color:#6c7790;border-style:solid;border-width:0;z-index:2}
 .mark.tl{left:-2.7mm;top:-2.7mm;border-left-width:.16mm;border-top-width:.16mm}
 .mark.tr{right:-2.7mm;top:-2.7mm;border-right-width:.16mm;border-top-width:.16mm}
 .mark.bl{left:-2.7mm;bottom:-2.7mm;border-left-width:.16mm;border-bottom-width:.16mm}
 .mark.br{right:-2.7mm;bottom:-2.7mm;border-right-width:.16mm;border-bottom-width:.16mm}
-.poster{width:190mm;height:132mm;background:#fff;border:.3mm solid var(--navy);border-radius:5.6mm;overflow:hidden;padding:5mm 5.4mm 4.5mm;display:flex;flex-direction:column;gap:3.2mm;font-family:Inter,Arial,sans-serif;color:var(--navy);font-synthesis:none}
-.poster-header{height:9.5mm;flex:none;display:flex;align-items:center;justify-content:center;gap:6mm}
-.poster-header:before,.poster-header:after{content:'';display:block;height:.26mm;flex:1;background:var(--gold)}
-.poster-header .brand{font-weight:500;font-size:6mm;letter-spacing:.04mm;white-space:nowrap}
-.poster-header .brand b{color:var(--gold);font-weight:500}
-.hero{display:flex;gap:5mm;align-items:center;height:29mm;min-height:0;flex:none;border-bottom:.25mm solid var(--gold);padding-bottom:3mm}
+.cut-guide{
+ position:absolute;top:50%;left:5mm;right:5mm;display:flex;align-items:center;gap:2mm;
+ transform:translateY(-50%);color:var(--navy)
+}
+.cut-guide::before{content:'';flex:1;order:1;border-top:.22mm dashed #7d8c9b}
+.cut-guide svg{width:5mm;height:5mm;fill:none;stroke:currentColor;stroke-width:1.3;stroke-linecap:round}
+.cut-guide span:last-child{order:2;transform:scaleX(-1)}
+.poster{
+ width:194mm;height:136mm;background:#fff;border:.75mm solid var(--navy);border-radius:7mm;
+ overflow:hidden;padding:2.8mm 4.6mm 3.8mm;display:grid;grid-template-rows:12mm 43mm 34mm minmax(0,1fr);
+ font-family:Inter,Arial,sans-serif;color:var(--navy);font-synthesis:none
+}
+.poster-header{display:flex;align-items:center;justify-content:center;gap:5mm;padding:0 4mm}
+.poster-header::before,.poster-header::after{content:'';display:block;height:.52mm;flex:1;background:var(--gold)}
+.poster-header .brand{font-weight:600;font-size:9.6mm;letter-spacing:-.33mm;white-space:nowrap}
+.poster-header .brand b{color:var(--gold);font-weight:600}
+.hero{
+ display:flex;gap:4mm;align-items:center;min-width:0;min-height:0;
+ border-bottom:.5mm solid var(--gold);padding:2mm 1mm 3mm
+}
 .hero-main{min-width:0;flex:1}
-.hero .product-name{font-size:8mm;line-height:1.05;font-weight:700;overflow-wrap:anywhere}
-.hero .product-name.long{font-size:6.2mm}.hero .product-name.verylong{font-size:5mm}
-.hero .variant{font-size:3.8mm;color:#50647a;margin-top:2mm;max-width:125mm;overflow-wrap:anywhere}
-.hero .reference{font-size:2.7mm;color:#66778a;margin-top:1mm;overflow-wrap:anywhere}
-.tv-size{background:var(--navy);color:white;min-width:46mm;max-width:46mm;height:27mm;border-radius:4mm 4mm 4mm 0;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:2mm solid var(--gold)}
-.tv-size strong{font-size:14.5mm;line-height:1}.tv-size span{font-size:4.1mm;margin-top:1.5mm}
-.spec-grid{height:36mm;min-height:0;flex:1;display:grid;gap:1mm 2mm;border-bottom:.25mm solid var(--gold);padding:1mm 0 3mm}
-.poster.tv .spec-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1fr 1fr}
-.poster.console .spec-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:1fr;align-items:center}
-.spec-item{display:flex;align-items:center;gap:2.8mm;min-width:0;padding:1.2mm 2mm}
-.poster.console .spec-item{flex-direction:column;text-align:center;gap:1.4mm;align-items:center;border-right:.24mm solid var(--gold)}
-.poster.console .spec-item:last-child{border-right:0}
-.spec-icon{display:flex;align-items:center;justify-content:center;flex:none;color:var(--gold)}
-.spec-icon svg{width:8mm;height:8mm;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
-.spec-label{display:block;font-size:3.5mm;font-weight:700;line-height:1.15}
-.spec-value{display:block;font-size:3.1mm;line-height:1.22;color:#53687b;margin-top:.7mm;overflow-wrap:anywhere}
-.poster.console .spec-value{font-size:2.8mm}
-.poster .bottom{height:34.2mm;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:3mm;flex:none;align-items:stretch;padding-bottom:1.2mm}
-.price-box{background:var(--navy);color:#fff;border-radius:3.6mm;padding:2.5mm 3mm;display:flex;flex-direction:column;justify-content:center;border-right:2.2mm solid var(--gold)}
-.price-box .price-title{font-size:4.1mm;font-weight:600}.price-box .price{font-size:14.5mm;font-weight:700;letter-spacing:-.4mm;line-height:1.02;white-space:nowrap}
-.financing{display:flex;flex-direction:column;justify-content:center;gap:2mm;min-width:0}
-.financing-title{text-align:center;font-size:3.5mm;font-weight:700;white-space:nowrap}
-.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2mm}
-.month{border:.24mm solid var(--gold);border-radius:3mm;background:var(--pale);height:21mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5mm}
-.month b{font-size:4.2mm}.month span{font-size:5.6mm;font-weight:700;white-space:nowrap}
+.product-brand{font-size:7mm;line-height:1.1;font-weight:700;letter-spacing:.18mm;text-transform:uppercase}
+.hero .product-name{font-size:11mm;line-height:1.05;font-weight:700;letter-spacing:-.35mm;overflow-wrap:anywhere;margin-top:1.2mm}
+.hero .product-name.long{font-size:8.7mm}.hero .product-name.verylong{font-size:7mm}
+.poster.console .hero .product-name{font-size:12mm}
+.poster.console .hero .product-name.long{font-size:9.4mm}
+.poster.console .hero .product-name.verylong{font-size:7.5mm}
+.hero .variant{font-size:6mm;font-weight:600;color:#44596e;margin-top:1.2mm;overflow-wrap:anywhere}
+.hero .reference{font-size:4.5mm;color:#536a80;margin-top:1mm;overflow-wrap:anywhere}
+.console-mark{width:33mm;height:32mm;flex:none;display:grid;place-items:center}
+.console-mark svg{width:100%;height:100%;fill:currentColor}
+.tv-size{
+ isolation:isolate;position:relative;flex:0 0 70mm;height:38mm;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;padding:0 0 0 12mm;color:white;background:#ecb124;
+ overflow:hidden;border-radius:5mm 4mm 4mm 0;clip-path:polygon(28% 0,100% 0,100% 100%,0 100%)
+}
+.tv-size::before{
+ content:'';position:absolute;z-index:-1;inset:0 0 0 4.5mm;background:var(--navy);
+ clip-path:polygon(29% 0,100% 0,100% 100%,0 100%)
+}
+.tv-size strong{font-size:25mm;line-height:.88;font-weight:700;letter-spacing:-1mm;transform:skewX(-9deg)}
+.tv-size.compact strong{font-size:18mm}
+.tv-size span{font-size:6mm;line-height:1.2;margin-top:1.6mm;font-weight:600}
+.spec-grid{
+ display:grid;grid-template-columns:repeat(var(--spec-count,4),minmax(0,1fr));align-items:center;
+ min-height:0;border-bottom:.5mm solid var(--gold);padding:2mm 0
+}
+.spec-item{
+ display:grid;grid-template-rows:10mm minmax(0,1fr);justify-items:center;align-items:start;text-align:center;
+ gap:.65mm;min-width:0;height:26mm;padding:0 2mm;border-right:.3mm solid var(--gold)
+}
+.spec-item:last-child{border-right:0}
+.spec-icon{display:flex;align-items:center;justify-content:center;color:var(--gold)}
+.spec-icon svg{width:13mm;height:10mm;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}
+.spec-copy{max-width:100%;overflow-wrap:anywhere}
+.spec-label{display:block;font-size:5.5mm;font-weight:700;line-height:1.08}
+.spec-label.long{font-size:4.3mm}
+.spec-value{display:block;font-size:4.1mm;line-height:1.12;color:#40586d;margin-top:.65mm}
+.spec-value.long{font-size:3.5mm}
+.poster .bottom{
+ display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);gap:2.4mm;min-height:0;
+ align-items:stretch;padding-top:3mm
+}
+.price-box{
+ isolation:isolate;position:relative;min-width:0;display:flex;flex-direction:column;justify-content:center;
+ background:#ecb124;color:#fff;overflow:hidden;border-radius:4mm 3mm 4mm 4mm;padding:1.8mm 15mm 1.8mm 6mm;
+ clip-path:polygon(0 0,100% 0,85% 100%,0 100%)
+}
+.price-box::before{
+ content:'';position:absolute;z-index:-1;inset:0 3.4mm 0 0;background:var(--navy);
+ clip-path:polygon(0 0,100% 0,85% 100%,0 100%)
+}
+.price-box .price-title{font-size:5.2mm;font-weight:700}
+.price-box .price{font-size:20mm;font-weight:700;letter-spacing:-.6mm;line-height:1;white-space:nowrap}
+.price-box .price.long{font-size:14mm}.price-box .price.verylong{font-size:10mm}
+.financing{display:flex;flex-direction:column;justify-content:space-between;gap:1.8mm;min-width:0}
+.financing-title{display:flex;align-items:center;justify-content:center;gap:2mm;font-size:4.1mm;font-weight:700;white-space:nowrap}
+.financing-title::before,.financing-title::after{content:'';flex:1;height:.48mm;background:var(--gold)}
+.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.7mm;flex:1;min-height:0}
+.month{
+ border:.5mm solid var(--gold);border-radius:4.3mm;background:var(--pale);min-width:0;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1mm;line-height:1.08
+}
+.month b{font-size:5.2mm}.month span{font-size:7.2mm;font-weight:700;white-space:nowrap}
+.month span.long{font-size:5.2mm}
 .preview-note{font-size:12px;color:#627690}
 .empty-hint{padding:40px;text-align:center;color:#697e97}
 @page{size:A4 portrait;margin:0}
@@ -91,7 +146,7 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
 <div class="editor">
   <section class="panel">
     <h1>Créer une affiche commerciale</h1>
-    <p class="sub">Design validé : deux affiches de 190 × 132 mm sur une feuille A4 portrait. Sans photo. Les prix sont saisis par le magasin ; rien n'est déduit du catalogue.</p>
+    <p class="sub">Deux affiches de 194 × 136 mm par feuille A4. Recherche un produit, puis saisis le prix TTC.</p>
     <div class="field"><label for="category">Famille de produit</label><select id="category"><option value="console">Console de jeux</option><option value="tv">Téléviseur</option></select></div>
     <div id="posterSearch">
       <div class="field"><label for="posterQuery">Description (modèle, variante, stockage ou taille si connus)</label><input id="posterQuery" maxlength="120" autocomplete="off" placeholder="Ex. PS5 Digital 825 Go ou LG C4 55 pouces"></div>
@@ -128,6 +183,8 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const COEFF={p5:0.20748,p10:0.10693,p20:0.055885};
 const STORE_KEY='encre_affiches_v1';
+// PlayStation brand mark from Simple Icons (CC0).
+const PLAYSTATION_MARK='<svg viewBox="0 0 24 24" focusable="false"><path d="M8.984 2.596v17.547l3.915 1.261V6.688c0-.69.304-1.151.794-.991.636.18.76.814.76 1.505v5.875c2.441 1.193 4.362-.002 4.362-3.152 0-3.237-1.126-4.675-4.438-5.827-1.307-.448-3.728-1.186-5.39-1.502zm4.656 16.241l6.296-2.275c.715-.258.826-.625.246-.818-.586-.192-1.637-.139-2.357.123l-4.205 1.5V14.98l.24-.085s1.201-.42 2.913-.615c1.696-.18 3.785.03 5.437.661 1.848.601 2.04 1.472 1.576 2.072-.465.6-1.622 1.036-1.622 1.036l-8.544 3.107V18.86zM1.807 18.6c-1.9-.545-2.214-1.668-1.352-2.32.801-.586 2.16-1.052 2.16-1.052l5.615-2.013v2.313L4.205 17c-.705.271-.825.632-.239.826.586.195 1.637.15 2.343-.12L8.247 17v2.074c-.12.03-.256.044-.39.073-1.939.331-3.996.196-6.038-.479z"/></svg>';
 const META={
   console:{labels:['Stockage','Image','Technologie','Inclus'],icons:['storage','screen','spark','pad']},
   tv:{labels:['Technologie écran','Résolution','Fréquence native','Smart TV'],icons:['screen','4k','speed','wifi']}
@@ -141,11 +198,11 @@ function installments(value){
 function euro(n){return Number(n).toLocaleString('fr-FR',{minimumFractionDigits:Number(n)%1?2:0,maximumFractionDigits:2})+' €'}
 function icon(name){
   const paths={
-    storage:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M4 9h16M4 15h16"/>',
+    storage:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 10c0 1.7 3.6 3 8 3s8-1.3 8-3M4 15c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
     screen:'<rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="M8 21h8m-4-3v3"/>',
     spark:'<path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z"/>',
     pad:'<path d="M6 8h12c3 0 4 2 4 6l-2 4c-1 2-3 1-5-1H9c-2 2-4 3-5 1l-2-4c0-4 1-6 4-6z"/><path d="M6 13h6m-3-3v6m7-3h.1m3 2h.1"/>',
-    '4k':'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M5 15v-5l-2 4h5m3-4v5m0-3l3-2m-3 2l3 3m3-5v5"/>',
+    '4k':'<rect x="1" y="4" width="22" height="16" rx="2"/><path d="M10 8 6 13h5m-1-5v8m4-8v8m0-4 4-4m-4 4 4 4"/>',
     speed:'<path d="M3 18a9 9 0 1 1 18 0"/><path d="M12 18l5-9"/><circle cx="12" cy="18" r="1"/>',
     wifi:'<path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0M8 16a6 6 0 0 1 8 0"/><circle cx="12" cy="20" r="1"/>'
   };
@@ -165,7 +222,8 @@ const posterSearch=bindCatalogSearch($('posterSearch'),()=>$('category').value,p
   if(product&&product.verification_status==='vérifié'){
     const category=$('category').value;
     selectedPoster={
-      category,name:catalogProductName(product),variant:product.variant,reference:product.reference,
+      category,name:catalogProductName(product),brand:product.brand,model:product.model,
+      variant:product.variant,reference:product.reference,
       inches:product.inches??null,cm:null,specs:product.specs.map(spec=>spec.value),
       specLabels:product.specs.map(spec=>spec.label),sources:product.sources||[]
     };
@@ -212,24 +270,106 @@ function collect(){
   }
   return {...selectedPoster,cash:price,qty};
 }
+function specKind(label,value,fallback){
+ const key=String(label).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+ if(/stockage|^ssd/.test(key))return 'storage';
+ if(/manette|inclus|lecteur|edition/.test(key))return 'pad';
+ if(/frequence|rafraichissement/.test(key))return 'speed';
+ if(/smart tv|systeme/.test(key))return 'wifi';
+ if(key==='technologie'&&fallback==='screen')return 'screen';
+ if(/ray tracing|pssr/i.test(value)||/technologie$/.test(key))return 'spark';
+ if(/resolution|mode tv|performance|^image$/.test(key))return /\b4k\b/i.test(value)?'4k':'screen';
+ if(/ecran|dalle/.test(key))return 'screen';
+ return fallback;
+}
+function specCopy(label,value,kind){
+ if(kind==='wifi')return ['Smart TV',value];
+ if(kind==='pad'){
+  const controller=value.match(/^Manettes?\s+(.+)$/i);
+  return controller?['Manette',controller[1]]:[label,value];
+ }
+ if(kind==='spark'&&/ray tracing/i.test(value))return ['Ray Tracing',/^ray tracing$/i.test(value)?'':value];
+ const [title,...details]=value.split(/\s*[;·]\s*/);
+ return [title,details.join(' · ')];
+}
 function specMarkup(r){
  const meta=META[r.category];
- return r.specs.slice(0,4).map((v,i)=>v?'<div class="spec-item"><span class="spec-icon">'+icon(meta.icons[i])+'</span><span class="spec-copy"><span class="spec-label">'+esc(r.specLabels?.[i]||meta.labels[i])+'</span><span class="spec-value">'+esc(v)+'</span></span></div>':'').join('');
+ const items=r.specs.slice(0,4).flatMap((value,i)=>{
+  if(typeof value!=='string'||!value.trim())return [];
+  const label=r.specLabels?.[i]||meta.labels[i];
+  const kind=specKind(label,value,meta.icons[i]);
+  const [title,detail]=specCopy(label,value,kind);
+  return [`<div class="spec-item">
+   <span class="spec-icon">${icon(kind)}</span>
+   <span class="spec-copy">
+    <span class="spec-label${title.length>19?' long':''}">${esc(title)}</span>
+    ${detail?`<span class="spec-value${detail.length>32?' long':''}">${esc(detail)}</span>`:''}
+   </span>
+  </div>`];
+ });
+ return `<div class="spec-grid" style="--spec-count:${items.length||4}">${items.join('')}</div>`;
+}
+function posterIdentity(r){
+ const storedBrand=(typeof r.brand==='string'&&r.brand)||r.name.match(/^(?:SAMSUNG|LG|SONY|TCL|HISENSE|PHILIPS|PANASONIC|PLAYSTATION|NINTENDO|XBOX)(?=\s)/i)?.[0]||'';
+ let model=(typeof r.model==='string'&&r.model)||r.name;
+ if(storedBrand&&model.toLowerCase().startsWith(storedBrand.toLowerCase()+' ')){
+  model=model.slice(storedBrand.length).trim();
+ }
+ if(r.category==='tv')return {brand:storedBrand,model,subtitle:r.model?'':r.variant};
+
+ const playstation=/^playstation$/i.test(storedBrand)||/^(?:PS[45]\b|PlayStation)/i.test(model);
+ const [title,...variants]=model.split(/\s+[—–]\s+/);
+ const storage=r.specs.find((value,i)=>/stockage/i.test(r.specLabels?.[i]||META.console.labels[i]));
+ const subtitle=playstation&&/^PS5 Pro\b/i.test(title)&&storage
+  ?storage.replace(/^SSD\s+(.+)$/i,'$1 SSD')
+  :variants.join(' · ')||storage;
+ return {
+  brand:storedBrand,model:playstation?title.replace(/^PS([45])\b/i,'PlayStation® $1'):title,
+  subtitle:subtitle?`Console · ${subtitle}`:'Console',playstation
+ };
 }
 function poster(r){
  const values=installments(r.cash),tv=r.category==='tv';
- const nameClass=r.name.length>34?'verylong':r.name.length>24?'long':'';
- const size=tv?'<div class="tv-size"><strong>'+esc(Number(r.inches).toLocaleString('fr-FR'))+'″</strong>'+(r.cm?'<span>('+esc(r.cm)+' cm)</span>':'')+'</div>':'';
- const months=values.map((v,i)=>'<div class="month"><b>×'+[5,10,20][i]+'</b><span>'+esc(v?v+' €':'')+'</span></div>').join('');
- return '<article class="poster '+esc(r.category)+'"><div class="poster-header"><span class="brand">ENCRE POUR <b>TOUS</b></span></div>'+
- '<div class="hero"><div class="hero-main"><div class="product-name '+nameClass+'">'+esc(r.name)+'</div>'+
- (r.variant?'<div class="variant">'+esc(r.variant)+'</div>':'')+(r.reference?'<div class="reference">Réf. '+esc(r.reference)+'</div>':'')+
- '</div>'+size+'</div><div class="spec-grid">'+specMarkup(r)+'</div>'+
- '<div class="bottom"><div class="price-box"><span class="price-title">PRIX TTC</span><span class="price">'+esc(euro(r.cash))+'</span></div>'+
- '<div class="financing"><span class="financing-title">PAYEZ EN PLUSIEURS FOIS</span><div class="months">'+months+'</div></div></div></article>';
+ const identity=posterIdentity(r),name=identity.model;
+ const nameClass=name.length>40?'verylong':name.length>24?'long':'';
+ const inches=Number(r.inches);
+ // Commercial size in whole centimetres, following the 55″ / 139 cm reference.
+ const cm=r.cm||(inches>0?Math.floor(inches*2.54):null);
+ const size=tv&&inches>0?`<div class="tv-size${inches>=100||inches%1?' compact':''}">
+  <strong>${esc(inches.toLocaleString('fr-FR'))}″</strong>${cm?`<span>(${esc(cm)} cm)</span>`:''}
+ </div>`:'';
+ const price=euro(r.cash);
+ const months=values.map((v,i)=>`<div class="month"><b>×${[5,10,20][i]}</b><span class="${v.length>4?'long':''}">${esc(v?v+' €':'')}</span></div>`).join('');
+ return `<article class="poster ${esc(r.category)}">
+  <div class="poster-header"><span class="brand">ENCRE POUR <b>TOUS</b></span></div>
+  <div class="hero">
+   ${identity.playstation?`<div class="console-mark" aria-hidden="true">${PLAYSTATION_MARK}</div>`:''}
+   <div class="hero-main">
+    ${identity.brand&&(tv||!identity.playstation)?`<div class="product-brand">${esc(identity.brand)}</div>`:''}
+    <div class="product-name ${nameClass}">${esc(name)}</div>
+    ${identity.subtitle?`<div class="variant">${esc(identity.subtitle)}</div>`:''}
+    ${tv&&r.reference?`<div class="reference">Réf. ${esc(r.reference)}</div>`:''}
+   </div>${size}
+  </div>
+  ${specMarkup(r)}
+  <div class="bottom">
+   <div class="price-box"><span class="price-title">PRIX TTC</span><span class="price ${price.length>10?'verylong':price.length>6?'long':''}">${esc(price)}</span></div>
+   <div class="financing"><span class="financing-title">PAYEZ EN PLUSIEURS FOIS</span><div class="months">${months}</div></div>
+  </div>
+ </article>`;
 }
 function cutSlot(r){
  return '<div class="cut-slot'+(r?'':' empty')+'">'+(r?poster(r)+'<span class="mark tl"></span><span class="mark tr"></span><span class="mark bl"></span><span class="mark br"></span>':'')+'</div>';
+}
+function fitPrices(){
+ document.querySelectorAll('.poster .price').forEach(price=>{
+  price.style.fontSize='';
+  const width=price.clientWidth;
+  const textWidth=price.scrollWidth;
+  if(width&&textWidth>width){
+   price.style.fontSize=parseFloat(getComputedStyle(price).fontSize)*width/textWidth*0.98+'px';
+  }
+ });
 }
 function draw(){
  const list=$('items');list.replaceChildren();
@@ -243,10 +383,17 @@ function draw(){
    li.append(label,edit,del);list.appendChild(li);
  });
  const expanded=rows.flatMap(r=>Array.from({length:Math.min(r.qty,50)},()=>r)).slice(0,200);
- const sheets=[];for(let i=0;i<expanded.length;i+=2)sheets.push('<div class="sheet">'+cutSlot(expanded[i])+cutSlot(expanded[i+1])+'</div>');
+ const scissors='<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="6" r="3"/><circle cx="5" cy="18" r="3"/><path d="m7.5 8 14 11m-14-3 14-11"/></svg>';
+ const guide='<div class="cut-guide" aria-hidden="true"><span>'+scissors+'</span><span>'+scissors+'</span></div>';
+ const sheets=[];
+ for(let i=0;i<expanded.length;i+=2){
+  const next=expanded[i+1];
+  sheets.push('<div class="sheet">'+cutSlot(expanded[i])+cutSlot(next)+(next?guide:'')+'</div>');
+ }
  $('preview').innerHTML=sheets.join('')||'<div class="empty-hint">Ajoute un produit pour afficher la planche.</div>';
  $('pageCount').textContent=sheets.length?sheets.length+' page'+(sheets.length>1?'s':'')+' A4':'Aucune page';
  $('print').disabled=!expanded.length;
+ fitPrices();document.fonts.ready.then(fitPrices);
 }
 function reset(){
  editIndex=-1;posterSearch.reset();
@@ -272,7 +419,12 @@ $('add').addEventListener('click',()=>{
  }catch(e){$('status').textContent=e.message}
 });
 $('reset').onclick=reset;
-$('print').onclick=()=>{if(rows.length)window.print()};
+window.addEventListener('beforeprint',fitPrices);
+$('print').onclick=async()=>{
+ if(!rows.length)return;
+ await document.fonts.ready;
+ fitPrices();window.print();
+};
 $('clear').onclick=()=>{if(!rows.length)return;if(!confirm('Effacer toutes les affiches de la planche ?'))return;rows=[];save();reset();draw()};
 draw();renderFinance();
 </script>
