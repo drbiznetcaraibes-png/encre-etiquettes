@@ -5,7 +5,7 @@ from typing import Literal
 
 from storage import store
 
-Category = Literal['tablet', 'console']
+Category = Literal['tablet', 'console', 'tv']
 CATALOG_COLUMNS = (
     'brand,model,manufacturer_references,available_capacities,connectivity_options,'
     'specs,variant_note,verification_status'
@@ -21,10 +21,18 @@ TABLET_SPECS = {
 }
 CONSOLE_PRIORITY = (
     ('stockage', 'storage'),
-    ('image', 'resolution', 'affichage', 'video'),
-    ('technologie', 'technologies', 'performance'),
-    ('inclus', 'lecteur', 'manette', 'accessoires'),
+    ('performances', 'performance', 'image', 'resolution', 'affichage', 'video', 'modetv'),
+    ('edition', 'technologie', 'technologies', 'lecteur'),
+    ('inclus', 'manette', 'accessoires'),
 )
+TV_PRIORITY = (
+    ('technologie', 'technologieecran', 'dalle'),
+    ('resolution', 'definition'),
+    ('frequence', 'frequencenative', 'rafraichissement'),
+    ('smarttv', 'systeme'),
+)
+SIZE_KEYS = {'taille', 'diagonale', 'taillepouces', 'diagonaleenpouces', 'tailleenpouces'}
+INCHES = re.compile(r'(?<![\d.,])([0-9]{2,3}(?:[.,][0-9])?)\s*-?\s*(?:pouces?\b|inch(?:es)?\b|po\b|[″"])', re.I)
 
 
 def clean_text(value, limit=180):
@@ -61,10 +69,32 @@ def tablet_specs(facts, row):
     return specs
 
 
-def console_specs(facts):
-    # Prefer the four fields of the existing poster, then use other recorded facts.
-    priority = [key for aliases in CONSOLE_PRIORITY if (key := next((a for a in aliases if a in facts), None))]
-    return [facts[key] for key in dict.fromkeys([*priority, *facts])][:4]
+def poster_specs(facts, priorities):
+    priority = [key for aliases in priorities if (key := next((a for a in aliases if a in facts), None))]
+    return [facts[key] for key in dict.fromkeys([*priority, *facts]) if key not in SIZE_KEYS][:4]
+
+
+def tv_inches(facts):
+    for key, fact in facts.items():
+        if key not in SIZE_KEYS and key != 'ecran':
+            continue
+        value = fact['value']
+        match = INCHES.search(value)
+        if not match and key in SIZE_KEYS:
+            match = re.fullmatch(r'([0-9]{2,3}(?:[.,][0-9])?)', value)
+        if match and 10 <= (size := float(match[1].replace(',', '.'))) <= 120:
+            return size
+    return None
+
+
+def row_facts(row):
+    raw_specs = row.get('specs')
+    facts = {}
+    if isinstance(raw_specs, dict):
+        for label, raw_value in raw_specs.items():
+            if (label := clean_text(label, 50)) and (value := clean_text(raw_value)):
+                facts[search_key(label)] = {'label': label, 'value': value}
+    return facts
 
 
 def public_product(row, category, needle):
@@ -80,32 +110,43 @@ def public_product(row, category, needle):
     if not reference and len(matching or references) == 1:
         reference = (matching or references)[0]
 
-    raw_specs = row.get('specs')
-    facts = {}
-    if isinstance(raw_specs, dict):
-        for label, raw_value in raw_specs.items():
-            if (label := clean_text(label, 50)) and (value := clean_text(raw_value)):
-                facts[search_key(label)] = {'label': label, 'value': value}
-
-    return {
+    facts = row_facts(row)
+    specs = tablet_specs(facts, row) if category == 'tablet' else poster_specs(
+        facts, TV_PRIORITY if category == 'tv' else CONSOLE_PRIORITY,
+    )
+    product = {
         'brand': brand,
         'model': model,
         'reference': reference,
         'variant': variant,
-        'specs': tablet_specs(facts, row) if category == 'tablet' else console_specs(facts),
+        'specs': specs,
         'available_capacities': tablet_capacities(row.get('available_capacities')),
         'verification_status': clean_text(row.get('verification_status'), 30),
     }
+    if category == 'tv':
+        product['inches'] = tv_inches(facts)
+    return product
+
+
+async def catalog_rows(category: Category, columns=CATALOG_COLUMNS):
+    rows = []
+    offset = 0
+    page_size = 200
+    while True:
+        page = await store.request('GET', 'product_catalog', params={
+            'category': f'eq.{category}', 'select': columns, 'order': 'id.asc',
+            'limit': str(page_size), 'offset': str(offset),
+        })
+        if not isinstance(page, list) or any(not isinstance(row, dict) for row in page):
+            raise RuntimeError('Réponse du catalogue invalide.')
+        rows.extend(page)
+        if len(page) < page_size:
+            return rows
+        offset += page_size
 
 
 async def search_products(category: Category, query: str):
-    rows = await store.request('GET', 'product_catalog', params={
-        'category': f'eq.{category}',
-        'select': CATALOG_COLUMNS,
-        'order': 'id.asc',
-    })
-    if not isinstance(rows, list) or any(not isinstance(row, dict) for row in rows):
-        raise RuntimeError('Réponse du catalogue invalide.')
+    rows = await catalog_rows(category)
     needle = search_key(query)
     products = [product for row in rows if (product := public_product(row, category, needle))]
     return sorted(products, key=lambda product: tuple(

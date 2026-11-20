@@ -56,7 +56,7 @@
 <select id="labelCategory"><option value="phone">Smartphones</option><option value="tablet">Tablettes</option></select>
 <div id="phoneSearch"><p class="sub">Saisis la référence constructeur ou le nom complet du téléphone (ex. Samsung A56 5G 256 Go). Les fiches constructeur sont utilisées en priorité, avec une recherche Internet et IA en complément. Choisis ensuite le stockage du téléphone si plusieurs capacités sont disponibles.</p><label for="reference">Référence ou nom du téléphone</label><div class="cols" style="grid-template-columns:1fr auto;align-items:end"><input id="reference" placeholder="Ex. Xiaomi 17T ou iPhone 17 Pro" autocomplete="off" list="phoneModels" aria-describedby="referenceHint"><button id="search" class="btn">Rechercher</button></div><datalist id="phoneModels"></datalist><p id="referenceHint" class="hint">Choisis une suggestion ou saisis librement le nom d’un autre modèle, puis clique sur Rechercher.</p><div class="actions" style="margin-top:8px"><button id="diagnostic" class="btn light tiny" type="button">Tester le serveur</button></div></div>
 <div id="tabletSearch" hidden>
- <label for="tabletQuery">Marque, modèle ou référence constructeur</label>
+ <label for="tabletQuery">Description de la tablette (modèle, variante ou stockage si connus)</label>
  <div class="cols" style="grid-template-columns:1fr auto;align-items:end"><input id="tabletQuery" maxlength="120" autocomplete="off"><button class="btn" type="button">Rechercher</button></div>
  <div hidden><label for="tabletResults">Tablettes trouvées</label><select id="tabletResults"></select></div>
  <p class="hint" role="status"></p>
@@ -177,7 +177,7 @@ function stopLookup(){
 function renderProduct(src){
  const p=selected;if(!p)return;
  const capacities=availableCapacities(p);
- const capacityChoice=capacities.length?`<label for="capacityChoice">${p.category==='tablet'?'Stockage de la tablette':'Stockage du téléphone'}</label><select id="capacityChoice"><option value="">Choisir le stockage</option>${capacities.map(cap=>`<option value="${esc(cap)}" ${cap===p.capacity?'selected':''}>${esc(cap)}</option>`).join('')}</select><p class="capacity-hint">Choisis la capacité de l’appareil vendu parmi les variantes documentées.</p>`:'';
+ const capacityChoice=capacities.length&&!(p.category==='tablet'&&p.capacityResolved)?`<label for="capacityChoice">${p.category==='tablet'?'Stockage de la tablette':'Stockage du téléphone'}</label><select id="capacityChoice"><option value="">Choisir le stockage</option>${capacities.map(cap=>`<option value="${esc(cap)}" ${cap===p.capacity?'selected':''}>${esc(cap)}</option>`).join('')}</select><p class="capacity-hint">Choisis la capacité de l’appareil vendu parmi les variantes documentées.</p>`:'';
  const specs=Object.entries(p.specs||{}).map(([key,value])=>`<div><b>${esc(Object.hasOwn(SPEC_NAMES,key)?SPEC_NAMES[key]:key)}</b> ${esc(value)}</div>`).join('');
  const sources=safeSources(p.sources);
  $('product').innerHTML=`<strong>${esc(p.brand)} ${esc(p.model)}</strong> <span class="pill">${esc(src||sourceLabel(p))}</span><div class="product-specs">${specs||esc(p.feature||'')}</div>${capacityChoice||`<div>Stockage : ${esc(p.capacity||'Non précisée')}</div>`}<small>Référence ${esc(p.ref)}</small>${sources.length?`<div class="product-sources">Sources : ${sources.map(source=>`<a href="${esc(source.url)}" title="${esc(source.title)}" target="_blank" rel="noopener noreferrer">${esc(source.host)}</a>`).join('')}</div>`:''}`;
@@ -321,10 +321,10 @@ const tabletSearch = bindCatalogSearch($('tabletSearch'), 'tablet', product => {
   $('status').textContent = 'Fiche tablette incomplète : trois caractéristiques sont nécessaires.';
   return;
  }
- const capacity = capacities.length===1 ? capacities[0] : '';
+ const capacity = product.capacity || (capacities.length===1 ? capacities[0] : '');
  selected = {
   ...product, category:'tablet', ref:product.reference || catalogProductName(product),
-  capacity, capacity_confirmed:Boolean(capacity)
+  capacity, capacity_confirmed:Boolean(capacity), capacityResolved:Boolean(capacity)
  };
  renderProduct('Catalogue produits'+(product.verification_status?' · '+product.verification_status:''));
 });

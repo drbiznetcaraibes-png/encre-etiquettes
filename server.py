@@ -24,6 +24,7 @@ from bs4 import BeautifulSoup
 from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
 
 from official_phones import lookup_official_phone
 from xiaomi_phones import lookup_xiaomi_phone
@@ -33,6 +34,7 @@ from manufacturer_pages import lookup_manufacturer_phone
 from openai_phones import search_openai_web, OpenAIServiceError
 from storage import store
 from product_catalog import Category, search_products
+from product_lookup import AI_MODELS, lookup_product
 from database_models import get_database_models, invalidate_database_models_cache
 
 BASE = Path(__file__).resolve().parent
@@ -532,7 +534,7 @@ async def openai_lookup(query, is_model_query=False):
     """Fallback OpenAI with strict identity and storage checks."""
     if not OPENAI_KEY:
         return None
-    if OPENAI_MODEL not in ('gpt-5.4-mini', 'gpt-5-mini'):
+    if OPENAI_MODEL not in AI_MODELS:
         raise RuntimeError('Modèle IA non autorisé par le budget configuré.')
     if not store.configured or not await store.reserve():
         raise RuntimeError("Budget IA indisponible ou plafond mensuel atteint.")
@@ -829,6 +831,21 @@ async def products(category: Category, query: str = Query(default='', max_length
         return {'products': await search_products(category, query.strip())}
     except RuntimeError:
         raise HTTPException(502, 'Catalogue produits indisponible.') from None
+
+
+class ProductLookupRequest(BaseModel):
+    category: Category
+    query: str = Field(default='', max_length=120)
+
+
+@app.post('/api/products/lookup')
+async def product_lookup(request: Request, body: ProductLookupRequest):
+    if request.headers.get('content-type', '').split(';', 1)[0].strip().lower() != 'application/json':
+        raise HTTPException(415, 'La recherche exige une requête JSON.')
+    if not store.configured:
+        raise HTTPException(503, 'Catalogue produits non configuré.')
+    _check_rate_limit(request)
+    return await lookup_product(body.category, body.query.strip(), OPENAI_KEY, OPENAI_MODEL)
 
 
 @app.get('/api/status')

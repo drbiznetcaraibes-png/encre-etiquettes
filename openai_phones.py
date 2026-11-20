@@ -25,7 +25,7 @@ def _http_error(response):
     except (ValueError, AttributeError):
         error = {}
     code = error.get('code')
-    quota_codes = {'insufficient_quota', 'billing_hard_limit_reached', 'billing_not_active'}
+    quota_codes = ('insufficient_quota', 'billing_hard_limit_reached', 'billing_not_active')
     if response.status_code in (402, 429) and (code in quota_codes or error.get('type') in quota_codes):
         return OpenAIServiceError('Crédits API OpenAI insuffisants : vérifie la facturation du projet OpenAI.')
     if response.status_code == 429:
@@ -85,8 +85,22 @@ def _safe_source(url, title="Source web"):
     return {"title": str(title or host)[:150], "url": url}
 
 
-def parse_openai_response(payload):
-    """Extrait uniquement la réponse textuelle et des URL effectivement renvoyées par l'outil."""
+def _declared_source_urls(parsed):
+    citations = parsed.get("citations")
+    urls = []
+    if isinstance(citations, dict):
+        urls.extend(citations.values())
+        specs = citations.get("specs")
+        if isinstance(specs, dict):
+            urls.extend(specs.values())
+    choices = parsed.get("choices")
+    if isinstance(choices, list):
+        urls.extend(choice.get("url") for choice in choices if isinstance(choice, dict))
+    return {url for url in urls if isinstance(url, str)}
+
+
+def parse_openai_response(payload, *, require_declared_citations=False):
+    """Return JSON and tool-backed sources, intersected with declared URLs when required."""
     if not isinstance(payload, dict) or payload.get("status") != "completed":
         return None
     output = payload.get("output") or []
@@ -100,7 +114,7 @@ def parse_openai_response(payload):
 
     def add(url, title):
         item = _safe_source(url, title)
-        if item and item["url"] not in seen and len(urls) < 6:
+        if item and item["url"] not in seen:
             seen.add(item["url"])
             urls.append(item)
 
@@ -127,9 +141,13 @@ def parse_openai_response(payload):
                     add(source.get("url"), source.get("title"))
 
     parsed = _json_object("\n".join(texts))
-    if not parsed or not urls:
+    if not parsed:
         return None
-    return parsed, urls
+    if require_declared_citations:
+        # JSON output can lack inline citation annotations even after a completed web search.
+        declared = _declared_source_urls(parsed)
+        urls = [item for item in urls if item["url"] in declared]
+    return (parsed, urls[:6]) if urls else None
 
 
 async def search_openai_web(query: str, api_key: str, model: str = "gpt-5.4-mini"):
@@ -162,6 +180,14 @@ Ce JSON est un EXEMPLE de format : n'en recopie aucune valeur sans preuve.
 Si tu ne peux confirmer au moins 3 caractéristiques spécifiques du modèle exact,
 retourne {{"verified":false}}.
 """
+    return await search_openai_evidence(prompt, api_key, model)
+
+
+class OpenAITimeoutError(OpenAIServiceError):
+    """The web search exceeded its request deadline."""
+
+
+async def search_openai_evidence(prompt, api_key, model, *, require_declared_citations=False):
     body = {
         "model": model,
         "input": prompt,
@@ -181,13 +207,16 @@ retourne {{"verified":false}}.
                 json=body,
             )
     except httpx.TimeoutException as exc:
-        raise OpenAIServiceError("Délai OpenAI dépassé.") from exc
+        raise OpenAITimeoutError("Délai OpenAI dépassé.") from exc
     except httpx.RequestError as exc:
         raise OpenAIServiceError("Connexion au service OpenAI impossible.") from exc
 
     if response.status_code != 200:
         raise _http_error(response)
-    payload = response.json()
-    if payload.get('status') == 'incomplete':
+    try:
+        payload = response.json()
+    except ValueError:
+        raise OpenAIServiceError('Réponse OpenAI invalide.') from None
+    if isinstance(payload, dict) and payload.get('status') == 'incomplete':
         raise OpenAIServiceError('Réponse OpenAI incomplète : aucune fiche IA enregistrée.')
-    return parse_openai_response(payload)
+    return parse_openai_response(payload, require_declared_citations=require_declared_citations)

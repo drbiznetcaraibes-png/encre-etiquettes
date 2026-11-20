@@ -67,7 +67,7 @@ class ProductCatalogTests(unittest.IsolatedAsyncioTestCase):
                     },
                 }]})
             upstream.assert_awaited_with('GET', 'product_catalog', params={
-                'category': 'eq.tablet', 'select': CATALOG_COLUMNS, 'order': 'id.asc',
+                'category': 'eq.tablet', 'select': CATALOG_COLUMNS, 'order': 'id.asc', 'limit': '200', 'offset': '0',
             })
             response = await self.client.get('/api/products', auth=self.auth, params={
                 'category': 'tablet', 'query': 'Galaxy Tab S11',
@@ -87,7 +87,7 @@ class ProductCatalogTests(unittest.IsolatedAsyncioTestCase):
                 {'label': label, 'value': value} for label, value in CONSOLE['specs'].items()
             ])
             upstream.assert_awaited_once_with('GET', 'product_catalog', params={
-                'category': 'eq.console', 'select': CATALOG_COLUMNS, 'order': 'id.asc',
+                'category': 'eq.console', 'select': CATALOG_COLUMNS, 'order': 'id.asc', 'limit': '200', 'offset': '0',
             })
 
     async def test_validation_and_unavailable_catalog(self):

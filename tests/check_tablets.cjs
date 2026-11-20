@@ -17,10 +17,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
    specs:{processeur:'Snapdragon 8 Gen 2',ecran:'AMOLED 12,4″',Compatibilité:'S Pen'},
    available_capacities:['256 Go','512 Go'],verification_status:'vérifié',
   };
-  await page.route('**/api/products?*',async route=>{
-   const params=new URL(route.request().url()).searchParams;
-   assert.equal(params.get('category'),'tablet');
-   const products=params.get('query')==='SM-X810'?[tablet]:[];
+  await page.route('**/api/products/lookup',async route=>{
+   assert.equal(route.request().method(),'POST');
+   const {category,query}=route.request().postDataJSON();
+   assert.equal(category,'tablet');
+   assert.deepEqual(Object.keys(route.request().postDataJSON()).sort(),['category','query']);
+   const products=query==='SM-X810 256 Go'?[{...tablet,capacity:'256 Go'}]:
+    query==='SM-X810'?[tablet]:[];
    await route.fulfill({json:{products}});
   });
   await page.goto('http://127.0.0.1:'+(process.env.TEST_PORT||'8002'));
@@ -64,6 +67,15 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await card.locator('.amount b').count(),0);
   await page.locator('#list li').last().locator('[data-act=del]').click();
   assert.equal(await page.locator('.labelcard').count(),1);
+  await page.fill('#tabletQuery','SM-X810 256 Go');
+  await page.locator('#tabletQuery').press('Enter');
+  await page.locator('#product').getByText('Stockage : 256 Go').waitFor();
+  assert.equal(await page.locator('#capacityChoice').count(),0,'stockage fourni par la description');
+  assert.equal(await page.inputValue('#cash'),'');
+  await page.fill('#cash','499');
+  await page.click('#add');
+  assert.equal(await page.locator('.labelcard').count(),2);
+  assert.equal(await page.locator('.labelcard .storage').last().textContent(),'256 Go');
   await page.selectOption('#labelCategory','phone');
   assert.equal(await page.locator('#capacityGb').isVisible(),true);
   assert.deepEqual(errors,[]);
