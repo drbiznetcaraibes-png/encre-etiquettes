@@ -32,3 +32,5 @@ jobs:
           done
           node tests/check_labels.cjs
           node tests/check_capacity.cjs
+          node tests/check_tablets.cjs
+          node tests/check_affiches.cjs

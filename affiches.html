@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ENCRE POUR TOUS | Affiches TV et consoles</title>
+<style>
+@font-face{font-family:Inter;src:url('/assets/fonts/Inter-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:Inter;src:url('/assets/fonts/Inter-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
+@font-face{font-family:Inter;src:url('/assets/fonts/Inter-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{--navy:#071d3b;--gold:#cf9200;--pale:#fff5dd;--ink:#0e2848;--grey:#687b91}
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font:14px Inter,Arial,sans-serif;color:var(--ink);background:#edf1f7}
+.app-header{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--navy);color:#fff;padding:18px 24px}
+.logo{font-weight:600;font-size:20px;letter-spacing:.1px}.logo span{color:#eeb539}
+.app-header a{color:white;text-decoration:none;font-weight:600;border:1px solid #8896a8;padding:8px 12px;border-radius:9px}
+main{display:grid;grid-template-columns:minmax(330px,420px) minmax(0,1fr);gap:20px;align-items:start;padding:20px}
+.panel{background:white;border-radius:14px;padding:19px;box-shadow:0 6px 22px #14345117}
+h1,h2{margin:0 0 8px}h1{font-size:20px}h2{font-size:17px}
+.sub{font-size:12px;color:#66778f;line-height:1.5;margin:0 0 14px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.field{margin:0 0 12px}.field label{display:block;margin-bottom:5px;font-size:12px;font-weight:700}
+input,select{width:100%;min-width:0;padding:10px;border:1px solid #c5d1df;border-radius:8px;font:inherit;background:white;color:var(--ink)}
+input:focus,select:focus{outline:2px solid #eed18b;border-color:#b58c2a}
+button{border:0;border-radius:9px;padding:10px 12px;cursor:pointer;font-weight:700;font:700 13px Inter,Arial,sans-serif}
+button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d;color:var(--navy)}button.light{background:#e9eff7;color:var(--navy)}button:disabled{opacity:.55;cursor:not-allowed}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+#status{font-size:12px;line-height:1.5;color:#51647f;min-height:16px;margin-top:9px}
+#items{margin:10px 0;padding:0;list-style:none}
+#items li{display:flex;align-items:center;gap:8px;border-bottom:1px solid #e6edf4;padding:9px 0}
+#items .item-main{min-width:0;flex:1}#items b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}#items small{color:#6c7d92}
+#items button{padding:6px 8px;font-size:11px}
+.info{border-radius:8px;background:#fff8e9;padding:10px;color:#78602b;font-size:12px;line-height:1.45;margin-top:10px}
+.preview-container{overflow:auto;padding-bottom:14px}
+.preview{display:grid;justify-content:center;gap:24px}
+.sheet{width:210mm;height:297mm;display:grid;grid-template-rows:132mm 132mm;gap:13mm;padding:10mm;background:#fff;box-shadow:0 8px 22px #1c345c25;position:relative}
+.cut-slot{position:relative;width:190mm;height:132mm}
+.cut-slot.empty{background:#fff}
+.cut-slot .mark{position:absolute;width:2mm;height:2mm;border-color:#6c7790;border-style:solid;border-width:0;z-index:2}
+.mark.tl{left:-2.7mm;top:-2.7mm;border-left-width:.16mm;border-top-width:.16mm}
+.mark.tr{right:-2.7mm;top:-2.7mm;border-right-width:.16mm;border-top-width:.16mm}
+.mark.bl{left:-2.7mm;bottom:-2.7mm;border-left-width:.16mm;border-bottom-width:.16mm}
+.mark.br{right:-2.7mm;bottom:-2.7mm;border-right-width:.16mm;border-bottom-width:.16mm}
+.poster{width:190mm;height:132mm;background:#fff;border:.3mm solid var(--navy);border-radius:5.6mm;overflow:hidden;padding:5mm 5.4mm 4.5mm;display:flex;flex-direction:column;gap:3.2mm;font-family:Inter,Arial,sans-serif;color:var(--navy);font-synthesis:none}
+.poster-header{height:9.5mm;flex:none;display:flex;align-items:center;justify-content:center;gap:6mm}
+.poster-header:before,.poster-header:after{content:'';display:block;height:.26mm;flex:1;background:var(--gold)}
+.poster-header .brand{font-weight:500;font-size:6mm;letter-spacing:.04mm;white-space:nowrap}
+.poster-header .brand b{color:var(--gold);font-weight:500}
+.hero{display:flex;gap:5mm;align-items:center;height:29mm;min-height:0;flex:none;border-bottom:.25mm solid var(--gold);padding-bottom:3mm}
+.hero-main{min-width:0;flex:1}
+.hero .product-name{font-size:8mm;line-height:1.05;font-weight:700;overflow-wrap:anywhere}
+.hero .product-name.long{font-size:6.2mm}.hero .product-name.verylong{font-size:5mm}
+.hero .variant{font-size:3.8mm;color:#50647a;margin-top:2mm;max-width:125mm;overflow-wrap:anywhere}
+.hero .reference{font-size:2.7mm;color:#66778a;margin-top:1mm;overflow-wrap:anywhere}
+.tv-size{background:var(--navy);color:white;min-width:46mm;max-width:46mm;height:27mm;border-radius:4mm 4mm 4mm 0;display:flex;flex-direction:column;align-items:center;justify-content:center;border-left:2mm solid var(--gold)}
+.tv-size strong{font-size:14.5mm;line-height:1}.tv-size span{font-size:4.1mm;margin-top:1.5mm}
+.spec-grid{height:36mm;min-height:0;flex:1;display:grid;gap:1mm 2mm;border-bottom:.25mm solid var(--gold);padding:1mm 0 3mm}
+.poster.tv .spec-grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1fr 1fr}
+.poster.console .spec-grid{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:1fr;align-items:center}
+.spec-item{display:flex;align-items:center;gap:2.8mm;min-width:0;padding:1.2mm 2mm}
+.poster.console .spec-item{flex-direction:column;text-align:center;gap:1.4mm;align-items:center;border-right:.24mm solid var(--gold)}
+.poster.console .spec-item:last-child{border-right:0}
+.spec-icon{display:flex;align-items:center;justify-content:center;flex:none;color:var(--gold)}
+.spec-icon svg{width:8mm;height:8mm;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.spec-label{display:block;font-size:3.5mm;font-weight:700;line-height:1.15}
+.spec-value{display:block;font-size:3.1mm;line-height:1.22;color:#53687b;margin-top:.7mm;overflow-wrap:anywhere}
+.poster.console .spec-value{font-size:2.8mm}
+.poster .bottom{height:34.2mm;display:grid;grid-template-columns:minmax(0,4fr) minmax(0,6fr);gap:3mm;flex:none;align-items:stretch;padding-bottom:1.2mm}
+.price-box{background:var(--navy);color:#fff;border-radius:3.6mm;padding:2.5mm 3mm;display:flex;flex-direction:column;justify-content:center;border-right:2.2mm solid var(--gold)}
+.price-box .price-title{font-size:4.1mm;font-weight:600}.price-box .price{font-size:14.5mm;font-weight:700;letter-spacing:-.4mm;line-height:1.02;white-space:nowrap}
+.financing{display:flex;flex-direction:column;justify-content:center;gap:2mm;min-width:0}
+.financing-title{text-align:center;font-size:3.5mm;font-weight:700;white-space:nowrap}
+.months{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2mm}
+.month{border:.24mm solid var(--gold);border-radius:3mm;background:var(--pale);height:21mm;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5mm}
+.month b{font-size:4.2mm}.month span{font-size:5.6mm;font-weight:700;white-space:nowrap}
+.preview-note{font-size:12px;color:#627690}
+.empty-hint{padding:40px;text-align:center;color:#697e97}
+@page{size:A4 portrait;margin:0}
+@media(max-width:1280px){main{display:block}.preview{margin:15px 0}.sheet{zoom:.75}}
+@media(max-width:780px){main{padding:10px}.sheet{zoom:.50}.panel{padding:14px}.app-header{padding:14px}.logo{font-size:16px}}
+@media(max-width:500px){.sheet{zoom:.34}}
+@media print{html,body{margin:0!important;padding:0!important;background:#fff!important}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}header,.editor,.preview-title,.preview-note{display:none!important}main{display:block;padding:0;margin:0}.preview-container{overflow:visible!important;padding:0}.preview{display:block;margin:0}.sheet{zoom:1!important;box-shadow:none!important;margin:0!important;break-after:page;page-break-after:always}.sheet:last-child{break-after:auto;page-break-after:auto}.poster,.poster *{-webkit-print-color-adjust:exact;print-color-adjust:exact}.empty-hint{display:none}}
+</style>
+</head>
+<body>
+<header class="app-header">
+  <div class="logo">ENCRE POUR <span>TOUS</span> <small style="font-size:12px;font-weight:400;color:#c5d5e5">/ Affiches TV & consoles</small></div>
+  <a href="/">← Étiquettes téléphones</a>
+</header>
+<main>
+<div class="editor">
+  <section class="panel">
+    <h1>Créer une affiche commerciale</h1>
+    <p class="sub">Design validé : deux affiches de 190 × 132 mm sur une feuille A4 portrait. Sans photo. Les prix sont saisis par le magasin ; rien n'est déduit du catalogue.</p>
+    <div class="field"><label for="category">Famille de produit</label><select id="category"><option value="console">Console de jeux</option><option value="tv">Téléviseur</option></select></div>
+    <div id="consoleSearch">
+      <div class="field"><label for="consoleQuery">Marque, modèle ou référence constructeur</label><input id="consoleQuery" maxlength="120" autocomplete="off"></div>
+      <button type="button" class="primary">Rechercher</button>
+      <div class="field" hidden><label for="consoleResults">Consoles trouvées</label><select id="consoleResults"></select></div>
+      <p class="hint" role="status"></p>
+    </div>
+    <div class="field"><label for="name">Marque et modèle *</label><input id="name" maxlength="110" placeholder="Ex. PlayStation 5 Pro"></div>
+    <div class="field"><label for="variant" id="variantLabel">Variante / édition</label><input id="variant" maxlength="100" placeholder="Ex. Console • 2 To SSD"></div>
+    <div class="field"><label for="reference">Référence constructeur (facultatif)</label><input id="reference" maxlength="90" placeholder="Ex. CFI-7000"></div>
+    <div class="form-grid" id="tvSizeFields" hidden>
+      <div class="field"><label for="inches">Taille en pouces *</label><input id="inches" type="number" min="10" max="120" step="0.1" placeholder="55"></div>
+      <div class="field"><label for="centimeters">Taille en cm (facultatif)</label><input id="centimeters" type="number" min="20" max="305" step="1" placeholder="139"></div>
+    </div>
+    <h2>Caractéristiques essentielles</h2>
+    <p class="sub">Quatre éléments maximum. Tu peux laisser un champ vide si une caractéristique n'est pas vérifiée.</p>
+    <div class="form-grid" id="specFields"></div>
+    <div class="field"><label for="cash">Prix TTC (€) *</label><input id="cash" type="number" step="0.01" min="0.01" max="999999" inputmode="decimal" placeholder="Ex. 799"></div>
+    <div class="field"><label for="qty">Nombre d'affiches</label><input id="qty" type="number" min="1" max="50" step="1" value="1"></div>
+    <div class="info" id="financePreview">Financement ×5 / ×10 / ×20 calculé automatiquement. Montants masqués selon les seuils de l'application existante.</div>
+    <div class="actions"><button type="button" id="add" class="gold">Ajouter à la planche</button><button type="button" id="reset" class="light">Nouveau produit</button></div>
+    <div id="status" role="status" aria-live="polite"></div>
+  </section>
+  <section class="panel" style="margin-top:15px">
+    <h2>Planche d'impression</h2>
+    <ul id="items"></ul>
+    <div class="actions">
+      <button id="print" type="button" class="primary">Imprimer / PDF A4</button>
+      <button id="clear" type="button" class="light">Vider la planche</button>
+    </div>
+    <div class="info">Imprime en « Taille réelle » / 100 %, sans ajustement à la page. Deux affiches par A4, espaces et repères de coupe discrets. Vérifie l'impression test avant la première découpe.</div>
+  </section>
+</div>
+<div class="preview-container">
+  <div class="preview-title" style="margin-bottom:10px"><b>Aperçu A4 portrait</b> <span class="preview-note" id="pageCount">—</span></div>
+  <div id="preview" class="preview"><div class="empty-hint">Ajoute un produit pour afficher la planche.</div></div>
+</div>
+</main>
+<script src="/assets/catalog-search.js"></script>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const COEFF={p5:0.20748,p10:0.10693,p20:0.055885};
+const STORE_KEY='encre_affiches_v1';
+const META={
+  console:{labels:['Stockage','Image','Technologie','Inclus'],icons:['storage','screen','spark','pad']},
+  tv:{labels:['Technologie écran','Résolution','Fréquence native','Smart TV'],icons:['screen','4k','speed','wifi']}
+};
+const FINANCE_THRESHOLD=120,MIN_MONTHLY=20;
+function installments(value){
+  const p=Number(value);
+  if(!Number.isFinite(p)||p<=FINANCE_THRESHOLD)return ['','',''];
+  return Object.values(COEFF).map(c=>{const n=Math.ceil(p*c-1e-9);return n>MIN_MONTHLY?String(n):''});
+}
+function euro(n){return Number(n).toLocaleString('fr-FR',{minimumFractionDigits:Number(n)%1?2:0,maximumFractionDigits:2})+' €'}
+function icon(name){
+  const paths={
+    storage:'<rect x="4" y="3" width="16" height="18" rx="3"/><path d="M4 9h16M4 15h16"/>',
+    screen:'<rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="M8 21h8m-4-3v3"/>',
+    spark:'<path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z"/>',
+    pad:'<path d="M6 8h12c3 0 4 2 4 6l-2 4c-1 2-3 1-5-1H9c-2 2-4 3-5 1l-2-4c0-4 1-6 4-6z"/><path d="M6 13h6m-3-3v6m7-3h.1m3 2h.1"/>',
+    '4k':'<rect x="2" y="4" width="20" height="16" rx="2"/><path d="M5 15v-5l-2 4h5m3-4v5m0-3l3-2m-3 2l3 3m3-5v5"/>',
+    speed:'<path d="M3 18a9 9 0 1 1 18 0"/><path d="M12 18l5-9"/><circle cx="12" cy="18" r="1"/>',
+    wifi:'<path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0M8 16a6 6 0 0 1 8 0"/><circle cx="12" cy="20" r="1"/>'
+  };
+  return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(paths[name]||paths.spark)+'</svg>';
+}
+let rows=[];try{const stored=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');if(Array.isArray(stored))rows=stored.filter(isRecord).slice(0,100)}catch(e){}
+let editIndex=-1, consoleSelection=null, consoleLabels=[];
+function isRecord(r){return r&&['tv','console'].includes(r.category)&&typeof r.name==='string'&&Number.isFinite(Number(r.cash))&&Number(r.cash)>0&&Array.isArray(r.specs)}
+function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(rows))}catch(e){$('status').textContent='Stockage navigateur indisponible : pense à imprimer ta planche.'}}
+function setFields(){
+  const type=$('category').value,meta=META[type];
+  $('consoleSearch').hidden=type!=='console';$('tvSizeFields').hidden=type!=='tv';
+  const lockFields=type==='console'&&(rows[editIndex]?.category!=='console'||rows[editIndex].fromCatalog===true);
+  for(const id of ['name','variant','reference'])$(id).readOnly=lockFields;
+  $('variantLabel').textContent=type==='tv'?'Gamme / technologie (facultatif)':'Variante / édition';
+  $('specFields').replaceChildren();
+  meta.labels.forEach((label,i)=>{
+    const wrap=document.createElement('div');wrap.className='field';
+    const lab=document.createElement('label');lab.htmlFor='s'+i;lab.textContent=label;
+    const field=document.createElement('input');field.id='s'+i;field.maxLength=90;field.readOnly=lockFields;field.placeholder=type==='tv'?['Ex. Mini LED','Ex. 4K UHD','Ex. 144 Hz','Ex. Tizen'][i]:['Ex. SSD 2 To','Ex. 4K','Ex. Ray tracing','Ex. DualSense'][i];
+    wrap.append(lab,field);$('specFields').appendChild(wrap);
+  });
+}
+function renderFinance(){
+  const values=installments($('cash').value);
+  $('financePreview').textContent='Financement : ×5 '+(values[0]?values[0]+' €':'—')+' · ×10 '+(values[1]?values[1]+' €':'—')+' · ×20 '+(values[2]?values[2]+' €':'—')+'. Sous réserve des conditions de financement.';
+}
+const consoleSearch=bindCatalogSearch($('consoleSearch'),'console',product=>{
+  consoleSelection=null;consoleLabels=[];
+  if($('category').value!=='console')return;
+  $('status').textContent='';
+  $('name').value=product?catalogProductName(product):'';
+  $('variant').value=product?.variant||'';
+  $('reference').value=product?.reference||'';
+  const specs=product?.specs||[];
+  consoleLabels=specs.map(spec=>spec.label);
+  fillConsoleSpecs(specs.map(spec=>spec.value));
+  if(product){
+   consoleSelection=specs.length===4?'catalog':null;
+   if(!consoleSelection)$('status').textContent='Fiche console incomplète : quatre caractéristiques sont nécessaires.';
+   else if(product.verification_status!=='vérifié')$('status').textContent='Fiche catalogue : '+(product.verification_status||'statut de vérification inconnu')+'.';
+   for(const id of ['name','variant','reference','s0','s1','s2','s3'])$(id).readOnly=true;
+  }
+});
+function fillConsoleSpecs(values){
+  META.console.labels.forEach((label,i)=>{
+   document.querySelector('label[for="s'+i+'"]').textContent=consoleLabels[i]||label;
+   $('s'+i).value=values[i]||'';
+  });
+}
+function collect(){
+  const type=$('category').value;
+  if(type==='console'&&!consoleSelection){
+    throw Error('Sélectionne une console dans le catalogue.');
+  }
+  const name=$('name').value.trim(),price=Number($('cash').value),qty=Number($('qty').value);
+  if(!name||!Number.isFinite(price)||price<=0||!Number.isInteger(qty)||qty<1||qty>50)throw Error('Saisis un nom, un prix TTC valide et une quantité entre 1 et 50.');
+  const inches=Number($('inches').value),cm=$('centimeters').value?Number($('centimeters').value):null;
+  if(type==='tv'&&(!Number.isFinite(inches)||inches<10||inches>120))throw Error('Indique la diagonale du téléviseur en pouces.');
+  if(type==='tv'&&cm!==null&&(!Number.isFinite(cm)||cm<20||cm>305))throw Error('Taille en centimètres incorrecte.');
+  const specs=[0,1,2,3].map(i=>$('s'+i).value.trim());
+  if(specs.filter(Boolean).length<2)throw Error('Renseigne au moins deux caractéristiques vérifiées.');
+  return {category:type,name,variant:$('variant').value.trim(),reference:$('reference').value.trim(),inches:type==='tv'?inches:null,cm:type==='tv'?cm:null,specs,specLabels:type==='console'?consoleLabels:[],cash:price,qty,fromCatalog:type==='console'&&(consoleSelection==='catalog'||rows[editIndex]?.fromCatalog===true)};
+}
+function specMarkup(r){
+ const meta=META[r.category];
+ return r.specs.slice(0,4).map((v,i)=>v?'<div class="spec-item"><span class="spec-icon">'+icon(meta.icons[i])+'</span><span class="spec-copy"><span class="spec-label">'+esc(r.specLabels?.[i]||meta.labels[i])+'</span><span class="spec-value">'+esc(v)+'</span></span></div>':'').join('');
+}
+function poster(r){
+ const values=installments(r.cash),tv=r.category==='tv';
+ const nameClass=r.name.length>34?'verylong':r.name.length>24?'long':'';
+ const size=tv?'<div class="tv-size"><strong>'+esc(Number(r.inches).toLocaleString('fr-FR'))+'″</strong>'+(r.cm?'<span>('+esc(r.cm)+' cm)</span>':'')+'</div>':'';
+ const months=values.map((v,i)=>'<div class="month"><b>×'+[5,10,20][i]+'</b><span>'+esc(v?v+' €':'')+'</span></div>').join('');
+ return '<article class="poster '+esc(r.category)+'"><div class="poster-header"><span class="brand">ENCRE POUR <b>TOUS</b></span></div>'+
+ '<div class="hero"><div class="hero-main"><div class="product-name '+nameClass+'">'+esc(r.name)+'</div>'+
+ (r.variant?'<div class="variant">'+esc(r.variant)+'</div>':'')+(r.reference?'<div class="reference">Réf. '+esc(r.reference)+'</div>':'')+
+ '</div>'+size+'</div><div class="spec-grid">'+specMarkup(r)+'</div>'+
+ '<div class="bottom"><div class="price-box"><span class="price-title">PRIX TTC</span><span class="price">'+esc(euro(r.cash))+'</span></div>'+
+ '<div class="financing"><span class="financing-title">PAYEZ EN PLUSIEURS FOIS</span><div class="months">'+months+'</div></div></div></article>';
+}
+function cutSlot(r){
+ return '<div class="cut-slot'+(r?'':' empty')+'">'+(r?poster(r)+'<span class="mark tl"></span><span class="mark tr"></span><span class="mark bl"></span><span class="mark br"></span>':'')+'</div>';
+}
+function draw(){
+ const list=$('items');list.replaceChildren();
+ rows.forEach((r,i)=>{
+   const li=document.createElement('li'),label=document.createElement('div');label.className='item-main';
+   const title=document.createElement('b');title.textContent=r.name+' — '+euro(r.cash);
+   const small=document.createElement('small');small.textContent=(r.category==='tv'?'TV':'Console')+' · '+r.qty+' exemplaire'+(r.qty>1?'s':'');
+   label.append(title,small);
+   const edit=document.createElement('button');edit.className='light';edit.textContent='Modifier';edit.onclick=()=>startEdit(i);
+   const del=document.createElement('button');del.className='light';del.textContent='Supprimer';del.onclick=()=>{rows.splice(i,1);if(editIndex===i)reset();else if(editIndex>i)editIndex--;save();draw()};
+   li.append(label,edit,del);list.appendChild(li);
+ });
+ const expanded=rows.flatMap(r=>Array.from({length:Math.min(r.qty,50)},()=>r)).slice(0,200);
+ const sheets=[];for(let i=0;i<expanded.length;i+=2)sheets.push('<div class="sheet">'+cutSlot(expanded[i])+cutSlot(expanded[i+1])+'</div>');
+ $('preview').innerHTML=sheets.join('')||'<div class="empty-hint">Ajoute un produit pour afficher la planche.</div>';
+ $('pageCount').textContent=sheets.length?sheets.length+' page'+(sheets.length>1?'s':'')+' A4':'Aucune page';
+ $('print').disabled=!expanded.length;
+}
+function reset(){
+ editIndex=-1;$('category').value='console';setFields();consoleSearch.reset();
+ ['name','variant','reference','inches','centimeters','cash'].forEach(id=>$(id).value='');
+ for(let i=0;i<4;i++)$('s'+i).value='';
+ $('qty').value=1;$('add').textContent='Ajouter à la planche';$('status').textContent='';renderFinance();
+}
+function startEdit(i){
+ const r=rows[i];if(!r)return;editIndex=i;$('category').value=r.category;setFields();consoleSearch.reset();
+ $('name').value=r.name;$('variant').value=r.variant||'';$('reference').value=r.reference||'';
+ $('inches').value=r.inches||'';$('centimeters').value=r.cm||'';$('cash').value=r.cash;$('qty').value=r.qty;
+ if(r.category==='console'){
+  consoleSelection='saved';consoleLabels=r.specLabels||[];fillConsoleSpecs(r.specs);
+ }else for(let j=0;j<4;j++)$('s'+j).value=r.specs[j]||'';
+ $('add').textContent='Enregistrer la modification';renderFinance();window.scrollTo({top:0,behavior:'smooth'});
+}
+$('category').addEventListener('change',()=>{
+ const type=$('category').value;
+ reset();
+ $('category').value=type;setFields();
+});
+$('cash').addEventListener('input',renderFinance);
+$('add').addEventListener('click',()=>{
+ try{
+   const r=collect();
+   const newRows=rows.slice();
+   if(editIndex>=0)newRows[editIndex]=r;else newRows.push(r);
+   if(newRows.length>100||newRows.reduce((sum,p)=>sum+p.qty,0)>200)throw Error('Maximum : 100 références ou 200 affiches.');
+   rows=newRows;
+   save();draw();reset();$('status').textContent='Affiche enregistrée dans la planche.';
+ }catch(e){$('status').textContent=e.message}
+});
+$('reset').onclick=reset;
+$('print').onclick=()=>{if(rows.length)window.print()};
+$('clear').onclick=()=>{if(!rows.length)return;if(!confirm('Effacer toutes les affiches de la planche ?'))return;rows=[];save();reset();draw()};
+setFields();draw();renderFinance();
+</script>
+</body>
+</html>
