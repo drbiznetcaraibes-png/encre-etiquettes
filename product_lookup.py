@@ -193,9 +193,9 @@ Vérifie marque, modèle, référence, édition, variante et capacité ou diagon
 une version Pro et Digital, une version avec lecteur et une version sans lecteur, ni les tailles 55 et 65 pouces.
 {essentials[category]}
 N'invente rien. Omet toute donnée non confirmée. Le champ specs accepte seulement les clés {fields}.
-Pour chaque fait et chaque référence ou capacité fournie, cite la page qui établit ce fait dans les annotations
-de ta réponse et renseigne son URL exacte dans citations. Ne cite pas une page simplement consultée.
-Réponds uniquement avec ce JSON, en remplaçant les valeurs par les preuves trouvées :
+Pour chaque fait et chaque référence ou capacité fournie, renseigne dans citations l'URL exacte
+de la page renvoyée par l'outil Web qui établit ce fait. Une page qui ne fait que mentionner la gamme
+ne suffit pas. Réponds uniquement avec ce JSON, en remplaçant les valeurs par les preuves trouvées :
 {{"verified":true,"brand":"","model":"","variant":"","manufacturer_references":[],
 "available_capacities":[],"inches":null,"specs":{{}},
 "citations":{{"identity":"","variant":"","references":"","capacities":"","inches":"","specs":{{}}}}}}
@@ -365,7 +365,7 @@ async def lookup_product(category, query, api_key, model):
         raise HTTPException(429, 'Plafond mensuel de recherche IA atteint.')
     try:
         result = await asyncio.wait_for(
-            search_openai_evidence(product_prompt(category, query), api_key, model, citations_only=True),
+            search_openai_evidence(product_prompt(category, query), api_key, model, require_declared_citations=True),
             timeout=22,
         )
     except (TimeoutError, OpenAITimeoutError):

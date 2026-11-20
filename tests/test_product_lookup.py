@@ -173,7 +173,7 @@ class ProductLookupTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual(second.status_code, 200, second.text)
                 self.assertEqual(second.json()['origin'], 'catalogue')
                 self.assertEqual(first.json()['products'], second.json()['products'])
-                self.assertTrue(self.web.await_args.kwargs['citations_only'])
+                self.assertTrue(self.web.await_args.kwargs['require_declared_citations'])
                 self.assertIn(f'catégorie {category}', self.web.await_args.args[0])
         self.assertEqual(self.reserve.await_count, len(cases))
         self.assertEqual(self.web.await_count, len(cases))
@@ -206,11 +206,11 @@ class ProductLookupTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(body['tools'], [{'type': 'web_search', 'search_context_size': 'low'}])
             self.assertFalse(body['store'])
             return httpx.Response(200, json={'status': 'completed', 'output': [
-                {'type': 'web_search_call', 'status': 'completed'},
+                {'type': 'web_search_call', 'status': 'completed', 'action': {'sources': [
+                    {'type': 'url', **source},
+                ]}},
                 {'type': 'message', 'status': 'completed', 'content': [
-                    {'type': 'output_text', 'text': json.dumps(facts), 'annotations': [
-                        {'type': 'url_citation', **source},
-                    ]},
+                    {'type': 'output_text', 'text': json.dumps(facts), 'annotations': []},
                 ]},
             ]})
 
@@ -329,19 +329,35 @@ class ProductLookupTests(unittest.IsolatedAsyncioTestCase):
 
 
 class ProductEvidenceTests(unittest.TestCase):
-    def test_citations_require_successful_web_search_and_exclude_consulted_sources(self):
+    def test_structured_citations_use_web_sources_without_annotations(self):
         source = SOURCE['url']
+        parsed = {'verified': True, 'citations': {'identity': source, 'specs': {'screen': source}}}
+        consulted = [{'type': 'url', 'url': f'https://example.com/consulted/{i}'} for i in range(7)]
         response = {'status': 'completed', 'output': [
             {'type': 'web_search_call', 'status': 'completed',
-             'action': {'sources': [{'url': 'https://example.com/consulted'}]}},
+             'action': {'sources': [*consulted, {'type': 'url', 'url': source}]}},
             {'type': 'message', 'status': 'completed', 'content': [
-                {'type': 'output_text', 'text': '{"verified":false}', 'annotations': [
-                    {'type': 'url_citation', 'url': source},
-                ]},
+                {'type': 'output_text', 'text': json.dumps(parsed), 'annotations': []},
             ]},
         ]}
-        self.assertEqual([s['url'] for s in parse_openai_response(response, citations_only=True)[1]], [source])
-        response['output'][1]['content'][0]['annotations'] = []
-        self.assertIsNone(parse_openai_response(response, citations_only=True))
+        self.assertEqual(parse_openai_response(response, require_declared_citations=True), (
+            parsed, [{'url': source, 'title': 'www.samsung.com'}],
+        ))
+        self.assertEqual(parse_openai_response(response)[1][0]['url'], consulted[0]['url'])
+
+    def test_consulted_or_invented_urls_do_not_count_and_search_must_complete(self):
+        source = SOURCE['url']
+        content = {'type': 'output_text', 'text': json.dumps({
+            'verified': False, 'choices': [{'description': 'Variante 55 pouces', 'url': 'https://example.com/invented'}],
+        })}
+        response = {'status': 'completed', 'output': [
+            {'type': 'web_search_call', 'status': 'completed', 'action': {'sources': [{'url': source}]}},
+            {'type': 'message', 'status': 'completed', 'content': [content]},
+        ]}
+        self.assertIsNone(parse_openai_response(response, require_declared_citations=True))
+
+        content['text'] = json.dumps({'verified': False, 'choices': [{'description': 'Variante 55 pouces', 'url': source}]})
+        content['annotations'] = [{'type': 'url_citation', 'url': source}]
+        self.assertEqual(parse_openai_response(response, require_declared_citations=True)[1][0]['url'], source)
         response['output'][0]['status'] = 'failed'
-        self.assertIsNone(parse_openai_response(response, citations_only=True))
+        self.assertIsNone(parse_openai_response(response, require_declared_citations=True))

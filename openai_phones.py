@@ -85,8 +85,22 @@ def _safe_source(url, title="Source web"):
     return {"title": str(title or host)[:150], "url": url}
 
 
-def parse_openai_response(payload, *, citations_only=False):
-    """Extrait uniquement la réponse textuelle et des URL effectivement renvoyées par l'outil."""
+def _declared_source_urls(parsed):
+    citations = parsed.get("citations")
+    urls = []
+    if isinstance(citations, dict):
+        urls.extend(citations.values())
+        specs = citations.get("specs")
+        if isinstance(specs, dict):
+            urls.extend(specs.values())
+    choices = parsed.get("choices")
+    if isinstance(choices, list):
+        urls.extend(choice.get("url") for choice in choices if isinstance(choice, dict))
+    return {url for url in urls if isinstance(url, str)}
+
+
+def parse_openai_response(payload, *, require_declared_citations=False):
+    """Return JSON and tool-backed sources, intersected with declared URLs when required."""
     if not isinstance(payload, dict) or payload.get("status") != "completed":
         return None
     output = payload.get("output") or []
@@ -100,7 +114,7 @@ def parse_openai_response(payload, *, citations_only=False):
 
     def add(url, title):
         item = _safe_source(url, title)
-        if item and item["url"] not in seen and len(urls) < 6:
+        if item and item["url"] not in seen:
             seen.add(item["url"])
             urls.append(item)
 
@@ -118,7 +132,7 @@ def parse_openai_response(payload, *, citations_only=False):
                 for annotation in content.get("annotations") or []:
                     if isinstance(annotation, dict) and annotation.get("type") == "url_citation":
                         add(annotation.get("url"), annotation.get("title"))
-        elif not citations_only and part.get("type") == "web_search_call" and part.get("status") == "completed":
+        elif part.get("type") == "web_search_call" and part.get("status") == "completed":
             action = part.get("action") or {}
             if not isinstance(action, dict):
                 continue
@@ -127,9 +141,13 @@ def parse_openai_response(payload, *, citations_only=False):
                     add(source.get("url"), source.get("title"))
 
     parsed = _json_object("\n".join(texts))
-    if not parsed or not urls:
+    if not parsed:
         return None
-    return parsed, urls
+    if require_declared_citations:
+        # JSON output can lack inline citation annotations even after a completed web search.
+        declared = _declared_source_urls(parsed)
+        urls = [item for item in urls if item["url"] in declared]
+    return (parsed, urls[:6]) if urls else None
 
 
 async def search_openai_web(query: str, api_key: str, model: str = "gpt-5.4-mini"):
@@ -169,7 +187,7 @@ class OpenAITimeoutError(OpenAIServiceError):
     """The web search exceeded its request deadline."""
 
 
-async def search_openai_evidence(prompt, api_key, model, *, citations_only=False):
+async def search_openai_evidence(prompt, api_key, model, *, require_declared_citations=False):
     body = {
         "model": model,
         "input": prompt,
@@ -201,4 +219,4 @@ async def search_openai_evidence(prompt, api_key, model, *, citations_only=False
         raise OpenAIServiceError('Réponse OpenAI invalide.') from None
     if isinstance(payload, dict) and payload.get('status') == 'incomplete':
         raise OpenAIServiceError('Réponse OpenAI incomplète : aucune fiche IA enregistrée.')
-    return parse_openai_response(payload, citations_only=citations_only)
+    return parse_openai_response(payload, require_declared_citations=require_declared_citations)
