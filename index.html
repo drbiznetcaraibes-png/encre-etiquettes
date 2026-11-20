@@ -316,7 +316,7 @@ const tabletSearch = bindCatalogSearch($('tabletSearch'), 'tablet', product => {
   ...product, category:'tablet', ref:product.reference || catalogProductName(product),
   capacity, capacity_confirmed:Boolean(capacity)
  };
- renderProduct('Catalogue produits');
+ renderProduct('Catalogue produits'+(product.verification_status?' · '+product.verification_status:''));
 });
 
 function updateCategoryFields(){

@@ -15,7 +15,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   const tablet={
    brand:'Samsung',model:'Galaxy Tab S9+',reference:'SM-X810',variant:'',
    specs:{processeur:'Snapdragon 8 Gen 2',ecran:'AMOLED 12,4″',ram:'12 Go'},
-   available_capacities:['256 Go','512 Go'],
+   available_capacities:['256 Go','512 Go'],verification_status:'vérifié',
   };
   await page.route('**/api/products?*',async route=>{
    const params=new URL(route.request().url()).searchParams;

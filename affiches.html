@@ -161,7 +161,7 @@ function icon(name){
   return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(paths[name]||paths.spark)+'</svg>';
 }
 let rows=[];try{const stored=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');if(Array.isArray(stored))rows=stored.filter(isRecord).slice(0,100)}catch(e){}
-let editIndex=-1, consoleSelection=null;
+let editIndex=-1, consoleSelection=null, consoleLabels=[];
 function isRecord(r){return r&&['tv','console'].includes(r.category)&&typeof r.name==='string'&&Number.isFinite(Number(r.cash))&&Number(r.cash)>0&&Array.isArray(r.specs)}
 function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(rows))}catch(e){$('status').textContent='Stockage navigateur indisponible : pense à imprimer ta planche.'}}
 function setFields(){
@@ -183,20 +183,28 @@ function renderFinance(){
   $('financePreview').textContent='Financement : ×5 '+(values[0]?values[0]+' €':'—')+' · ×10 '+(values[1]?values[1]+' €':'—')+' · ×20 '+(values[2]?values[2]+' €':'—')+'. Sous réserve des conditions de financement.';
 }
 const consoleSearch=bindCatalogSearch($('consoleSearch'),'console',product=>{
-  consoleSelection=null;
+  consoleSelection=null;consoleLabels=[];
   if($('category').value!=='console')return;
   $('status').textContent='';
   $('name').value=product?catalogProductName(product):'';
   $('variant').value=product?.variant||'';
   $('reference').value=product?.reference||'';
-  const specs=['storage','video','technology','included'].map(key=>product?.specs[key]||'');
-  specs.forEach((value,i)=>{$('s'+i).value=value});
+  const specs=product?.specs||[];
+  consoleLabels=specs.map(spec=>spec.label);
+  fillConsoleSpecs(specs.map(spec=>spec.value));
   if(product){
-   consoleSelection=specs.every(Boolean)?'catalog':null;
+   consoleSelection=specs.length===4?'catalog':null;
    if(!consoleSelection)$('status').textContent='Fiche console incomplète : quatre caractéristiques sont nécessaires.';
+   else if(product.verification_status!=='vérifié')$('status').textContent='Fiche catalogue : '+(product.verification_status||'statut de vérification inconnu')+'.';
    for(const id of ['name','variant','reference','s0','s1','s2','s3'])$(id).readOnly=true;
   }
 });
+function fillConsoleSpecs(values){
+  META.console.labels.forEach((label,i)=>{
+   document.querySelector('label[for="s'+i+'"]').textContent=consoleLabels[i]||label;
+   $('s'+i).value=values[i]||'';
+  });
+}
 function collect(){
   const type=$('category').value;
   if(type==='console'&&!consoleSelection){
@@ -209,11 +217,11 @@ function collect(){
   if(type==='tv'&&cm!==null&&(!Number.isFinite(cm)||cm<20||cm>305))throw Error('Taille en centimètres incorrecte.');
   const specs=[0,1,2,3].map(i=>$('s'+i).value.trim());
   if(specs.filter(Boolean).length<2)throw Error('Renseigne au moins deux caractéristiques vérifiées.');
-  return {category:type,name,variant:$('variant').value.trim(),reference:$('reference').value.trim(),inches:type==='tv'?inches:null,cm:type==='tv'?cm:null,specs,cash:price,qty,fromCatalog:type==='console'&&(consoleSelection==='catalog'||rows[editIndex]?.fromCatalog===true)};
+  return {category:type,name,variant:$('variant').value.trim(),reference:$('reference').value.trim(),inches:type==='tv'?inches:null,cm:type==='tv'?cm:null,specs,specLabels:type==='console'?consoleLabels:[],cash:price,qty,fromCatalog:type==='console'&&(consoleSelection==='catalog'||rows[editIndex]?.fromCatalog===true)};
 }
 function specMarkup(r){
  const meta=META[r.category];
- return r.specs.slice(0,4).map((v,i)=>v?'<div class="spec-item"><span class="spec-icon">'+icon(meta.icons[i])+'</span><span class="spec-copy"><span class="spec-label">'+esc(meta.labels[i])+'</span><span class="spec-value">'+esc(v)+'</span></span></div>':'').join('');
+ return r.specs.slice(0,4).map((v,i)=>v?'<div class="spec-item"><span class="spec-icon">'+icon(meta.icons[i])+'</span><span class="spec-copy"><span class="spec-label">'+esc(r.specLabels?.[i]||meta.labels[i])+'</span><span class="spec-value">'+esc(v)+'</span></span></div>':'').join('');
 }
 function poster(r){
  const values=installments(r.cash),tv=r.category==='tv';
@@ -257,8 +265,9 @@ function startEdit(i){
  const r=rows[i];if(!r)return;editIndex=i;$('category').value=r.category;setFields();consoleSearch.reset();
  $('name').value=r.name;$('variant').value=r.variant||'';$('reference').value=r.reference||'';
  $('inches').value=r.inches||'';$('centimeters').value=r.cm||'';$('cash').value=r.cash;$('qty').value=r.qty;
- for(let j=0;j<4;j++)$('s'+j).value=r.specs[j]||'';
- if(r.category==='console')consoleSelection='saved';
+ if(r.category==='console'){
+  consoleSelection='saved';consoleLabels=r.specLabels||[];fillConsoleSpecs(r.specs);
+ }else for(let j=0;j<4;j++)$('s'+j).value=r.specs[j]||'';
  $('add').textContent='Enregistrer la modification';renderFinance();window.scrollTo({top:0,behavior:'smooth'});
 }
 $('category').addEventListener('change',()=>{

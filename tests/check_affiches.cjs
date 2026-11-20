@@ -9,10 +9,14 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   const page=await context.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
   const consoles=[
-   {brand:'PlayStation',model:'PlayStation 5 Pro',reference:'CFI-7000',variant:'',
-    specs:{storage:'SSD 2 To',video:'4K',technology:'PSSR',included:'DualSense'},available_capacities:[]},
+   {brand:'PLAYSTATION',model:'PS5 Pro — 2 To Digital',reference:'CFI-7000',variant:'Édition numérique',
+    specs:[{label:'Stockage',value:'SSD 2 To'},{label:'Image',value:'4K'},
+           {label:'Technologie',value:'PSSR'},{label:'Lecteur',value:'Accessoire optionnel'}],
+    available_capacities:['2 To'],verification_status:'vérifié'},
    {brand:'Nintendo',model:'Switch 2',reference:'BEE-001',variant:'',
-    specs:{storage:'256 Go',video:'Full HD',technology:'4K en mode TV',included:'Joy-Con 2'},available_capacities:[]},
+    specs:[{label:'Stockage',value:'256 Go'},{label:'Image',value:'Full HD'},
+           {label:'Technologie',value:'4K en mode TV'},{label:'Inclus',value:'Joy-Con 2'}],
+    available_capacities:['256 Go'],verification_status:'vérifié'},
   ];
   await page.route('**/api/products?*',async route=>{
    const params=new URL(route.request().url()).searchParams;
@@ -30,8 +34,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.match(await page.locator('#status').textContent(),/Sélectionne une console/);
   await page.fill('#consoleQuery','CFI-7000');
   await page.locator('#consoleQuery').press('Enter');
-  await page.waitForFunction(()=>document.querySelector('#name').value==='PlayStation 5 Pro');
-  assert.equal(await page.inputValue('#name'),'PlayStation 5 Pro');
+  await page.waitForFunction(()=>document.querySelector('#name').value==='PLAYSTATION PS5 Pro — 2 To Digital');
+  assert.equal(await page.inputValue('#name'),'PLAYSTATION PS5 Pro — 2 To Digital');
   await page.fill('#cash','799');
   await page.click('#add');
   assert.equal(await page.locator('.poster').count(),1);
@@ -39,7 +43,8 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.deepEqual(await page.locator('.poster .month span').allTextContents(),['166 €','86 €','45 €']);
   assert.equal(await page.locator('.poster img').count(),0);
   assert.equal(await page.locator('.poster.console .spec-item').count(),4);
-  assert.equal(await page.locator('.poster.console .spec-value').last().textContent(),'DualSense');
+  assert.equal(await page.locator('.poster.console .spec-label').last().textContent(),'Lecteur');
+  assert.equal(await page.locator('.poster.console .spec-value').last().textContent(),'Accessoire optionnel');
 
   await page.selectOption('#category','tv');
   assert.equal(await page.locator('#consoleSearch').isHidden(),true);
@@ -67,7 +72,12 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   const sheet=await page.locator('.sheet').first().boundingBox();
   assert.ok(Math.abs(sheet.width-210*pxPerMm)<2,'largeur A4');
   assert.ok(Math.abs(sheet.height-297*pxPerMm)<2,'hauteur A4');
-  assert.equal(await page.locator('.cut-slot:not(.empty) .mark').count(),8,'quatre repères par affiche');
+  const marks=page.locator('.cut-slot:not(.empty) .mark');
+  assert.equal(await marks.count(),8,'quatre repères par affiche');
+  const posterBox=await page.locator('.poster').first().boundingBox();
+  const topLeft=await marks.first().boundingBox();
+  assert.ok(topLeft.x>=sheet.x&&topLeft.y>=sheet.y,'repère dans la feuille');
+  assert.ok(topLeft.x+topLeft.width<posterBox.x&&topLeft.y+topLeft.height<posterBox.y,'repère en dehors de l’affiche');
   await page.pdf({path:process.env.AFFICHE_PDF||'/tmp/encre-affiches-test.pdf',preferCSSPageSize:true});
   await page.emulateMedia({media:'screen'});
 
@@ -77,11 +87,12 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.deepEqual(await page.locator('.poster.console .month span').allTextContents(),['','','']);
   await page.reload();
   assert.equal(await page.locator('.poster').count(),2,'sauvegarde navigateur');
+  assert.equal(await page.locator('.poster.console .spec-label').last().textContent(),'Lecteur');
 
   await page.selectOption('#category','console');
   await page.locator('#consoleSearch button').click();
   await page.locator('#consoleResults option').nth(2).waitFor({state:'attached'});
-  await page.selectOption('#consoleResults',{label:'Nintendo Switch 2 · BEE-001'});
+  await page.selectOption('#consoleResults',{label:'Nintendo Switch 2 · BEE-001 · 256 Go'});
   await page.fill('#cash','499');
   await page.click('#add');
   assert.equal(await page.locator('.sheet').count(),2,'trois affiches = deux A4');

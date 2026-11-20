@@ -86,7 +86,7 @@ Dans le générateur d’étiquettes, sélectionne **Tablettes**, puis recherche
 
 Sur `/affiches`, sélectionne **Console de jeux** et lance une recherche. Une recherche vide liste les références disponibles. Après sélection, le modèle, la variante, la référence et les quatre caractéristiques proviennent du catalogue. Saisis le prix TTC et la quantité.
 
-L’API authentifiée `GET /api/products` lit `public.product_catalog` avec la configuration Supabase du serveur. L’adaptateur de catalogue attend une colonne `category` et des champs de marque, modèle, référence facultative, caractéristiques et capacités. Il normalise les données destinées à l’impression et renvoie uniquement les champs utilisés par les formulaires. Les tests locaux simulent le catalogue. Vérifie les fiches de `biznet-etiquette` dans un environnement connecté avant mise en service.
+L’API authentifiée `GET /api/products` lit `public.product_catalog` avec la configuration Supabase du serveur. Il filtre `category` sur `tablet` ou `console` et lit les champs existants, dont `manufacturer_references`, `available_capacities`, `specs` et `variant_note`. Il normalise les données destinées à l’impression et renvoie uniquement les champs utilisés par les formulaires. Les tests locaux simulent le catalogue. Vérifie les fiches de `biznet-etiquette` dans un environnement connecté avant mise en service.
 
 ## Affiches TV et consoles (en préproduction)
 
@@ -94,7 +94,7 @@ Une interface séparée est disponible à `/affiches`, accessible depuis l'en-t�
 
 - A4 portrait, **deux affiches de 190 × 132 mm** par page, marges blanches de 10 mm, séparation centrale de 13 mm et repères de coupe fins à l'extérieur des affiches.
 - TV : diagonale en pouces mise en évidence ; modèle et référence ; 4 caractéristiques importantes maximum ; prix TTC ; financement ×5/×10/×20.
-- Consoles : nom, variante et quatre caractéristiques du catalogue (stockage, image, technologie et contenu inclus). Prix TTC saisi par le magasin et financement calculé. Aucune photo.
+- Consoles : nom, variante et quatre caractéristiques du catalogue (par exemple stockage, image, technologie et lecteur). Prix TTC saisi par le magasin et financement calculé. Aucune photo.
 - L'utilisateur peut créer, modifier, supprimer et dupliquer via la quantité. La planche est conservée dans le navigateur (clé `encre_affiches_v1`) ; **ce n'est pas une sauvegarde Supabase**.
 - Les seuils de financement sont les mêmes que ceux du générateur téléphone : pas de mensualité si prix ≤ 120 €, ni d'échéance ≤ 20 €.
 - L'impression passe par « Imprimer / PDF A4 » et exige l'option « Taille réelle / 100 % » (sans ajustement).
