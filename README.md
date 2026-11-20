@@ -79,3 +79,17 @@ Connecte-toi en local avec l’utilisateur `encre` et le mot de passe `local-tes
 La recherche consulte Supabase, les catalogues et les sources constructeur, puis OpenAI si nécessaire et si le budget persistant l'autorise. Les nouvelles fiches vérifiées sont sauvegardées ; les recherches incomplètes sont placées dans une file hebdomadaire ciblée. Gemini n'est plus appelé dans ce parcours.
 
 Le site exige un accès salarié (utilisateur `encre`, secret `APP_ACCESS_TOKEN`). Voir [OPERATIONS.md](OPERATIONS.md) pour la configuration Supabase/Render, l'import des quatre catalogues, les limites IA, les tests et l'activation facultative de la maintenance. Aucun déploiement automatique n'est prévu : validation obligatoire avant production.
+
+## Affiches TV et consoles (en préproduction)
+
+Une interface séparée est disponible à `/affiches`, accessible depuis l'en-tête du générateur de téléphones. Elle n'interfère pas avec le gabarit des étiquettes smartphones (88 × 52 mm).
+
+- A4 portrait, **deux affiches de 190 × 132 mm** par page, marges blanches de 10 mm, séparation centrale de 13 mm et repères de coupe fins à l'extérieur des affiches.
+- TV : diagonale en pouces mise en évidence ; modèle et référence ; 4 caractéristiques importantes maximum ; prix TTC ; financement ×5/×10/×20.
+- Consoles : nom, variante et jusqu'à 4 caractéristiques ; prix TTC et financement. Aucune photo.
+- Trois exemples de consoles avec fiches constructeur consultables : PlayStation 5 Pro, Nintendo Switch 2 et Xbox Series X. Leur prix est **toujours renseigné par l'utilisateur** et n'est jamais prérempli.
+- L'utilisateur peut créer, modifier, supprimer et dupliquer via la quantité. La planche est conservée dans le navigateur (clé `encre_affiches_v1`) ; **ce n'est pas une sauvegarde Supabase**.
+- Les seuils de financement sont les mêmes que ceux du générateur téléphone : pas de mensualité si prix ≤ 120 €, ni d'échéance ≤ 20 €.
+- L'impression passe par « Imprimer / PDF A4 » et exige l'option « Taille réelle / 100 % » (sans ajustement).
+- Les téléviseurs sont en saisie manuelle dans cette première étape ; l'ajout de la recherche constructeur et de la persistance dans la future base multi-produits est une étape distincte.
+- **À valider avant production** : tests Playwright (`node tests/check_affiches.cjs`), export PDF avec Chromium et découpe sur feuille A4 physique. Aucun déploiement automatique.
