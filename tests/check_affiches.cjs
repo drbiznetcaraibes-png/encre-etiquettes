@@ -18,12 +18,27 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
            {label:'Technologie',value:'4K en mode TV'},{label:'Inclus',value:'Joy-Con 2'}],
     available_capacities:['256 Go'],verification_status:'vérifié'},
   ];
-  await page.route('**/api/products?*',async route=>{
-   const params=new URL(route.request().url()).searchParams;
-   assert.equal(params.get('category'),'console');
-   const query=params.get('query').toLowerCase();
-   const products=consoles.filter(p=>[p.brand,p.model,p.reference].some(text=>text.toLowerCase().includes(query)));
-   await route.fulfill({json:{products}});
+  const tv={brand:'Samsung',model:'Téléviseur de test QLED',reference:'TQ55XXXXX',variant:'Neo QLED',
+   inches:55,available_capacities:[],verification_status:'vérifié',sources:[{url:'https://www.samsung.com/fr/tvs/'}],
+   specs:[{label:'Technologie écran',value:'Mini LED'},{label:'Résolution',value:'4K UHD'},
+          {label:'Fréquence native',value:'144 Hz'},{label:'Smart TV',value:'Tizen'}]};
+  const tvQueries=[];
+  await page.route('**/api/products/lookup',async route=>{
+   assert.equal(route.request().method(),'POST');
+   const {query,category}=route.request().postDataJSON();
+   if(category==='tv'){
+    tvQueries.push(query);
+    if(query==='Samsung QLED'){
+     await route.fulfill({json:{products:[],choices:['Samsung QLED 55 pouces','Samsung QLED 65 pouces']}});
+    }else{
+     assert.equal(query,'Samsung QLED 55 pouces');
+     await route.fulfill({json:{products:[tv]}});
+    }
+   }else{
+    assert.equal(category,'console');
+    const products=consoles.filter(p=>[p.brand,p.model,p.reference].some(text=>text.toLowerCase().includes(query.toLowerCase())));
+    await route.fulfill({json:{products}});
+   }
   });
   await page.goto('http://127.0.0.1:'+(process.env.TEST_PORT||'8002')+'/affiches');
   await page.evaluate(()=>localStorage.removeItem('encre_affiches_v1'));
@@ -31,11 +46,11 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.sheet').count(),0);
   await page.fill('#cash','799');
   await page.click('#add');
-  assert.match(await page.locator('#status').textContent(),/Sélectionne une console/);
-  await page.fill('#consoleQuery','CFI-7000');
-  await page.locator('#consoleQuery').press('Enter');
-  await page.waitForFunction(()=>document.querySelector('#name').value==='PLAYSTATION PS5 Pro — 2 To Digital');
-  assert.equal(await page.inputValue('#name'),'PLAYSTATION PS5 Pro — 2 To Digital');
+  assert.match(await page.locator('#status').textContent(),/Sélectionne un produit/);
+  await page.fill('#posterQuery','CFI-7000');
+  await page.locator('#posterQuery').press('Enter');
+  await page.locator('#posterProduct').getByText(/PLAYSTATION PS5 Pro/).waitFor();
+  assert.equal(await page.inputValue('#cash'),'799');
   await page.fill('#cash','799');
   await page.click('#add');
   assert.equal(await page.locator('.poster').count(),1);
@@ -47,22 +62,21 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.poster.console .spec-value').last().textContent(),'Accessoire optionnel');
 
   await page.selectOption('#category','tv');
-  assert.equal(await page.locator('#consoleSearch').isHidden(),true);
-  assert.equal(await page.locator('#tvSizeFields').isVisible(),true);
-  await page.fill('#name','Téléviseur de test QLED');
-  await page.fill('#variant','Neo QLED');
-  await page.fill('#reference','TQ55XXXXX');
-  await page.fill('#inches','55');
-  await page.fill('#centimeters','139');
-  await page.fill('#s0','Mini LED');
-  await page.fill('#s1','4K UHD');
-  await page.fill('#s2','144 Hz');
-  await page.fill('#s3','Tizen');
+  await page.fill('#posterQuery','Samsung QLED');
+  await page.locator('#posterQuery').press('Enter');
+  await page.locator('#posterResults option').nth(2).waitFor({state:'attached'});
+  await page.selectOption('#posterResults',{label:'Samsung QLED 55 pouces'});
+  await page.locator('#posterProduct').getByText(/Téléviseur de test QLED/).waitFor();
+  assert.deepEqual(tvQueries,['Samsung QLED','Samsung QLED 55 pouces']);
+  assert.equal(await page.locator('#posterProduct a').getAttribute('href'),'https://www.samsung.com/fr/tvs/');
+  assert.equal(await page.locator('#inches,#name,#reference,#s0').count(),0,'aucun champ technique manuel');
+  assert.equal(await page.inputValue('#cash'),'');
   await page.fill('#cash','999');
   await page.click('#add');
   assert.equal(await page.locator('.poster.tv').count(),1);
   assert.equal(await page.locator('.sheet').count(),1);
   assert.equal(await page.locator('.tv-size strong').textContent(),'55″');
+  assert.equal(await page.locator('.poster.tv .spec-item').count(),4);
   assert.deepEqual(await page.locator('.poster.tv .month span').allTextContents(),['208 €','107 €','56 €']);
   await page.emulateMedia({media:'print'});
   const dims=await page.locator('.poster').first().evaluate(el=>({width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height}));
@@ -90,9 +104,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.poster.console .spec-label').last().textContent(),'Lecteur');
 
   await page.selectOption('#category','console');
-  await page.locator('#consoleSearch button').click();
-  await page.locator('#consoleResults option').nth(2).waitFor({state:'attached'});
-  await page.selectOption('#consoleResults',{label:'Nintendo Switch 2 · BEE-001 · 256 Go'});
+  await page.locator('#posterSearch button').click();
+  await page.locator('#posterResults option').nth(2).waitFor({state:'attached'});
+  await page.selectOption('#posterResults',{label:'Nintendo Switch 2 · BEE-001 · 256 Go'});
   await page.fill('#cash','499');
   await page.click('#add');
   assert.equal(await page.locator('.sheet').count(),2,'trois affiches = deux A4');

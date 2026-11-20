@@ -80,13 +80,13 @@ La recherche consulte Supabase, les catalogues et les sources constructeur, puis
 
 Le site exige un accès salarié (utilisateur `encre`, secret `APP_ACCESS_TOKEN`). Voir [OPERATIONS.md](OPERATIONS.md) pour la configuration Supabase/Render, l'import des quatre catalogues, les limites IA, les tests et l'activation facultative de la maintenance. Aucun déploiement automatique n'est prévu : validation obligatoire avant production.
 
-## Tablettes et consoles du catalogue
+## Recherche des tablettes, consoles et téléviseurs
 
-Dans le générateur d’étiquettes, sélectionne **Tablettes**, puis recherche une marque, un modèle ou une référence constructeur. Sélectionne la fiche et une capacité proposée, puis saisis le prix TTC et la quantité. La planche peut mélanger tablettes et smartphones au format 88 × 52 mm.
+Sélectionne **Tablettes** dans le générateur d’étiquettes, ou **Console de jeux** ou **Téléviseur** sur `/affiches`. Saisis une description avec le modèle, la variante, le stockage ou la taille si tu les connais. Exemples avec `iPad Air M4 11 pouces 256 Go`, `PS5 Digital 825 Go` et `LG C4 55 pouces`. Si plusieurs variantes sont possibles, choisis la bonne. Saisis ensuite le prix TTC et, si besoin, la quantité. La planche d’étiquettes peut mélanger tablettes et smartphones.
 
-Sur `/affiches`, sélectionne **Console de jeux** et lance une recherche. Une recherche vide liste les références disponibles. Après sélection, le modèle, la variante, la référence et les quatre caractéristiques proviennent du catalogue. Saisis le prix TTC et la quantité.
+L’API authentifiée `POST /api/products/lookup` recherche d’abord dans `public.product_catalog`. Une fiche connue est lue sans appel IA. Pour une fiche absente, le serveur réserve une tentative dans le quota Supabase partagé avec les smartphones, puis interroge OpenAI avec recherche web et priorité aux sources constructeur. Il vérifie la concordance du modèle ou de la référence, de la variante et des caractéristiques citées avant d’enregistrer une nouvelle fiche. Une deuxième recherche peut alors réutiliser la fiche en base. Les clés Supabase et OpenAI sont configurées côté serveur.
 
-L’API authentifiée `GET /api/products` lit `public.product_catalog` avec la configuration Supabase du serveur. Il filtre `category` sur `tablet` ou `console` et lit les champs existants, dont `manufacturer_references`, `available_capacities`, `specs` et `variant_note`. Il normalise les données destinées à l’impression et renvoie uniquement les champs utilisés par les formulaires. Les tests locaux simulent le catalogue. Vérifie les fiches de `biznet-etiquette` dans un environnement connecté avant mise en service.
+Une réponse ambiguë ou insuffisamment documentée ne crée pas de fiche. La recherche affiche un message si l’IA est indisponible ou si le quota est atteint. Les tests de ce parcours simulent OpenAI et les écritures Supabase. Une validation connectée en préproduction peut vérifier la recherche Web et la sauvegarde avec la configuration de test, sans utiliser les données de production en écriture.
 
 ## Affiches TV et consoles (en préproduction)
 
@@ -94,9 +94,8 @@ Une interface séparée est disponible à `/affiches`, accessible depuis l'en-t�
 
 - A4 portrait, **deux affiches de 190 × 132 mm** par page, marges blanches de 10 mm, séparation centrale de 13 mm et repères de coupe fins à l'extérieur des affiches.
 - TV : diagonale en pouces mise en évidence ; modèle et référence ; 4 caractéristiques importantes maximum ; prix TTC ; financement ×5/×10/×20.
-- Consoles : nom, variante et quatre caractéristiques du catalogue (par exemple stockage, image, technologie et lecteur). Prix TTC saisi par le magasin et financement calculé. Aucune photo.
+- Consoles avec nom, variante et quatre caractéristiques, par exemple stockage, édition, performances et contenu inclus. Le magasin saisit le prix TTC et le site calcule le financement. Aucune photo.
 - L'utilisateur peut créer, modifier, supprimer et dupliquer via la quantité. La planche est conservée dans le navigateur (clé `encre_affiches_v1`) ; **ce n'est pas une sauvegarde Supabase**.
 - Les seuils de financement sont les mêmes que ceux du générateur téléphone : pas de mensualité si prix ≤ 120 €, ni d'échéance ≤ 20 €.
 - L'impression passe par « Imprimer / PDF A4 » et exige l'option « Taille réelle / 100 % » (sans ajustement).
-- Les téléviseurs sont en saisie manuelle.
 - **À valider avant production** : tests Playwright (`node tests/check_affiches.cjs`), export PDF avec Chromium et découpe sur feuille A4 physique. Aucun déploiement automatique.

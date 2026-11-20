@@ -93,22 +93,13 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
     <h1>Créer une affiche commerciale</h1>
     <p class="sub">Design validé : deux affiches de 190 × 132 mm sur une feuille A4 portrait. Sans photo. Les prix sont saisis par le magasin ; rien n'est déduit du catalogue.</p>
     <div class="field"><label for="category">Famille de produit</label><select id="category"><option value="console">Console de jeux</option><option value="tv">Téléviseur</option></select></div>
-    <div id="consoleSearch">
-      <div class="field"><label for="consoleQuery">Marque, modèle ou référence constructeur</label><input id="consoleQuery" maxlength="120" autocomplete="off"></div>
+    <div id="posterSearch">
+      <div class="field"><label for="posterQuery">Description (modèle, variante, stockage ou taille si connus)</label><input id="posterQuery" maxlength="120" autocomplete="off" placeholder="Ex. PS5 Digital 825 Go ou LG C4 55 pouces"></div>
       <button type="button" class="primary">Rechercher</button>
-      <div class="field" hidden><label for="consoleResults">Consoles trouvées</label><select id="consoleResults"></select></div>
+      <div class="field" hidden><label for="posterResults">Variantes trouvées</label><select id="posterResults"></select></div>
       <p class="hint" role="status"></p>
     </div>
-    <div class="field"><label for="name">Marque et modèle *</label><input id="name" maxlength="110" placeholder="Ex. PlayStation 5 Pro"></div>
-    <div class="field"><label for="variant" id="variantLabel">Variante / édition</label><input id="variant" maxlength="100" placeholder="Ex. Console • 2 To SSD"></div>
-    <div class="field"><label for="reference">Référence constructeur (facultatif)</label><input id="reference" maxlength="90" placeholder="Ex. CFI-7000"></div>
-    <div class="form-grid" id="tvSizeFields" hidden>
-      <div class="field"><label for="inches">Taille en pouces *</label><input id="inches" type="number" min="10" max="120" step="0.1" placeholder="55"></div>
-      <div class="field"><label for="centimeters">Taille en cm (facultatif)</label><input id="centimeters" type="number" min="20" max="305" step="1" placeholder="139"></div>
-    </div>
-    <h2>Caractéristiques essentielles</h2>
-    <p class="sub">Quatre éléments maximum. Tu peux laisser un champ vide si une caractéristique n'est pas vérifiée.</p>
-    <div class="form-grid" id="specFields"></div>
+    <div class="info" id="posterProduct" aria-live="polite">Aucun produit sélectionné.</div>
     <div class="field"><label for="cash">Prix TTC (€) *</label><input id="cash" type="number" step="0.01" min="0.01" max="999999" inputmode="decimal" placeholder="Ex. 799"></div>
     <div class="field"><label for="qty">Nombre d'affiches</label><input id="qty" type="number" min="1" max="50" step="1" value="1"></div>
     <div class="info" id="financePreview">Financement ×5 / ×10 / ×20 calculé automatiquement. Montants masqués selon les seuils de l'application existante.</div>
@@ -161,63 +152,65 @@ function icon(name){
   return '<svg viewBox="0 0 24 24" aria-hidden="true">'+(paths[name]||paths.spark)+'</svg>';
 }
 let rows=[];try{const stored=JSON.parse(localStorage.getItem(STORE_KEY)||'[]');if(Array.isArray(stored))rows=stored.filter(isRecord).slice(0,100)}catch(e){}
-let editIndex=-1, consoleSelection=null, consoleLabels=[];
+let editIndex=-1, selectedPoster=null;
 function isRecord(r){return r&&['tv','console'].includes(r.category)&&typeof r.name==='string'&&Number.isFinite(Number(r.cash))&&Number(r.cash)>0&&Array.isArray(r.specs)}
 function save(){try{localStorage.setItem(STORE_KEY,JSON.stringify(rows))}catch(e){$('status').textContent='Stockage navigateur indisponible : pense à imprimer ta planche.'}}
-function setFields(){
-  const type=$('category').value,meta=META[type];
-  $('consoleSearch').hidden=type!=='console';$('tvSizeFields').hidden=type!=='tv';
-  const lockFields=type==='console'&&(rows[editIndex]?.category!=='console'||rows[editIndex].fromCatalog===true);
-  for(const id of ['name','variant','reference'])$(id).readOnly=lockFields;
-  $('variantLabel').textContent=type==='tv'?'Gamme / technologie (facultatif)':'Variante / édition';
-  $('specFields').replaceChildren();
-  meta.labels.forEach((label,i)=>{
-    const wrap=document.createElement('div');wrap.className='field';
-    const lab=document.createElement('label');lab.htmlFor='s'+i;lab.textContent=label;
-    const field=document.createElement('input');field.id='s'+i;field.maxLength=90;field.readOnly=lockFields;field.placeholder=type==='tv'?['Ex. Mini LED','Ex. 4K UHD','Ex. 144 Hz','Ex. Tizen'][i]:['Ex. SSD 2 To','Ex. 4K','Ex. Ray tracing','Ex. DualSense'][i];
-    wrap.append(lab,field);$('specFields').appendChild(wrap);
-  });
-}
 function renderFinance(){
   const values=installments($('cash').value);
   $('financePreview').textContent='Financement : ×5 '+(values[0]?values[0]+' €':'—')+' · ×10 '+(values[1]?values[1]+' €':'—')+' · ×20 '+(values[2]?values[2]+' €':'—')+'. Sous réserve des conditions de financement.';
 }
-const consoleSearch=bindCatalogSearch($('consoleSearch'),'console',product=>{
-  consoleSelection=null;consoleLabels=[];
-  if($('category').value!=='console')return;
+const posterSearch=bindCatalogSearch($('posterSearch'),()=>$('category').value,product=>{
+  selectedPoster=null;
   $('status').textContent='';
-  $('name').value=product?catalogProductName(product):'';
-  $('variant').value=product?.variant||'';
-  $('reference').value=product?.reference||'';
-  const specs=product?.specs||[];
-  consoleLabels=specs.map(spec=>spec.label);
-  fillConsoleSpecs(specs.map(spec=>spec.value));
-  if(product){
-   consoleSelection=specs.length===4?'catalog':null;
-   if(!consoleSelection)$('status').textContent='Fiche console incomplète : quatre caractéristiques sont nécessaires.';
-   else if(product.verification_status!=='vérifié')$('status').textContent='Fiche catalogue : '+(product.verification_status||'statut de vérification inconnu')+'.';
-   for(const id of ['name','variant','reference','s0','s1','s2','s3'])$(id).readOnly=true;
+  if(product&&product.verification_status==='vérifié'){
+    const category=$('category').value;
+    selectedPoster={
+      category,name:catalogProductName(product),variant:product.variant,reference:product.reference,
+      inches:product.inches??null,cm:null,specs:product.specs.map(spec=>spec.value),
+      specLabels:product.specs.map(spec=>spec.label),sources:product.sources||[]
+    };
   }
+  showProduct();
 });
-function fillConsoleSpecs(values){
-  META.console.labels.forEach((label,i)=>{
-   document.querySelector('label[for="s'+i+'"]').textContent=consoleLabels[i]||label;
-   $('s'+i).value=values[i]||'';
+function showProduct(){
+  const panel=$('posterProduct'), product=selectedPoster;
+  panel.replaceChildren();
+  if(!product){
+    panel.textContent='Aucun produit sélectionné.';
+    return;
+  }
+  const name=document.createElement('strong');
+  name.textContent=[product.name,product.inches&&product.inches+'″',product.reference].filter(Boolean).join(' · ');
+  panel.append(name);
+  if(product.variant){
+    const variant=document.createElement('div');
+    variant.textContent=product.variant;panel.append(variant);
+  }
+  const facts=document.createElement('ul');
+  product.specs.forEach((value,i)=>{
+    if(!value)return;
+    const item=document.createElement('li');
+    item.textContent=(product.specLabels?.[i]||META[product.category].labels[i])+' : '+value;
+    facts.append(item);
   });
+  panel.append(facts);
+  for(const source of Array.isArray(product.sources)?product.sources:[]){
+    try{
+      const url=new URL(source.url);
+      if(url.protocol!=='https:'||url.username||url.password)continue;
+      const link=document.createElement('a');
+      link.href=url.href;link.textContent=url.hostname;link.target='_blank';link.rel='noopener noreferrer';
+      panel.append(link,' ');
+    }catch{}
+  }
 }
 function collect(){
-  const type=$('category').value;
-  if(type==='console'&&!consoleSelection){
-    throw Error('Sélectionne une console dans le catalogue.');
+  if(!selectedPoster)throw Error('Sélectionne un produit vérifié dans le catalogue.');
+  const price=Number($('cash').value),qty=Number($('qty').value);
+  if(!Number.isFinite(price)||price<=0||price>999999||!Number.isInteger(qty)||qty<1||qty>50){
+    throw Error('Saisis un prix TTC valide et une quantité entre 1 et 50.');
   }
-  const name=$('name').value.trim(),price=Number($('cash').value),qty=Number($('qty').value);
-  if(!name||!Number.isFinite(price)||price<=0||!Number.isInteger(qty)||qty<1||qty>50)throw Error('Saisis un nom, un prix TTC valide et une quantité entre 1 et 50.');
-  const inches=Number($('inches').value),cm=$('centimeters').value?Number($('centimeters').value):null;
-  if(type==='tv'&&(!Number.isFinite(inches)||inches<10||inches>120))throw Error('Indique la diagonale du téléviseur en pouces.');
-  if(type==='tv'&&cm!==null&&(!Number.isFinite(cm)||cm<20||cm>305))throw Error('Taille en centimètres incorrecte.');
-  const specs=[0,1,2,3].map(i=>$('s'+i).value.trim());
-  if(specs.filter(Boolean).length<2)throw Error('Renseigne au moins deux caractéristiques vérifiées.');
-  return {category:type,name,variant:$('variant').value.trim(),reference:$('reference').value.trim(),inches:type==='tv'?inches:null,cm:type==='tv'?cm:null,specs,specLabels:type==='console'?consoleLabels:[],cash:price,qty,fromCatalog:type==='console'&&(consoleSelection==='catalog'||rows[editIndex]?.fromCatalog===true)};
+  return {...selectedPoster,cash:price,qty};
 }
 function specMarkup(r){
  const meta=META[r.category];
@@ -256,25 +249,17 @@ function draw(){
  $('print').disabled=!expanded.length;
 }
 function reset(){
- editIndex=-1;$('category').value='console';setFields();consoleSearch.reset();
- ['name','variant','reference','inches','centimeters','cash'].forEach(id=>$(id).value='');
- for(let i=0;i<4;i++)$('s'+i).value='';
- $('qty').value=1;$('add').textContent='Ajouter à la planche';$('status').textContent='';renderFinance();
+ editIndex=-1;posterSearch.reset();
+ $('cash').value='';$('qty').value=1;
+ $('add').textContent='Ajouter à la planche';$('status').textContent='';renderFinance();
 }
 function startEdit(i){
- const r=rows[i];if(!r)return;editIndex=i;$('category').value=r.category;setFields();consoleSearch.reset();
- $('name').value=r.name;$('variant').value=r.variant||'';$('reference').value=r.reference||'';
- $('inches').value=r.inches||'';$('centimeters').value=r.cm||'';$('cash').value=r.cash;$('qty').value=r.qty;
- if(r.category==='console'){
-  consoleSelection='saved';consoleLabels=r.specLabels||[];fillConsoleSpecs(r.specs);
- }else for(let j=0;j<4;j++)$('s'+j).value=r.specs[j]||'';
+ const r=rows[i];if(!r)return;
+ reset();editIndex=i;$('category').value=r.category;selectedPoster=r;showProduct();
+ $('cash').value=r.cash;$('qty').value=r.qty;
  $('add').textContent='Enregistrer la modification';renderFinance();window.scrollTo({top:0,behavior:'smooth'});
 }
-$('category').addEventListener('change',()=>{
- const type=$('category').value;
- reset();
- $('category').value=type;setFields();
-});
+$('category').addEventListener('change',reset);
 $('cash').addEventListener('input',renderFinance);
 $('add').addEventListener('click',()=>{
  try{
@@ -289,7 +274,7 @@ $('add').addEventListener('click',()=>{
 $('reset').onclick=reset;
 $('print').onclick=()=>{if(rows.length)window.print()};
 $('clear').onclick=()=>{if(!rows.length)return;if(!confirm('Effacer toutes les affiches de la planche ?'))return;rows=[];save();reset();draw()};
-setFields();draw();renderFinance();
+draw();renderFinance();
 </script>
 </body>
 </html>

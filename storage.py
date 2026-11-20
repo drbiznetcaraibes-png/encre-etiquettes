@@ -12,10 +12,10 @@ class Store:
     def configured(self):
         return bool(self.url and self.key)
 
-    async def request(self, method, path, **kwargs):
+    async def request(self, method, path, *, prefer='return=representation,resolution=merge-duplicates', **kwargs):
         if not self.configured:
             raise RuntimeError('Base centralisée non configurée.')
-        headers = {'apikey': self.key, 'Prefer': 'return=representation,resolution=merge-duplicates'}
+        headers = {'apikey': self.key, 'Prefer': prefer}
         # Modern keys are opaque API keys, not JWT bearer tokens.
         if not self.key.startswith('sb_secret_'):
             headers['Authorization'] = 'Bearer ' + self.key

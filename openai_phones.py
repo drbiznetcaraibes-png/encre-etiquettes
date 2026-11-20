@@ -25,7 +25,7 @@ def _http_error(response):
     except (ValueError, AttributeError):
         error = {}
     code = error.get('code')
-    quota_codes = {'insufficient_quota', 'billing_hard_limit_reached', 'billing_not_active'}
+    quota_codes = ('insufficient_quota', 'billing_hard_limit_reached', 'billing_not_active')
     if response.status_code in (402, 429) and (code in quota_codes or error.get('type') in quota_codes):
         return OpenAIServiceError('Crédits API OpenAI insuffisants : vérifie la facturation du projet OpenAI.')
     if response.status_code == 429:
@@ -85,7 +85,7 @@ def _safe_source(url, title="Source web"):
     return {"title": str(title or host)[:150], "url": url}
 
 
-def parse_openai_response(payload):
+def parse_openai_response(payload, *, citations_only=False):
     """Extrait uniquement la réponse textuelle et des URL effectivement renvoyées par l'outil."""
     if not isinstance(payload, dict) or payload.get("status") != "completed":
         return None
@@ -118,7 +118,7 @@ def parse_openai_response(payload):
                 for annotation in content.get("annotations") or []:
                     if isinstance(annotation, dict) and annotation.get("type") == "url_citation":
                         add(annotation.get("url"), annotation.get("title"))
-        elif part.get("type") == "web_search_call" and part.get("status") == "completed":
+        elif not citations_only and part.get("type") == "web_search_call" and part.get("status") == "completed":
             action = part.get("action") or {}
             if not isinstance(action, dict):
                 continue
@@ -162,6 +162,14 @@ Ce JSON est un EXEMPLE de format : n'en recopie aucune valeur sans preuve.
 Si tu ne peux confirmer au moins 3 caractéristiques spécifiques du modèle exact,
 retourne {{"verified":false}}.
 """
+    return await search_openai_evidence(prompt, api_key, model)
+
+
+class OpenAITimeoutError(OpenAIServiceError):
+    """The web search exceeded its request deadline."""
+
+
+async def search_openai_evidence(prompt, api_key, model, *, citations_only=False):
     body = {
         "model": model,
         "input": prompt,
@@ -181,13 +189,16 @@ retourne {{"verified":false}}.
                 json=body,
             )
     except httpx.TimeoutException as exc:
-        raise OpenAIServiceError("Délai OpenAI dépassé.") from exc
+        raise OpenAITimeoutError("Délai OpenAI dépassé.") from exc
     except httpx.RequestError as exc:
         raise OpenAIServiceError("Connexion au service OpenAI impossible.") from exc
 
     if response.status_code != 200:
         raise _http_error(response)
-    payload = response.json()
-    if payload.get('status') == 'incomplete':
+    try:
+        payload = response.json()
+    except ValueError:
+        raise OpenAIServiceError('Réponse OpenAI invalide.') from None
+    if isinstance(payload, dict) and payload.get('status') == 'incomplete':
         raise OpenAIServiceError('Réponse OpenAI incomplète : aucune fiche IA enregistrée.')
-    return parse_openai_response(payload)
+    return parse_openai_response(payload, citations_only=citations_only)
