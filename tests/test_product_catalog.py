@@ -14,7 +14,10 @@ TABLET = {
     'manufacturer_references': ['A1234', 'A5678'],
     'available_capacities': ['128 Go', '256 GB', '512 Go', '1 To', '256 Go'],
     'connectivity_options': ['Wi-Fi', 'Cellulaire'],
-    'specs': {'Écran': '11 pouces Liquid Retina', 'Puce': 'Apple M4', 'Réseau': 'Wi-Fi 7'},
+    'specs': {
+        'Écran': '11 pouces Liquid Retina', 'Puce': 'Apple M4', 'Réseau': 'Wi-Fi 7',
+        'Appareil photo': '12 Mpx arrière', 'Compatibilité': 'Apple Pencil Pro',
+    },
     'variant_note': None, 'verification_status': 'vérifié',
 }
 CONSOLE = {
@@ -58,7 +61,10 @@ class ProductCatalogTests(unittest.IsolatedAsyncioTestCase):
                     'brand': 'APPLE', 'model': 'iPad Air 11 pouces (M4)', 'reference': reference, 'variant': '',
                     'available_capacities': ['128 Go', '256 Go', '512 Go', '1 To'],
                     'verification_status': 'vérifié',
-                    'specs': {'processeur': 'Apple M4', 'ecran': '11 pouces Liquid Retina', 'reseau': 'Wi-Fi 7'},
+                    'specs': {
+                        'processeur': 'Apple M4', 'ecran': '11 pouces Liquid Retina', 'reseau': 'Wi-Fi 7',
+                        'photo': '12 Mpx arrière', 'Compatibilité': 'Apple Pencil Pro',
+                    },
                 }]})
             upstream.assert_awaited_with('GET', 'product_catalog', params={
                 'category': 'eq.tablet', 'select': CATALOG_COLUMNS, 'order': 'id.asc',

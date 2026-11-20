@@ -96,7 +96,13 @@ const icons={
  ram:'<rect x="2" y="6" width="20" height="11" rx="1"/><path d="M5 9h3v4H5Zm6 0h3v4h-3Zm6 0h2v4h-2M5 17v3m4-3v3m4-3v3m4-3v3"/>'
 };
 const order=[['processeur','Puce'],['ecran','Écran'],['photo','Photo'],['batterie','Batterie'],['reseau','Réseau'],['ram','RAM']];
-const specLines=order.filter(([k])=>specs[k]).slice(0,5).map(([k,label])=>`<div class="spec-line"><span class="spec-ico" aria-hidden="true"><svg viewBox="0 0 24 24">${icons[k]}</svg></span><span class="spec-text">${esc(labelSpec(k,specs[k]))}</span></div>`).join('');
+const lines=order.filter(([key])=>specs[key]).map(([key])=>[labelSpec(key,specs[key]),icons[key]]);
+if(r.category==='tablet'){
+ for(const [label,value] of Object.entries(specs)){
+  if(!Object.hasOwn(icons,label)&&value)lines.push([`${label} : ${value}`,'']);
+ }
+}
+const specLines=lines.slice(0,5).map(([text,icon])=>`<div class="spec-line"><span class="spec-ico" aria-hidden="true">${icon?`<svg viewBox="0 0 24 24">${icon}</svg>`:''}</span><span class="spec-text">${esc(text)}</span></div>`).join('');
 const modelHTML=esc(model);
 const financing=calcFin(r.cash);
 return `<div class="labelcard">
@@ -172,7 +178,7 @@ function renderProduct(src){
  const p=selected;if(!p)return;
  const capacities=availableCapacities(p);
  const capacityChoice=capacities.length?`<label for="capacityChoice">${p.category==='tablet'?'Stockage de la tablette':'Stockage du téléphone'}</label><select id="capacityChoice"><option value="">Choisir le stockage</option>${capacities.map(cap=>`<option value="${esc(cap)}" ${cap===p.capacity?'selected':''}>${esc(cap)}</option>`).join('')}</select><p class="capacity-hint">Choisis la capacité de l’appareil vendu parmi les variantes documentées.</p>`:'';
- const specs=Object.entries(p.specs||{}).map(([key,value])=>`<div><b>${esc(SPEC_NAMES[key]||key)}</b> ${esc(value)}</div>`).join('');
+ const specs=Object.entries(p.specs||{}).map(([key,value])=>`<div><b>${esc(Object.hasOwn(SPEC_NAMES,key)?SPEC_NAMES[key]:key)}</b> ${esc(value)}</div>`).join('');
  const sources=safeSources(p.sources);
  $('product').innerHTML=`<strong>${esc(p.brand)} ${esc(p.model)}</strong> <span class="pill">${esc(src||sourceLabel(p))}</span><div class="product-specs">${specs||esc(p.feature||'')}</div>${capacityChoice||`<div>Stockage : ${esc(p.capacity||'Non précisée')}</div>`}<small>Référence ${esc(p.ref)}</small>${sources.length?`<div class="product-sources">Sources : ${sources.map(source=>`<a href="${esc(source.url)}" title="${esc(source.title)}" target="_blank" rel="noopener noreferrer">${esc(source.host)}</a>`).join('')}</div>`:''}`;
  const choice=$('capacityChoice');
@@ -307,8 +313,12 @@ const tabletSearch = bindCatalogSearch($('tabletSearch'), 'tablet', product => {
  $('product').textContent = 'Aucune tablette sélectionnée.';
  if (!product) return;
  const capacities = availableCapacities(product);
- if (!specsOk(product) || !capacities.length) {
-  $('status').textContent = 'Fiche tablette incomplète : trois caractéristiques et un stockage sont nécessaires.';
+ if (!capacities.length) {
+  $('status').textContent = 'Aucune capacité de stockage enregistrée pour cette tablette.';
+  return;
+ }
+ if (!specsOk(product)) {
+  $('status').textContent = 'Fiche tablette incomplète : trois caractéristiques sont nécessaires.';
   return;
  }
  const capacity = capacities.length===1 ? capacities[0] : '';

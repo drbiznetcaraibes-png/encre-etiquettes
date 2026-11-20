@@ -14,7 +14,7 @@ CATALOG_COLUMNS = (
 TABLET_SPECS = {
     'processeur': ('puce', 'processeur', 'processor', 'cpu'),
     'ecran': ('ecran', 'display', 'screen'),
-    'photo': ('photo', 'camera'),
+    'photo': ('photo', 'appareilphoto', 'camera'),
     'batterie': ('batterie', 'battery'),
     'reseau': ('reseau', 'connectivite', 'connectivity'),
     'ram': ('ram', 'memoirevive'),
@@ -56,6 +56,8 @@ def tablet_specs(facts, row):
             specs[field] = facts[key]['value']
     if 'reseau' not in specs and (options := text_array(row.get('connectivity_options'))):
         specs['reseau'] = ' / '.join(options)
+    known_aliases = {alias for aliases in TABLET_SPECS.values() for alias in aliases}
+    specs.update({fact['label']: fact['value'] for key, fact in facts.items() if key not in known_aliases})
     return specs
 
 

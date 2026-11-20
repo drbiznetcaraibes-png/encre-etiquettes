@@ -14,7 +14,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   page.on('pageerror',error=>errors.push(error.message));
   const tablet={
    brand:'Samsung',model:'Galaxy Tab S9+',reference:'SM-X810',variant:'',
-   specs:{processeur:'Snapdragon 8 Gen 2',ecran:'AMOLED 12,4″',ram:'12 Go'},
+   specs:{processeur:'Snapdragon 8 Gen 2',ecran:'AMOLED 12,4″',Compatibilité:'S Pen'},
    available_capacities:['256 Go','512 Go'],verification_status:'vérifié',
   };
   await page.route('**/api/products?*',async route=>{
@@ -44,7 +44,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.labelcard').count(),2);
   const card=page.locator('.labelcard').first();
   assert.equal(await card.locator('.storage').textContent(),'512 Go');
-  assert.match(await card.locator('.features').textContent(),/Snapdragon.*AMOLED/);
+  assert.match(await card.locator('.features').textContent(),/Snapdragon.*AMOLED.*Compatibilité : S Pen/);
   assert.deepEqual(await card.locator('.amount b').allTextContents(),['208€','107€','56€']);
   await page.emulateMedia({media:'print'});
   const dims=await card.boundingBox(),mm=96/25.4;
