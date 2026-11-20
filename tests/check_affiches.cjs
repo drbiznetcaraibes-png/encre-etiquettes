@@ -8,11 +8,29 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   const context=await browser.newContext({viewport:{width:1440,height:1100},httpCredentials:{username:'encre',password:process.env.APP_ACCESS_TOKEN||'browser-test'}});
   const page=await context.newPage(),errors=[];
   page.on('pageerror',e=>errors.push(e.message));
+  const consoles=[
+   {brand:'PlayStation',model:'PlayStation 5 Pro',reference:'CFI-7000',variant:'',
+    specs:{storage:'SSD 2 To',video:'4K',technology:'PSSR',included:'DualSense'},available_capacities:[]},
+   {brand:'Nintendo',model:'Switch 2',reference:'BEE-001',variant:'',
+    specs:{storage:'256 Go',video:'Full HD',technology:'4K en mode TV',included:'Joy-Con 2'},available_capacities:[]},
+  ];
+  await page.route('**/api/products?*',async route=>{
+   const params=new URL(route.request().url()).searchParams;
+   assert.equal(params.get('category'),'console');
+   const query=params.get('query').toLowerCase();
+   const products=consoles.filter(p=>[p.brand,p.model,p.reference].some(text=>text.toLowerCase().includes(query)));
+   await route.fulfill({json:{products}});
+  });
   await page.goto('http://127.0.0.1:'+(process.env.TEST_PORT||'8002')+'/affiches');
   await page.evaluate(()=>localStorage.removeItem('encre_affiches_v1'));
   await page.reload();
   assert.equal(await page.locator('.sheet').count(),0);
-  await page.selectOption('#preset','ps5pro');
+  await page.fill('#cash','799');
+  await page.click('#add');
+  assert.match(await page.locator('#status').textContent(),/Sélectionne une console/);
+  await page.fill('#consoleQuery','CFI-7000');
+  await page.locator('#consoleQuery').press('Enter');
+  await page.waitForFunction(()=>document.querySelector('#name').value==='PlayStation 5 Pro');
   assert.equal(await page.inputValue('#name'),'PlayStation 5 Pro');
   await page.fill('#cash','799');
   await page.click('#add');
@@ -20,9 +38,11 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.sheet').count(),1);
   assert.deepEqual(await page.locator('.poster .month span').allTextContents(),['166 €','86 €','45 €']);
   assert.equal(await page.locator('.poster img').count(),0);
+  assert.equal(await page.locator('.poster.console .spec-item').count(),4);
+  assert.equal(await page.locator('.poster.console .spec-value').last().textContent(),'DualSense');
 
   await page.selectOption('#category','tv');
-  assert.equal(await page.locator('#presetBox').isHidden(),true);
+  assert.equal(await page.locator('#consoleSearch').isHidden(),true);
   assert.equal(await page.locator('#tvSizeFields').isVisible(),true);
   await page.fill('#name','Téléviseur de test QLED');
   await page.fill('#variant','Neo QLED');
@@ -44,6 +64,10 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   const pxPerMm=96/25.4;
   assert.ok(Math.abs(dims.width-190*pxPerMm)<2,'largeur 190 mm');
   assert.ok(Math.abs(dims.height-132*pxPerMm)<2,'hauteur 132 mm');
+  const sheet=await page.locator('.sheet').first().boundingBox();
+  assert.ok(Math.abs(sheet.width-210*pxPerMm)<2,'largeur A4');
+  assert.ok(Math.abs(sheet.height-297*pxPerMm)<2,'hauteur A4');
+  assert.equal(await page.locator('.cut-slot:not(.empty) .mark').count(),8,'quatre repères par affiche');
   await page.pdf({path:process.env.AFFICHE_PDF||'/tmp/encre-affiches-test.pdf',preferCSSPageSize:true});
   await page.emulateMedia({media:'screen'});
 
@@ -55,7 +79,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.poster').count(),2,'sauvegarde navigateur');
 
   await page.selectOption('#category','console');
-  await page.selectOption('#preset','switch2');
+  await page.locator('#consoleSearch button').click();
+  await page.locator('#consoleResults option').nth(2).waitFor({state:'attached'});
+  await page.selectOption('#consoleResults',{label:'Nintendo Switch 2 · BEE-001'});
   await page.fill('#cash','499');
   await page.click('#add');
   assert.equal(await page.locator('.sheet').count(),2,'trois affiches = deux A4');

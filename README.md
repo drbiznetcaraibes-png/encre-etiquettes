@@ -80,16 +80,23 @@ La recherche consulte Supabase, les catalogues et les sources constructeur, puis
 
 Le site exige un accès salarié (utilisateur `encre`, secret `APP_ACCESS_TOKEN`). Voir [OPERATIONS.md](OPERATIONS.md) pour la configuration Supabase/Render, l'import des quatre catalogues, les limites IA, les tests et l'activation facultative de la maintenance. Aucun déploiement automatique n'est prévu : validation obligatoire avant production.
 
+## Tablettes et consoles du catalogue
+
+Dans le générateur d’étiquettes, sélectionne **Tablettes**, puis recherche une marque, un modèle ou une référence constructeur. Sélectionne la fiche et une capacité proposée, puis saisis le prix TTC et la quantité. La planche peut mélanger tablettes et smartphones au format 88 × 52 mm.
+
+Sur `/affiches`, sélectionne **Console de jeux** et lance une recherche. Une recherche vide liste les références disponibles. Après sélection, le modèle, la variante, la référence et les quatre caractéristiques proviennent du catalogue. Saisis le prix TTC et la quantité.
+
+L’API authentifiée `GET /api/products` lit `public.product_catalog` avec la configuration Supabase du serveur. L’adaptateur de catalogue attend une colonne `category` et des champs de marque, modèle, référence facultative, caractéristiques et capacités. Il normalise les données destinées à l’impression et renvoie uniquement les champs utilisés par les formulaires. Les tests locaux simulent le catalogue. Vérifie les fiches de `biznet-etiquette` dans un environnement connecté avant mise en service.
+
 ## Affiches TV et consoles (en préproduction)
 
 Une interface séparée est disponible à `/affiches`, accessible depuis l'en-tête du générateur de téléphones. Elle n'interfère pas avec le gabarit des étiquettes smartphones (88 × 52 mm).
 
 - A4 portrait, **deux affiches de 190 × 132 mm** par page, marges blanches de 10 mm, séparation centrale de 13 mm et repères de coupe fins à l'extérieur des affiches.
 - TV : diagonale en pouces mise en évidence ; modèle et référence ; 4 caractéristiques importantes maximum ; prix TTC ; financement ×5/×10/×20.
-- Consoles : nom, variante et jusqu'à 4 caractéristiques ; prix TTC et financement. Aucune photo.
-- Trois exemples de consoles avec fiches constructeur consultables : PlayStation 5 Pro, Nintendo Switch 2 et Xbox Series X. Leur prix est **toujours renseigné par l'utilisateur** et n'est jamais prérempli.
+- Consoles : nom, variante et quatre caractéristiques du catalogue (stockage, image, technologie et contenu inclus). Prix TTC saisi par le magasin et financement calculé. Aucune photo.
 - L'utilisateur peut créer, modifier, supprimer et dupliquer via la quantité. La planche est conservée dans le navigateur (clé `encre_affiches_v1`) ; **ce n'est pas une sauvegarde Supabase**.
 - Les seuils de financement sont les mêmes que ceux du générateur téléphone : pas de mensualité si prix ≤ 120 €, ni d'échéance ≤ 20 €.
 - L'impression passe par « Imprimer / PDF A4 » et exige l'option « Taille réelle / 100 % » (sans ajustement).
-- Les téléviseurs sont en saisie manuelle dans cette première étape ; l'ajout de la recherche constructeur et de la persistance dans la future base multi-produits est une étape distincte.
+- Les téléviseurs sont en saisie manuelle.
 - **À valider avant production** : tests Playwright (`node tests/check_affiches.cjs`), export PDF avec Chromium et découpe sur feuille A4 physique. Aucun déploiement automatique.

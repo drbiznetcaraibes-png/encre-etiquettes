@@ -32,6 +32,7 @@ from google_phones import lookup_google_phone
 from manufacturer_pages import lookup_manufacturer_phone
 from openai_phones import search_openai_web, OpenAIServiceError
 from storage import store
+from product_catalog import Category, search_products
 from database_models import get_database_models, invalidate_database_models_cache
 
 BASE = Path(__file__).resolve().parent
@@ -819,6 +820,16 @@ async def affiches():
 
 @app.get('/health')
 async def health():return {'ok':True,'service':'encre-phones','version':app.version}
+
+@app.get('/api/products')
+async def products(category: Category, query: str = Query(default='', max_length=120)):
+    if not store.configured:
+        raise HTTPException(503, 'Catalogue produits non configuré.')
+    try:
+        return {'products': await search_products(category, query.strip())}
+    except RuntimeError:
+        raise HTTPException(502, 'Catalogue produits indisponible.') from None
+
 
 @app.get('/api/status')
 async def private_status():
