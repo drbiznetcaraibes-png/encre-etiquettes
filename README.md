@@ -92,7 +92,7 @@ Une réponse ambiguë ou insuffisamment documentée ne crée pas de fiche. La re
 
 Une interface séparée est disponible à `/affiches`, accessible depuis l'en-tête du générateur de téléphones. Elle n'interfère pas avec le gabarit des étiquettes smartphones (88 × 52 mm).
 
-- A4 portrait, **deux affiches de 190 × 132 mm** par page, marges blanches de 10 mm, séparation centrale de 13 mm et repères de coupe fins à l'extérieur des affiches.
+- A4 portrait, **deux affiches de 194 × 136 mm** par page, marges blanches de 8 mm, séparation centrale de 9 mm et repères de coupe.
 - TV : diagonale en pouces mise en évidence ; modèle et référence ; 4 caractéristiques importantes maximum ; prix TTC ; financement ×5/×10/×20.
 - Consoles avec nom, variante et quatre caractéristiques, par exemple stockage, édition, performances et contenu inclus. Le magasin saisit le prix TTC et le site calcule le financement. Aucune photo.
 - L'utilisateur peut créer, modifier, supprimer et dupliquer via la quantité. La planche est conservée dans le navigateur (clé `encre_affiches_v1`) ; **ce n'est pas une sauvegarde Supabase**.

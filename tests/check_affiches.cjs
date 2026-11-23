@@ -57,6 +57,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.sheet').count(),1);
   assert.deepEqual(await page.locator('.poster .month span').allTextContents(),['166 €','86 €','45 €']);
   assert.equal(await page.locator('.poster img').count(),0);
+  assert.equal(await page.locator('.poster.console .console-mark svg').count(),1);
+  assert.equal(await page.locator('.poster.console .product-name').textContent(),'PlayStation® 5 Pro');
+  assert.equal(await page.locator('.poster.console .variant').textContent(),'Console · 2 To SSD');
   assert.equal(await page.locator('.poster.console .spec-item').count(),4);
   assert.equal(await page.locator('.poster.console .spec-label').last().textContent(),'Lecteur');
   assert.equal(await page.locator('.poster.console .spec-value').last().textContent(),'Accessoire optionnel');
@@ -81,13 +84,18 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   await page.emulateMedia({media:'print'});
   const dims=await page.locator('.poster').first().evaluate(el=>({width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height}));
   const pxPerMm=96/25.4;
-  assert.ok(Math.abs(dims.width-190*pxPerMm)<2,'largeur 190 mm');
-  assert.ok(Math.abs(dims.height-132*pxPerMm)<2,'hauteur 132 mm');
+  assert.ok(Math.abs(dims.width-194*pxPerMm)<2,'largeur 194 mm');
+  assert.ok(Math.abs(dims.height-136*pxPerMm)<2,'hauteur 136 mm');
   const sheet=await page.locator('.sheet').first().boundingBox();
   assert.ok(Math.abs(sheet.width-210*pxPerMm)<2,'largeur A4');
   assert.ok(Math.abs(sheet.height-297*pxPerMm)<2,'hauteur A4');
   const marks=page.locator('.cut-slot:not(.empty) .mark');
   assert.equal(await marks.count(),8,'quatre repères par affiche');
+  assert.equal(await page.locator('.cut-guide svg').count(),2,'ligne de coupe centrale');
+  const specTops=await page.locator('.poster.tv .spec-item').evaluateAll(
+   cards=>cards.map(card=>card.getBoundingClientRect().top)
+  );
+  assert.equal(new Set(specTops).size,1,'quatre caractéristiques TV sur la même ligne');
   const posterBox=await page.locator('.poster').first().boundingBox();
   const topLeft=await marks.first().boundingBox();
   assert.ok(topLeft.x>=sheet.x&&topLeft.y>=sheet.y,'repère dans la feuille');
@@ -114,7 +122,15 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.cut-slot.empty').count(),1);
   await page.locator('#items li').last().getByText('Supprimer').click();
   assert.equal(await page.locator('.sheet').count(),1);
+  await page.locator('#items li').first().getByText('Modifier').click();
+  await page.fill('#cash','1299.99');
+  await page.click('#add');
+  await page.emulateMedia({media:'print'});
+  await page.evaluate(async()=>{await document.fonts.ready;fitPrices()});
+  assert.ok(await page.locator('.poster.console .price').evaluate(
+   price=>price.scrollWidth<=price.clientWidth+1
+  ),'prix avec centimes entièrement visible');
   assert.deepEqual(errors,[]);
-  console.log('Affiches OK : TV + console, A4 portrait, 190 × 132 mm, sauvegarde, financement, 2/page');
+  console.log('Affiches OK : TV + console, A4 portrait, 194 × 136 mm, sauvegarde, financement, 2/page');
  }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exit(1)});
