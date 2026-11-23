@@ -808,7 +808,7 @@ async def online_lookup(ref, is_model_query=False, refresh=False):
 
 @app.get('/api/admin/usage')
 async def usage():
- return {'monthly_ceiling_eur':4,'reservation_per_call_eur':0.10,
+ return {'monthly_ceiling_eur':20,'reservation_per_call_eur':0.10,
          'usage':await store.request('GET','ai_usage',params={'order':'month.desc','limit':'12'})}
 
 app.mount('/assets', StaticFiles(directory=BASE/'assets'), name='assets')

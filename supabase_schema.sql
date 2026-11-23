@@ -50,7 +50,7 @@ grant all on public.phone_specs to service_role;
 grant usage, select on sequence public.phone_specs_id_seq to service_role;
 
 -- Une réservation de 0,10 EUR par requête, sans remboursement, même en erreur.
--- 40 requêtes/mois = 4 EUR de réserve; 1 EUR de marge de change/tarifs.
+-- 200 requêtes par mois = 20 EUR de réserve.
 create table if not exists public.ai_usage (
  month date primary key,
  calls integer not null default 0,
@@ -65,7 +65,7 @@ declare accepted boolean;
 begin
  insert into ai_usage(month) values(date_trunc('month', now())::date) on conflict do nothing;
  update ai_usage set calls=calls+1, reserved_eur=reserved_eur+0.10
- where month=date_trunc('month', now())::date and calls<40 and reserved_eur+0.10<=4.00
+ where month=date_trunc('month', now())::date and calls<200 and reserved_eur+0.10<=20.00
  returning true into accepted;
  return coalesce(accepted,false);
 end;

@@ -13,7 +13,7 @@ Le gabarit reste à 88 × 52 mm, dix étiquettes par feuille A4. Les mensualité
 
 Les trois grilles ×5 / ×10 / ×20 restent visibles. Leurs montants sont laissés vides si le prix comptant est **inférieur ou égal à 120 EUR**. Au-dessus de ce prix, chaque échéance arrondie **inférieure ou égale à 20 EUR** reste également vide. Ces règles s’appliquent au formulaire, aux anciennes étiquettes enregistrées, à l’aperçu et à l’impression.
 
-Le quota IA est uniquement mensuel : jusqu’à 40 tentatives partagées par mois UTC, sans blocage après trois recherches dans une journée. Les recherches résolues par la base ou un constructeur ne consomment pas ce quota.
+Le quota IA est uniquement mensuel : jusqu’à 200 tentatives partagées par mois UTC, sans blocage après trois recherches dans une journée. Les recherches résolues par la base ou un constructeur ne consomment pas ce quota.
 
 L’import de novembre 2026 a contrôlé 120 références récentes : 9 Apple, 50 Samsung, 51 Xiaomi/Redmi/POCO et 10 Google. Les capacités sont séparées par variante et les sources constructeur sont conservées dans [l’instantané d’import](data/recent_catalogue_2026-11.json). Les fiches vérifiées déjà en base sont conservées ; les candidats sans caractéristiques confirmées ne sont pas présentés comme vérifiés. La collecte périodique inclut désormais Google et les gammes régionales Samsung M/F.
 
@@ -57,7 +57,7 @@ Pour connecter OpenAI au service existant :
 5. Une fois connecté avec l’utilisateur `encre`, consulte `/api/status` pour la présence des configurations et `/api/admin/usage` pour le compteur mensuel. Ces deux lectures ne consomment aucun appel OpenAI.
 6. Vérifie ensuite un modèle absent des catalogues et contrôle les sources affichées. Un résultat constructeur ne prouve pas que l’appel OpenAI fonctionne : le mode d’une fiche issue d’OpenAI est `openai_grounded`.
 
-Le modèle par défaut est `gpt-5.4-mini`, avec **40 tentatives / 4 EUR de réserve par mois UTC**, utilisables librement au cours du mois dans Supabase. `gpt-5-mini` reste accepté pour une transition jusqu’à son [arrêt annoncé le 11 décembre 2026](https://developers.openai.com/api/docs/deprecations). Tout autre modèle est bloqué. Chaque tentative réserve 0,10 EUR, même en erreur. Cette réserve est une provision, pas la facture réelle ; les [tarifs OpenAI](https://developers.openai.com/api/docs/pricing) et les alertes du projet doivent aussi être suivis. Gemini n’est plus appelé par la recherche.
+Le modèle par défaut est `gpt-5.4-mini`, avec **200 tentatives / 20 EUR de réserve par mois UTC**, utilisables librement au cours du mois dans Supabase. `gpt-5-mini` reste accepté pour une transition jusqu’à son [arrêt annoncé le 11 décembre 2026](https://developers.openai.com/api/docs/deprecations). Tout autre modèle est bloqué. Chaque tentative réserve 0,10 EUR, même en erreur. Cette réserve est une provision, pas la facture réelle ; les [tarifs OpenAI](https://developers.openai.com/api/docs/pricing) et les alertes du projet doivent aussi être suivis. Gemini n’est plus appelé par la recherche.
 
 Un refus OpenAI `429` bloque le recours IA : contrôler les [limites du projet API](https://platform.openai.com/settings/organization/limits) et sa [facturation](https://platform.openai.com/settings/organization/billing/overview). Le code ne peut pas lever les restrictions du compte fournisseur. Une réponse constructeur déjà disponible reste utilisable dans ce cas.
 
