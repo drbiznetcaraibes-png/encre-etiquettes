@@ -10,7 +10,7 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   page.on('pageerror',e=>errors.push(e.message));
   const consoles=[
    {brand:'PLAYSTATION',model:'PS5 Pro — 2 To Digital',reference:'CFI-7000',variant:'Édition numérique',
-    specs:[{label:'Stockage',value:'SSD 2 To'},{label:'Image',value:'4K'},
+    specs:[{label:'Stockage',value:'SSD 2 To'},{label:'Image',value:'4K ; jusqu’à 120 i/s sur écran compatible, selon le jeu et le mode vidéo sélectionnés'},
            {label:'Technologie',value:'PSSR'},{label:'Lecteur',value:'Accessoire optionnel'}],
     available_capacities:['2 To'],verification_status:'vérifié'},
    {brand:'Nintendo',model:'Switch 2',reference:'BEE-001',variant:'',
@@ -82,6 +82,22 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   assert.equal(await page.locator('.poster.tv .spec-item').count(),4);
   assert.deepEqual(await page.locator('.poster.tv .month span').allTextContents(),['208 €','107 €','56 €']);
   await page.emulateMedia({media:'print'});
+  await page.evaluate(()=>document.fonts.ready);
+  const bold=await page.locator('.poster.console').evaluate(poster=>{
+   const weight=selector=>getComputedStyle(poster.querySelector(selector)).fontWeight;
+   return [weight('.product-name'),weight('.spec-label'),weight('.month span')];
+  });
+  assert.deepEqual(bold,['800','800','800'],'titre, caractéristiques et mensualités en Inter ExtraBold');
+  const amountSize=await page.locator('.poster.console .month span').first().evaluate(amount=>
+   parseFloat(getComputedStyle(amount).fontSize)
+  );
+  assert.ok(Math.abs(amountSize-8.8*96/25.4)<1,'mensualités agrandies à 8,8 mm');
+  assert.ok(await page.evaluate(()=>[...document.fonts].some(font=>
+   font.family==='Inter'&&font.weight==='800'&&font.status==='loaded'
+  )),'la police ExtraBold locale est chargée');
+  assert.equal(await page.locator('.poster.console .spec-item').last().locator('svg circle').count(),2,'pictogramme disque pour le lecteur');
+  const iconHeight=await page.locator('.poster.console .spec-icon svg').first().evaluate(svg=>svg.getBoundingClientRect().height);
+  assert.ok(Math.abs(iconHeight-13.5*96/25.4)<1,'pictogrammes agrandis à 13,5 mm');
   const dims=await page.locator('.poster').first().evaluate(el=>({width:el.getBoundingClientRect().width,height:el.getBoundingClientRect().height}));
   const pxPerMm=96/25.4;
   assert.ok(Math.abs(dims.width-194*pxPerMm)<2,'largeur 194 mm');
@@ -96,6 +112,9 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
    cards=>cards.map(card=>card.getBoundingClientRect().top)
   );
   assert.equal(new Set(specTops).size,1,'quatre caractéristiques TV sur la même ligne');
+  assert.ok(await page.locator('.poster .spec-copy').evaluateAll(copies=>
+   copies.every(copy=>copy.scrollHeight<=copy.clientHeight+1)
+  ),'caractéristiques longues entièrement visibles');
   const posterBox=await page.locator('.poster').first().boundingBox();
   const topLeft=await marks.first().boundingBox();
   assert.ok(topLeft.x>=sheet.x&&topLeft.y>=sheet.y,'repère dans la feuille');
@@ -126,10 +145,13 @@ const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
   await page.fill('#cash','1299.99');
   await page.click('#add');
   await page.emulateMedia({media:'print'});
-  await page.evaluate(async()=>{await document.fonts.ready;fitPrices()});
+  await page.evaluate(async()=>{await document.fonts.ready;fitPosterText()});
   assert.ok(await page.locator('.poster.console .price').evaluate(
    price=>price.scrollWidth<=price.clientWidth+1
   ),'prix avec centimes entièrement visible');
+  assert.ok(await page.locator('.poster.console .month span').evaluateAll(amounts=>
+   amounts.every(amount=>amount.scrollWidth<=amount.clientWidth+1)
+  ),'mensualités entièrement visibles');
   assert.deepEqual(errors,[]);
   console.log('Affiches OK : TV + console, A4 portrait, 194 × 136 mm, sauvegarde, financement, 2/page');
  }finally{await browser.close()}
