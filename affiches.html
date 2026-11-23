@@ -8,6 +8,7 @@
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-Regular.woff2') format('woff2');font-weight:400;font-display:swap}
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-SemiBold.woff2') format('woff2');font-weight:600;font-display:swap}
 @font-face{font-family:Inter;src:url('/assets/fonts/Inter-Bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:Inter;src:url('/assets/fonts/Inter-ExtraBold.woff2') format('woff2');font-weight:800;font-display:swap}
 :root{--navy:#071d3b;--gold:#cf9200;--pale:#fff5dd;--ink:#0e2848;--grey:#687b91}
 *{box-sizing:border-box}[hidden]{display:none!important}
 body{margin:0;font:14px Inter,Arial,sans-serif;color:var(--ink);background:#edf1f7}
@@ -52,7 +53,7 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
 .cut-guide span:last-child{order:2;transform:scaleX(-1)}
 .poster{
  width:194mm;height:136mm;background:#fff;border:.75mm solid var(--navy);border-radius:7mm;
- overflow:hidden;padding:2.8mm 4.6mm 3.8mm;display:grid;grid-template-rows:12mm 43mm 34mm minmax(0,1fr);
+ overflow:hidden;padding:2.8mm 4.6mm 3.8mm;display:grid;grid-template-rows:12mm 43mm 36.5mm minmax(0,1fr);
  font-family:Inter,Arial,sans-serif;color:var(--navy);font-synthesis:none
 }
 .poster-header{display:flex;align-items:center;justify-content:center;gap:5mm;padding:0 4mm}
@@ -65,7 +66,7 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
 }
 .hero-main{min-width:0;flex:1}
 .product-brand{font-size:7mm;line-height:1.1;font-weight:700;letter-spacing:.18mm;text-transform:uppercase}
-.hero .product-name{font-size:11mm;line-height:1.05;font-weight:700;letter-spacing:-.35mm;overflow-wrap:anywhere;margin-top:1.2mm}
+.hero .product-name{font-size:11mm;line-height:1.05;font-weight:800;letter-spacing:-.35mm;overflow-wrap:anywhere;margin-top:1.2mm}
 .hero .product-name.long{font-size:8.7mm}.hero .product-name.verylong{font-size:7mm}
 .poster.console .hero .product-name{font-size:12mm}
 .poster.console .hero .product-name.long{font-size:9.4mm}
@@ -91,17 +92,17 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
  min-height:0;border-bottom:.5mm solid var(--gold);padding:2mm 0
 }
 .spec-item{
- display:grid;grid-template-rows:10mm minmax(0,1fr);justify-items:center;align-items:start;text-align:center;
- gap:.65mm;min-width:0;height:26mm;padding:0 2mm;border-right:.3mm solid var(--gold)
+ display:grid;grid-template-rows:13.5mm minmax(0,1fr);justify-items:center;align-items:start;text-align:center;
+ gap:.8mm;min-width:0;height:30mm;padding:0 1.8mm;border-right:.3mm solid var(--gold)
 }
 .spec-item:last-child{border-right:0}
 .spec-icon{display:flex;align-items:center;justify-content:center;color:var(--gold)}
-.spec-icon svg{width:13mm;height:10mm;fill:none;stroke:currentColor;stroke-width:1.55;stroke-linecap:round;stroke-linejoin:round}
-.spec-copy{max-width:100%;overflow-wrap:anywhere}
-.spec-label{display:block;font-size:5.5mm;font-weight:700;line-height:1.08}
-.spec-label.long{font-size:4.3mm}
-.spec-value{display:block;font-size:4.1mm;line-height:1.12;color:#40586d;margin-top:.65mm}
-.spec-value.long{font-size:3.5mm}
+.spec-icon svg{width:17mm;height:13.5mm;fill:none;stroke:currentColor;stroke-width:1.85;stroke-linecap:round;stroke-linejoin:round}
+.spec-copy{max-width:100%;max-height:100%;overflow-wrap:anywhere}
+.spec-label{display:block;font-size:calc(6.3mm * var(--spec-scale,1));font-weight:800;line-height:1.08}
+.spec-label.long{font-size:calc(4.7mm * var(--spec-scale,1))}
+.spec-value{display:block;font-size:calc(4.1mm * var(--spec-scale,1));line-height:1.12;color:#40586d;margin-top:.65mm}
+.spec-value.long{font-size:calc(3.5mm * var(--spec-scale,1))}
 .poster .bottom{
  display:grid;grid-template-columns:minmax(0,42fr) minmax(0,58fr);gap:2.4mm;min-height:0;
  align-items:stretch;padding-top:3mm
@@ -126,8 +127,9 @@ button.primary{background:var(--navy);color:white}button.gold{background:#f0c24d
  border:.5mm solid var(--gold);border-radius:4.3mm;background:var(--pale);min-width:0;
  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1mm;line-height:1.08
 }
-.month b{font-size:5.2mm}.month span{font-size:7.2mm;font-weight:700;white-space:nowrap}
-.month span.long{font-size:5.2mm}
+.month b{font-size:6mm;font-weight:800}
+.month span{max-width:100%;padding-inline:1mm;font-size:8.8mm;font-weight:800;white-space:nowrap}
+.month span.long{font-size:6.2mm}
 .preview-note{font-size:12px;color:#627690}
 .empty-hint{padding:40px;text-align:center;color:#697e97}
 @page{size:A4 portrait;margin:0}
@@ -202,6 +204,7 @@ function icon(name){
     screen:'<rect x="3" y="4" width="18" height="14" rx="1.5"/><path d="M8 21h8m-4-3v3"/>',
     spark:'<path d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4L12 2z"/>',
     pad:'<path d="M6 8h12c3 0 4 2 4 6l-2 4c-1 2-3 1-5-1H9c-2 2-4 3-5 1l-2-4c0-4 1-6 4-6z"/><path d="M6 13h6m-3-3v6m7-3h.1m3 2h.1"/>',
+    disc:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2.4"/><path d="M14.7 6.8a6 6 0 0 1 2.6 2.6m-10.6 5.2a6 6 0 0 0 2.6 2.6"/>',
     '4k':'<rect x="1" y="4" width="22" height="16" rx="2"/><path d="M10 8 6 13h5m-1-5v8m4-8v8m0-4 4-4m-4 4 4 4"/>',
     speed:'<path d="M3 18a9 9 0 1 1 18 0"/><path d="M12 18l5-9"/><circle cx="12" cy="18" r="1"/>',
     wifi:'<path d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0M8 16a6 6 0 0 1 8 0"/><circle cx="12" cy="20" r="1"/>'
@@ -273,7 +276,8 @@ function collect(){
 function specKind(label,value,fallback){
  const key=String(label).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
  if(/stockage|^ssd/.test(key))return 'storage';
- if(/manette|inclus|lecteur|edition/.test(key))return 'pad';
+ if(/lecteur|blu.?ray|disque/.test(key))return 'disc';
+ if(/manette|inclus|edition/.test(key))return 'pad';
  if(/frequence|rafraichissement/.test(key))return 'speed';
  if(/smart tv|systeme/.test(key))return 'wifi';
  if(key==='technologie'&&fallback==='screen')return 'screen';
@@ -284,6 +288,7 @@ function specKind(label,value,fallback){
 }
 function specCopy(label,value,kind){
  if(kind==='wifi')return ['Smart TV',value];
+ if(kind==='disc')return [label,value];
  if(kind==='pad'){
   const controller=value.match(/^Manettes?\s+(.+)$/i);
   return controller?['Manette',controller[1]]:[label,value];
@@ -361,8 +366,16 @@ function poster(r){
 function cutSlot(r){
  return '<div class="cut-slot'+(r?'':' empty')+'">'+(r?poster(r)+'<span class="mark tl"></span><span class="mark tr"></span><span class="mark bl"></span><span class="mark br"></span>':'')+'</div>';
 }
-function fitPrices(){
- document.querySelectorAll('.poster .price').forEach(price=>{
+function fitPosterText(){
+ document.querySelectorAll('.poster .spec-copy').forEach(copy=>{
+  copy.style.removeProperty('--spec-scale');
+  const height=copy.clientHeight;
+  const textHeight=copy.scrollHeight;
+  if(height&&textHeight>height){
+   copy.style.setProperty('--spec-scale',height/textHeight*0.98);
+  }
+ });
+ document.querySelectorAll('.poster .price, .poster .month span').forEach(price=>{
   price.style.fontSize='';
   const width=price.clientWidth;
   const textWidth=price.scrollWidth;
@@ -393,7 +406,7 @@ function draw(){
  $('preview').innerHTML=sheets.join('')||'<div class="empty-hint">Ajoute un produit pour afficher la planche.</div>';
  $('pageCount').textContent=sheets.length?sheets.length+' page'+(sheets.length>1?'s':'')+' A4':'Aucune page';
  $('print').disabled=!expanded.length;
- fitPrices();document.fonts.ready.then(fitPrices);
+ fitPosterText();document.fonts.ready.then(fitPosterText);
 }
 function reset(){
  editIndex=-1;posterSearch.reset();
@@ -419,11 +432,11 @@ $('add').addEventListener('click',()=>{
  }catch(e){$('status').textContent=e.message}
 });
 $('reset').onclick=reset;
-window.addEventListener('beforeprint',fitPrices);
+window.addEventListener('beforeprint',fitPosterText);
 $('print').onclick=async()=>{
  if(!rows.length)return;
  await document.fonts.ready;
- fitPrices();window.print();
+ fitPosterText();window.print();
 };
 $('clear').onclick=()=>{if(!rows.length)return;if(!confirm('Effacer toutes les affiches de la planche ?'))return;rows=[];save();reset();draw()};
 draw();renderFinance();
